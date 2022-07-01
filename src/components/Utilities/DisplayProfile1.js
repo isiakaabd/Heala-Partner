@@ -80,7 +80,7 @@ const DisplayProfile1 = (props) => {
 
   const { referralId, createdAt, status, type, patientData, partnerData } =
     props;
-  console.log(partnerData);
+
   return (
     <Grid
       item

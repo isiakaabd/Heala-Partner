@@ -223,10 +223,11 @@ const PendingOrderProfile = () => {
     prescriptions,
     orderId: idOrder,
     doctorData,
+    diagnostics,
     patientData,
     // eslint-disable-next-line
   } = state;
-
+  console.log(state);
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
 
@@ -340,7 +341,7 @@ const PendingOrderProfile = () => {
             <Grid item>
               <Chip
                 variant="outlined"
-                label="Chisom Sule"
+                label={diagnostics ? diagnostics : "No Value"}
                 classes={{
                   root: classes.chipRoot,
                   label: classes.chipLabel,
@@ -394,9 +395,7 @@ const PendingOrderProfile = () => {
                     <Typography variant="h6">
                       <li>Drugs : {i.drugName}</li>
                     </Typography>
-                    <Typography variant="h6">
-                      <li>Dosage : {i.drugName}</li>
-                    </Typography>
+
                     <Typography variant="h6">
                       <li>Dosage Quantity: {i.dosageQuantity}</li>
                     </Typography>

@@ -24,20 +24,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DisplayProfile = ({
-  fullName,
-  displayPhoto,
-  medicalTitle,
-  statusId,
-  specialization,
-  status,
-  /* setSelectedSubMenu, */
-  type,
-}) => {
+const DisplayProfile = (props) => {
+  const { patientData, type, medicalTitle } = props;
   const classes = useStyles();
   const theme = useTheme();
   const { patientId, hcpId } = useParams();
-
   const greenButton = {
     background: theme.palette.success.main,
     hover: theme.palette.success.light,
@@ -58,44 +49,44 @@ const DisplayProfile = ({
         <Grid container gap={2} alignItems="center">
           <Avatar
             alt={`Display Photo`}
-            src={displayPhoto}
+            src={patientData?.image}
             sx={{ width: 50, height: 50 }}
           />
-          <Typography variant="h3">{fullName}</Typography>
+          <Typography variant="h3">{`${patientData?.firstName} ${patientData?.lastName}`}</Typography>
         </Grid>
       </Grid>
       <Grid item>
         <Grid container alignItems="center" justifyContent="space-between">
-          {specialization ? (
+          {patientData?.specialization ? (
             <Grid item>
               <Typography variant="h4" style={{ fontWeight: 400 }}>
                 <span style={{ color: theme.palette.common.lightGrey }}>
                   Specialization:
-                </span>{" "}
+                </span>
                 <Chip
-                  label={specialization}
+                  label={patientData?.specialization}
                   color="success"
                   className={classes.badge}
                 />
               </Typography>
             </Grid>
-          ) : status ? (
+          ) : patientData?.status ? (
             <Grid item>
               <Typography variant="h4">
                 <span style={{ color: theme.palette.common.lightGrey }}>
                   Status:
                 </span>{" "}
                 <Chip
-                  label={status}
-                  color={status === "Active" ? "success" : "error"}
+                  label={patientData?.status}
+                  color={patientData?.status === "Active" ? "success" : "error"}
                   className={classes.badge}
                   style={{
                     background:
-                      status === "Active"
+                      patientData?.status === "Active"
                         ? theme.palette.common.lightGreen
                         : theme.palette.common.lightRed,
                     color:
-                      status === "Active"
+                      patientData?.status === "Active"
                         ? theme.palette.common.green
                         : theme.palette.common.red,
                   }}
@@ -110,7 +101,7 @@ const DisplayProfile = ({
           <span style={{ color: theme.palette.common.lightGrey }}>
             {medicalTitle}:
           </span>{" "}
-          {statusId}
+          {patientData?.dociId?.split("-")[1]}
         </Typography>
       </Grid>
       {type !== "" ? (

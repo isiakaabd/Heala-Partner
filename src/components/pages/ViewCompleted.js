@@ -111,7 +111,7 @@ const ViewCompleted = () => {
   } = state;
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
-
+  console.log(patientData);
   return (
     <>
       <Grid container direction="column" style={{ paddingBottom: "10rem" }}>
@@ -201,7 +201,7 @@ const ViewCompleted = () => {
             <Grid item>
               <Chip
                 variant="outlined"
-                label={doctorData.firstName}
+                label={doctorData?.firstName}
                 classes={{
                   root: classes.chipRoot,
                   label: classes.chipLabel,

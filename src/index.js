@@ -24,7 +24,9 @@ require("dotenv").config();
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const httpLink = createHttpLink({
-  uri: BASE_URL,
+  uri: "https://api.heala.io",
+
+  // BASE_URL,
 });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
