@@ -3,7 +3,6 @@ import * as Yup from "yup";
 import { NoData } from "components/layouts";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
-import { useSnackbar } from "notistack";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { DeleteOrDisable } from "components/modals";
@@ -18,9 +17,8 @@ import {
   cancelDiagnosticTest,
   scheduleDiagnosticTest,
 } from "components/graphQL/Mutation";
-
+import { useAlert } from "hooks";
 import { Typography, Grid, Chip } from "@mui/material";
-import { getErrors } from "components/Utilities/Time";
 import {
   DisplayProfile1,
   CustomButton,
@@ -98,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PendingProfile = () => {
-  const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const initialValues = {
     reason: "",
   };
@@ -146,13 +144,9 @@ const PendingProfile = () => {
         ],
       });
       history.push("/cancelled");
-      enqueueSnackbar("Test cancelled successfully", {
-        variant: "success",
-      });
+      displayMessage("success", "Test cancelled successfully");
     } catch (error) {
-      enqueueSnackbar(getErrors(error), {
-        variant: "error",
-      });
+      displayMessage("error", error);
       console.error(error);
     }
   };
@@ -191,15 +185,10 @@ const PendingProfile = () => {
           },
         ],
       });
-      enqueueSnackbar("Test Schedule successful", {
-        variant: "success",
-      });
+      displayMessage("success", "Test scheduled successfully");
       history.push("/schedule");
-      /* setSelectedSubMenu(2); */
     } catch (error) {
-      enqueueSnackbar(getErrors(error), {
-        variant: "error",
-      });
+      displayMessage("error", error);
       console.error(error);
     }
     handlePatientCloses();
@@ -232,6 +221,7 @@ const PendingProfile = () => {
     testOption,
     doctorData,
     patientData,
+    partnerData,
     // eslint-disable-next-line
   } = pendingProfile;
 
@@ -266,6 +256,7 @@ const PendingProfile = () => {
           testOption={testOption}
           doctorData={doctorData}
           patientData={patientData}
+          partnerData={partnerData}
           type="pending"
         />
         <Grid

@@ -41,7 +41,7 @@ import { getDrugOrders, cancelDrugOrder } from "components/graphQL/useQuery";
 import { fulfillDrugOrder } from "components/graphQL/Mutation";
 import { NoData, EmptyTable } from "components/layouts";
 import prettyMoney from "pretty-money";
-
+import { useAlert } from "hooks";
 const dates = ["Hello", "World", "Goodbye", "World"];
 const specializations = ["Dentistry", "Pediatry", "Optometry", "Pathology"];
 const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
@@ -132,6 +132,7 @@ const useStyles = makeStyles((theme) => ({
 const ProcessingOrders = () => {
   const theme = useTheme();
   const classes = useStyles();
+  const [displayMessage] = useAlert();
   const [state, setState] = useState([]);
   const { data, loading, error } = useQuery(getDrugOrders, {
     variables: { status: "processing" },
@@ -171,29 +172,35 @@ const ProcessingOrders = () => {
 
   const onSubmit = async (values) => {
     const { reason } = values;
-    await cancelTest({
-      variables: {
-        id: cancelId,
-        reason,
-      },
-      refetchQueries: [
-        {
-          query: getDrugOrders,
-          variables: {
-            status: "processing",
-            partnerProviderId,
-          },
+    try {
+      await cancelTest({
+        variables: {
+          id: cancelId,
+          reason,
         },
-        {
-          query: getDrugOrders,
-          variables: {
-            status: "cancelled",
-            partnerProviderId,
+        refetchQueries: [
+          {
+            query: getDrugOrders,
+            variables: {
+              status: "processing",
+              partnerProviderId,
+            },
           },
-        },
-      ],
-    });
-    history.push("/cancelled-order");
+          {
+            query: getDrugOrders,
+            variables: {
+              status: "cancelled",
+              partnerProviderId,
+            },
+          },
+        ],
+      });
+      displayMessage("success", "Drug Order Cancelled Successfully");
+      history.push("/cancelled-order");
+    } catch (error) {
+      console.error(error);
+      displayMessage("error", error);
+    }
   };
 
   const darkButton = {
@@ -209,29 +216,35 @@ const ProcessingOrders = () => {
     reason: Yup.string("Enter Reason ").trim().required("Reason is required"),
   });
   const onConfirm2 = async () => {
-    await fulfill({
-      variables: {
-        id: ids,
-      },
-      refetchQueries: [
-        {
-          query: getDrugOrders,
-          variables: {
-            status: "processing",
-            partnerProviderId,
-          },
+    try {
+      await fulfill({
+        variables: {
+          id: ids,
         },
-        {
-          query: getDrugOrders,
-          variables: {
-            status: "completed",
-            partnerProviderId,
+        refetchQueries: [
+          {
+            query: getDrugOrders,
+            variables: {
+              status: "processing",
+              partnerProviderId,
+            },
           },
-        },
-      ],
-    });
+          {
+            query: getDrugOrders,
+            variables: {
+              status: "completed",
+              partnerProviderId,
+            },
+          },
+        ],
+      });
+      displayMessage("success", "Drug Order Fulfilled Successfully");
+      history.push("/completed-order");
+    } catch (error) {
+      console.error(error);
+      displayMessage("error", error);
+    }
 
-    history.push("/completed-order");
     handleClose();
   };
 

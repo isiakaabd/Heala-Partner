@@ -1,23 +1,25 @@
 import React, { useEffect } from "react";
-
-import { Grid, Typography } from "@mui/material";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import Checkbox from "@mui/material/Checkbox";
+import PropTypes from "prop-types";
+import {
+  Grid,
+  Typography,
+  TableRow,
+  TableCell,
+  Checkbox,
+  Avatar,
+} from "@mui/material";
 import { EnhancedTable, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { rows } from "components/Utilities/DataHeader";
 import { pendingHeader } from "components/Utilities/tableHeaders";
-import Avatar from "@mui/material/Avatar";
 import displayPhoto from "assets/images/avatar.png";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
-import PreviousButton from "components/Utilities/PreviousButton";
-import CustomButton from "components/Utilities/CustomButton";
+import { CustomButton } from "components/Utilities";
 
 const useStyles = makeStyles((theme) => ({
   searchGrid: {
@@ -107,10 +109,6 @@ const PendingPayout = ({
   };
   return (
     <Grid container direction="column" rowSpacing={2}>
-      <Grid item>
-        <PreviousButton path="/finance" onClick={() => setSelectedSubMenu(0)} />
-      </Grid>
-
       <Grid
         item
         container

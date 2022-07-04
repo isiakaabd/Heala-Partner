@@ -7,7 +7,7 @@ import { makeStyles } from "@mui/styles";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { getDiagnosticTest } from "components/graphQL/useQuery";
-
+// import {useAlert} from "hooks";
 const useStyles = makeStyles((theme) => ({
   gridsWrapper: {
     background: "#fff",
@@ -98,6 +98,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ViewResult = () => {
   const classes = useStyles();
+  // const [err, setErr] = useAlert(null);
+
   const { completeId } = useParams();
   const [scheduleState, setScheduleState] = useState([]);
 
@@ -130,6 +132,7 @@ const ViewResult = () => {
     doctorData,
     patientData,
     tests,
+    partnerData,
     // eslint-disable-next-line
   } = scheduleState;
 
@@ -149,6 +152,7 @@ const ViewResult = () => {
           testOption={testOption}
           doctorData={doctorData}
           patientData={patientData}
+          partnerData={partnerData}
           type="scheduled"
         />
         <Grid

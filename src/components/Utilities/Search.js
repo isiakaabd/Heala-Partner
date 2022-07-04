@@ -43,7 +43,6 @@ const SearchContainer = ({
             </InputAdornment>
           )
         }
-        autoFocus={autoFocus}
       />
     </Grid>
   );

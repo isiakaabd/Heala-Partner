@@ -84,7 +84,8 @@ const useStyles = makeStyles((theme) => ({
 const DisplayProfile2 = (props) => {
   const classes = useStyles();
 
-  const { referralId, createdAt, status, type, patientData } = props;
+  const { referralId, createdAt, partnerData, status, type, patientData } =
+    props;
 
   return (
     <Grid
@@ -182,6 +183,18 @@ const DisplayProfile2 = (props) => {
               <Grid item width="100%">
                 <Typography variant="h4">
                   {createdAt ? `${dateMoment(createdAt)}` : "No Date "}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item sx={{ flexGrow: 1, flexBasis: 0 }}>
+            <Grid container direction="column" gap={1} width="100%">
+              <Grid item>
+                <Typography variant="body1">Provider</Typography>
+              </Grid>
+              <Grid item width="100%">
+                <Typography variant="h4">
+                  {partnerData ? partnerData.name : "No Provider"}
                 </Typography>
               </Grid>
             </Grid>

@@ -29,7 +29,6 @@ import { useQuery } from "@apollo/client";
 import { getDrugOrders } from "components/graphQL/useQuery";
 import { NoData, EmptyTable } from "components/layouts"; //
 import prettyMoney from "pretty-money";
-
 const referralOptions = ["Hello", "World", "Goodbye", "World"];
 
 const plans = ["Plan 1", "Plan 2", "Plan 3", "Plan 4"];

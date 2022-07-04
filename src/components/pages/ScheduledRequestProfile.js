@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { getErrors } from "components/Utilities/Time";
-import { useSnackbar } from "notistack";
 import {
   Modals,
   Loader,
   CustomButton,
   DisplayProfile1,
 } from "components/Utilities";
+import { useAlert } from "hooks";
 import * as Yup from "yup";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
@@ -96,9 +95,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ScheduledRequestProfile = () => {
-  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const theme = useTheme();
+  const [displayMessage] = useAlert();
   const history = useHistory();
 
   const { scheduleId } = useParams();
@@ -183,17 +182,11 @@ const ScheduledRequestProfile = () => {
         ],
       });
       history.push("/cancelled");
-      enqueueSnackbar("Test cancelled", {
-        variant: "success",
-      });
+      displayMessage("success", "Test cancelled successfully");
     } catch (error) {
-      enqueueSnackbar(getErrors(error), {
-        variant: "error",
-      });
+      displayMessage("error", error);
       console.error(error);
     }
-
-    /* setSelectedSubMenu(6); */
   };
 
   const darkButton = {
@@ -247,15 +240,12 @@ const ScheduledRequestProfile = () => {
           },
         ],
       });
-      enqueueSnackbar("Test completed", {
-        variant: "success",
-      });
+
+      displayMessage("success", "Test completed successfully");
       history.push("/completed");
       handleDialogClose();
     } catch (error) {
-      enqueueSnackbar(getErrors(error), {
-        variant: "error",
-      });
+      displayMessage("error", error);
       console.error(error);
     }
   };
@@ -278,6 +268,7 @@ const ScheduledRequestProfile = () => {
     doctorData,
     patient,
     patientData,
+    partnerData,
     // eslint-disable-next-line
   } = scheduleState;
   return (
@@ -298,6 +289,7 @@ const ScheduledRequestProfile = () => {
           patient={patient}
           patientData={patientData}
           doctorData={doctorData}
+          partnerData={partnerData}
           type="scheduled"
         />
         <Grid

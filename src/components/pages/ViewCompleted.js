@@ -111,7 +111,6 @@ const ViewCompleted = () => {
   } = state;
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
-
   return (
     <>
       <Grid container direction="column" style={{ paddingBottom: "10rem" }}>
@@ -201,7 +200,7 @@ const ViewCompleted = () => {
             <Grid item>
               <Chip
                 variant="outlined"
-                label="Chisom Sule"
+                label={doctorData?.firstName}
                 classes={{
                   root: classes.chipRoot,
                   label: classes.chipLabel,
@@ -239,9 +238,6 @@ const ViewCompleted = () => {
                       <ul style={{ padding: "2rem", color: "#606060" }}>
                         <Typography variant="h4" gutterBottom>
                           <li>Drugs : {i.drugName}</li>
-                        </Typography>
-                        <Typography variant="h4" gutterBottom>
-                          <li>Dosage : {i.drugName}</li>
                         </Typography>
                         <Typography variant="h4" gutterBottom>
                           <li>Dosage Quantity: {i.dosageQuantity}</li>

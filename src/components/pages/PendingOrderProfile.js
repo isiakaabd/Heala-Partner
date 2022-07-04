@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-
 import { makeStyles } from "@mui/styles";
 import { getErrors } from "components/Utilities/Time";
+import { useAlert } from "hooks";
 import { useSnackbar } from "notistack";
 import * as Yup from "yup";
 import { FormikControl } from "components/validation";
@@ -99,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PendingOrderProfile = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const classes = useStyles();
   const theme = useTheme();
   const { orderId } = useParams();
@@ -210,13 +211,9 @@ const PendingOrderProfile = () => {
         ],
       });
       history.push("/cancelled-order");
-      enqueueSnackbar("Test cancelled", {
-        variant: "success",
-      });
+      displayMessage("success", "Test cancelled");
     } catch (error) {
-      enqueueSnackbar(getErrors(error), {
-        variant: "error",
-      });
+      displayMessage("error", error);
       console.error(error);
     }
   };
@@ -226,6 +223,7 @@ const PendingOrderProfile = () => {
     prescriptions,
     orderId: idOrder,
     doctorData,
+    diagnostics,
     patientData,
     // eslint-disable-next-line
   } = state;
@@ -343,7 +341,7 @@ const PendingOrderProfile = () => {
             <Grid item>
               <Chip
                 variant="outlined"
-                label="Chisom Sule"
+                label={diagnostics ? diagnostics : "No Value"}
                 classes={{
                   root: classes.chipRoot,
                   label: classes.chipLabel,
@@ -396,9 +394,6 @@ const PendingOrderProfile = () => {
                   <ul style={{ color: "#606060" }}>
                     <Typography variant="h6">
                       <li>Drugs : {i.drugName}</li>
-                    </Typography>
-                    <Typography variant="h6">
-                      <li>Dosage : {i.drugName}</li>
                     </Typography>
                     <Typography variant="h6">
                       <li>Dosage Quantity: {i.dosageQuantity}</li>

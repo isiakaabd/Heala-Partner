@@ -2,6 +2,7 @@ import axios from "axios";
 import patterns from "mocks/patterns";
 import { Typography } from "@mui/material";
 import t from "prop-types";
+import React from "react";
 import { removeEmptyStringValues } from "./func";
 
 export const showErrorMsg = (enqueueSnackbar, errorMsg) => {

@@ -49,7 +49,6 @@ const PreApp = ({ window }) => {
       if (token) {
         const { exp } = jwtDecode(token);
         const time = Date.now() >= exp * 1000;
-        console.log(time);
         if (token && time) {
           logout();
           logout_user();

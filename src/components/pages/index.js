@@ -14,7 +14,6 @@ export { default as ViewCompleted } from "./ViewCompleted";
 export { default as Administrator } from "./Administrator";
 export { default as Appointments } from "./Appointments";
 export { default as Pending } from "./Pending";
-
 export { default as CaseNotes } from "./CaseNotes";
 export { default as PendingOrderProfile } from "./PendingOrderProfile";
 export { default as PendingProfile } from "./PendingProfile";
@@ -24,7 +23,6 @@ export { default as ViewResult } from "./ViewResult";
 export { default as ScheduledRequest } from "./ScheduledRequest";
 export { default as ScheduledRequestProfile } from "./ScheduledRequestProfile";
 export { default as Setting } from "./Setting";
-// export { default as ViewResult } from './ViewResult'
 export { default as Consultations } from "./Consultations";
 export { default as CreateEmail } from "./CreateEmail";
 export { default as CreateMessage } from "./CreateMessage";
@@ -48,20 +46,16 @@ export { default as Management } from "./Management";
 export { default as MedicalRecords } from "./MedicalRecords";
 export { default as Medications } from "./Medications";
 export { default as Messages } from "./Messages";
-// export { default as Chat } from './Chat'
-// export { default as Partners } from './Partners'
 export { default as PatientAppointment } from "./PatientAppointment";
 export { default as PatientProfile } from "./PatientProfile";
 export { default as Patients } from "./Patients";
 export { default as ViewMessage } from "./ViewMessage";
 export { default as Prescriptions } from "./Prescriptions";
-// export { default as Providers } from './Providers'
 export { default as ReferralTab } from "./ReferralTab";
 export { default as Settings } from "./Settings";
 export { default as SingleHCP } from "./SingleHCP";
 export { default as SinglePatient } from "./SinglePatient";
 export { default as Subscription } from "./Subscription";
-// export { default as VideoCall } from './VideoCall'
 export { default as ViewMail } from "./ViewMail";
 export { default as ViewReferral } from "./ViewReferral";
 export { default as WaitingList } from "./WaitingList";

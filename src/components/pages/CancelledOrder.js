@@ -30,7 +30,6 @@ import { useLazyQuery } from "@apollo/client";
 import { getDiagnosticTests } from "components/graphQL/useQuery";
 import {
   changeTableLimit,
-  fetchMoreData,
   handlePageChange,
 } from "helpers/filterHelperFunctions";
 
