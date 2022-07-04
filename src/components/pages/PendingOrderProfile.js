@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
-<<<<<<< HEAD
 import { makeStyles } from "@mui/styles";
 import { getErrors } from "components/Utilities/Time";
 import { useAlert } from "hooks";
-=======
-
-import { makeStyles } from "@mui/styles";
-import { getErrors } from "components/Utilities/Time";
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 import { useSnackbar } from "notistack";
 import * as Yup from "yup";
 import { FormikControl } from "components/validation";
@@ -105,10 +99,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PendingOrderProfile = () => {
   const { enqueueSnackbar } = useSnackbar();
-<<<<<<< HEAD
   const [displayMessage] = useAlert();
-=======
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
   const classes = useStyles();
   const theme = useTheme();
   const { orderId } = useParams();
@@ -220,19 +211,9 @@ const PendingOrderProfile = () => {
         ],
       });
       history.push("/cancelled-order");
-<<<<<<< HEAD
       displayMessage("success", "Test cancelled");
     } catch (error) {
       displayMessage("error", error);
-=======
-      enqueueSnackbar("Test cancelled", {
-        variant: "success",
-      });
-    } catch (error) {
-      enqueueSnackbar(getErrors(error), {
-        variant: "error",
-      });
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
       console.error(error);
     }
   };
@@ -242,10 +223,7 @@ const PendingOrderProfile = () => {
     prescriptions,
     orderId: idOrder,
     doctorData,
-<<<<<<< HEAD
     diagnostics,
-=======
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
     patientData,
     // eslint-disable-next-line
   } = state;
@@ -363,11 +341,7 @@ const PendingOrderProfile = () => {
             <Grid item>
               <Chip
                 variant="outlined"
-<<<<<<< HEAD
                 label={diagnostics ? diagnostics : "No Value"}
-=======
-                label="Chisom Sule"
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
                 classes={{
                   root: classes.chipRoot,
                   label: classes.chipLabel,
@@ -421,13 +395,6 @@ const PendingOrderProfile = () => {
                     <Typography variant="h6">
                       <li>Drugs : {i.drugName}</li>
                     </Typography>
-<<<<<<< HEAD
-
-=======
-                    <Typography variant="h6">
-                      <li>Dosage : {i.drugName}</li>
-                    </Typography>
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
                     <Typography variant="h6">
                       <li>Dosage Quantity: {i.dosageQuantity}</li>
                     </Typography>

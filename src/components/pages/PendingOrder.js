@@ -29,10 +29,6 @@ import { useQuery } from "@apollo/client";
 import { getDrugOrders } from "components/graphQL/useQuery";
 import { NoData, EmptyTable } from "components/layouts"; //
 import prettyMoney from "pretty-money";
-<<<<<<< HEAD
-=======
-
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 const referralOptions = ["Hello", "World", "Goodbye", "World"];
 
 const plans = ["Plan 1", "Plan 2", "Plan 3", "Plan 4"];
@@ -110,10 +106,6 @@ const useStyles = makeStyles((theme) => ({
 const PendingOrder = () => {
   const classes = useStyles();
   const theme = useTheme();
-<<<<<<< HEAD
-
-=======
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
   const [state, setState] = useState([]);
   const orderState = "pending";
   const { data, loading, error } = useQuery(getDrugOrders, {

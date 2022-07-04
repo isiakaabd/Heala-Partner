@@ -10,10 +10,6 @@ import {
   Checkbox,
   TableCell,
 } from "@mui/material";
-<<<<<<< HEAD
-
-=======
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 import { dateMoment, timeMoment } from "components/Utilities/Time";
 import prettyMoney from "pretty-money";
 import useFormInput from "components/hooks/useFormInput";

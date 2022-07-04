@@ -41,11 +41,7 @@ import { getDrugOrders, cancelDrugOrder } from "components/graphQL/useQuery";
 import { fulfillDrugOrder } from "components/graphQL/Mutation";
 import { NoData, EmptyTable } from "components/layouts";
 import prettyMoney from "pretty-money";
-<<<<<<< HEAD
 import { useAlert } from "hooks";
-=======
-
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 const dates = ["Hello", "World", "Goodbye", "World"];
 const specializations = ["Dentistry", "Pediatry", "Optometry", "Pathology"];
 const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
@@ -136,10 +132,7 @@ const useStyles = makeStyles((theme) => ({
 const ProcessingOrders = () => {
   const theme = useTheme();
   const classes = useStyles();
-<<<<<<< HEAD
   const [displayMessage] = useAlert();
-=======
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
   const [state, setState] = useState([]);
   const { data, loading, error } = useQuery(getDrugOrders, {
     variables: { status: "processing" },
@@ -179,7 +172,6 @@ const ProcessingOrders = () => {
 
   const onSubmit = async (values) => {
     const { reason } = values;
-<<<<<<< HEAD
     try {
       await cancelTest({
         variables: {
@@ -209,31 +201,6 @@ const ProcessingOrders = () => {
       console.error(error);
       displayMessage("error", error);
     }
-=======
-    await cancelTest({
-      variables: {
-        id: cancelId,
-        reason,
-      },
-      refetchQueries: [
-        {
-          query: getDrugOrders,
-          variables: {
-            status: "processing",
-            partnerProviderId,
-          },
-        },
-        {
-          query: getDrugOrders,
-          variables: {
-            status: "cancelled",
-            partnerProviderId,
-          },
-        },
-      ],
-    });
-    history.push("/cancelled-order");
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
   };
 
   const darkButton = {
@@ -249,7 +216,6 @@ const ProcessingOrders = () => {
     reason: Yup.string("Enter Reason ").trim().required("Reason is required"),
   });
   const onConfirm2 = async () => {
-<<<<<<< HEAD
     try {
       await fulfill({
         variables: {
@@ -279,31 +245,6 @@ const ProcessingOrders = () => {
       displayMessage("error", error);
     }
 
-=======
-    await fulfill({
-      variables: {
-        id: ids,
-      },
-      refetchQueries: [
-        {
-          query: getDrugOrders,
-          variables: {
-            status: "processing",
-            partnerProviderId,
-          },
-        },
-        {
-          query: getDrugOrders,
-          variables: {
-            status: "completed",
-            partnerProviderId,
-          },
-        },
-      ],
-    });
-
-    history.push("/completed-order");
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
     handleClose();
   };
 

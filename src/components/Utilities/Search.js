@@ -43,10 +43,6 @@ const SearchContainer = ({
             </InputAdornment>
           )
         }
-<<<<<<< HEAD
-=======
-        autoFocus={autoFocus}
->>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
       />
     </Grid>
   );
