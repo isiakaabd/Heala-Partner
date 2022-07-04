@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+<<<<<<< HEAD
 import PropTypes from "prop-types";
 import {
   Grid,
@@ -8,18 +9,34 @@ import {
   Checkbox,
   Avatar,
 } from "@mui/material";
+=======
+
+import { Grid, Typography } from "@mui/material";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import Checkbox from "@mui/material/Checkbox";
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 import { EnhancedTable, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { rows } from "components/Utilities/DataHeader";
 import { pendingHeader } from "components/Utilities/tableHeaders";
+<<<<<<< HEAD
+=======
+import Avatar from "@mui/material/Avatar";
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 import displayPhoto from "assets/images/avatar.png";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
+<<<<<<< HEAD
 import { CustomButton } from "components/Utilities";
+=======
+import PreviousButton from "components/Utilities/PreviousButton";
+import CustomButton from "components/Utilities/CustomButton";
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 
 const useStyles = makeStyles((theme) => ({
   searchGrid: {
@@ -109,6 +126,13 @@ const PendingPayout = ({
   };
   return (
     <Grid container direction="column" rowSpacing={2}>
+<<<<<<< HEAD
+=======
+      <Grid item>
+        <PreviousButton path="/finance" onClick={() => setSelectedSubMenu(0)} />
+      </Grid>
+
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
       <Grid
         item
         container

@@ -7,7 +7,11 @@ import { makeStyles } from "@mui/styles";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { getDiagnosticTest } from "components/graphQL/useQuery";
+<<<<<<< HEAD
 // import {useAlert} from "hooks";
+=======
+
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 const useStyles = makeStyles((theme) => ({
   gridsWrapper: {
     background: "#fff",
@@ -98,8 +102,11 @@ const useStyles = makeStyles((theme) => ({
 
 const ViewResult = () => {
   const classes = useStyles();
+<<<<<<< HEAD
   // const [err, setErr] = useAlert(null);
 
+=======
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
   const { completeId } = useParams();
   const [scheduleState, setScheduleState] = useState([]);
 
@@ -132,7 +139,10 @@ const ViewResult = () => {
     doctorData,
     patientData,
     tests,
+<<<<<<< HEAD
     partnerData,
+=======
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
     // eslint-disable-next-line
   } = scheduleState;
 
@@ -152,7 +162,10 @@ const ViewResult = () => {
           testOption={testOption}
           doctorData={doctorData}
           patientData={patientData}
+<<<<<<< HEAD
           partnerData={partnerData}
+=======
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
           type="scheduled"
         />
         <Grid

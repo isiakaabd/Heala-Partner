@@ -3,6 +3,10 @@ import * as Yup from "yup";
 import { NoData } from "components/layouts";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
+<<<<<<< HEAD
+=======
+import { useSnackbar } from "notistack";
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { DeleteOrDisable } from "components/modals";
@@ -17,8 +21,14 @@ import {
   cancelDiagnosticTest,
   scheduleDiagnosticTest,
 } from "components/graphQL/Mutation";
+<<<<<<< HEAD
 import { useAlert } from "hooks";
 import { Typography, Grid, Chip } from "@mui/material";
+=======
+
+import { Typography, Grid, Chip } from "@mui/material";
+import { getErrors } from "components/Utilities/Time";
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 import {
   DisplayProfile1,
   CustomButton,
@@ -96,7 +106,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PendingProfile = () => {
+<<<<<<< HEAD
   const [displayMessage] = useAlert();
+=======
+  const { enqueueSnackbar } = useSnackbar();
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
   const initialValues = {
     reason: "",
   };
@@ -144,9 +158,19 @@ const PendingProfile = () => {
         ],
       });
       history.push("/cancelled");
+<<<<<<< HEAD
       displayMessage("success", "Test cancelled successfully");
     } catch (error) {
       displayMessage("error", error);
+=======
+      enqueueSnackbar("Test cancelled successfully", {
+        variant: "success",
+      });
+    } catch (error) {
+      enqueueSnackbar(getErrors(error), {
+        variant: "error",
+      });
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
       console.error(error);
     }
   };
@@ -185,10 +209,22 @@ const PendingProfile = () => {
           },
         ],
       });
+<<<<<<< HEAD
       displayMessage("success", "Test scheduled successfully");
       history.push("/schedule");
     } catch (error) {
       displayMessage("error", error);
+=======
+      enqueueSnackbar("Test Schedule successful", {
+        variant: "success",
+      });
+      history.push("/schedule");
+      /* setSelectedSubMenu(2); */
+    } catch (error) {
+      enqueueSnackbar(getErrors(error), {
+        variant: "error",
+      });
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
       console.error(error);
     }
     handlePatientCloses();
@@ -221,7 +257,10 @@ const PendingProfile = () => {
     testOption,
     doctorData,
     patientData,
+<<<<<<< HEAD
     partnerData,
+=======
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
     // eslint-disable-next-line
   } = pendingProfile;
 
@@ -256,7 +295,10 @@ const PendingProfile = () => {
           testOption={testOption}
           doctorData={doctorData}
           patientData={patientData}
+<<<<<<< HEAD
           partnerData={partnerData}
+=======
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
           type="pending"
         />
         <Grid

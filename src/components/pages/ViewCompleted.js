@@ -111,7 +111,6 @@ const ViewCompleted = () => {
   } = state;
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
-  console.log(patientData);
   return (
     <>
       <Grid container direction="column" style={{ paddingBottom: "10rem" }}>
@@ -239,9 +238,6 @@ const ViewCompleted = () => {
                       <ul style={{ padding: "2rem", color: "#606060" }}>
                         <Typography variant="h4" gutterBottom>
                           <li>Drugs : {i.drugName}</li>
-                        </Typography>
-                        <Typography variant="h4" gutterBottom>
-                          <li>Dosage : {i.drugName}</li>
                         </Typography>
                         <Typography variant="h4" gutterBottom>
                           <li>Dosage Quantity: {i.dosageQuantity}</li>

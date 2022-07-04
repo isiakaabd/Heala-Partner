@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
+<<<<<<< HEAD
+=======
+import { getErrors } from "components/Utilities/Time";
+import { useSnackbar } from "notistack";
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 import {
   Modals,
   Loader,
   CustomButton,
   DisplayProfile1,
 } from "components/Utilities";
+<<<<<<< HEAD
 import { useAlert } from "hooks";
+=======
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
 import * as Yup from "yup";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
@@ -95,9 +103,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ScheduledRequestProfile = () => {
+<<<<<<< HEAD
   const classes = useStyles();
   const theme = useTheme();
   const [displayMessage] = useAlert();
+=======
+  const { enqueueSnackbar } = useSnackbar();
+  const classes = useStyles();
+  const theme = useTheme();
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
   const history = useHistory();
 
   const { scheduleId } = useParams();
@@ -182,11 +196,25 @@ const ScheduledRequestProfile = () => {
         ],
       });
       history.push("/cancelled");
+<<<<<<< HEAD
       displayMessage("success", "Test cancelled successfully");
     } catch (error) {
       displayMessage("error", error);
       console.error(error);
     }
+=======
+      enqueueSnackbar("Test cancelled", {
+        variant: "success",
+      });
+    } catch (error) {
+      enqueueSnackbar(getErrors(error), {
+        variant: "error",
+      });
+      console.error(error);
+    }
+
+    /* setSelectedSubMenu(6); */
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
   };
 
   const darkButton = {
@@ -240,12 +268,24 @@ const ScheduledRequestProfile = () => {
           },
         ],
       });
+<<<<<<< HEAD
 
       displayMessage("success", "Test completed successfully");
       history.push("/completed");
       handleDialogClose();
     } catch (error) {
       displayMessage("error", error);
+=======
+      enqueueSnackbar("Test completed", {
+        variant: "success",
+      });
+      history.push("/completed");
+      handleDialogClose();
+    } catch (error) {
+      enqueueSnackbar(getErrors(error), {
+        variant: "error",
+      });
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
       console.error(error);
     }
   };
@@ -268,7 +308,10 @@ const ScheduledRequestProfile = () => {
     doctorData,
     patient,
     patientData,
+<<<<<<< HEAD
     partnerData,
+=======
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
     // eslint-disable-next-line
   } = scheduleState;
   return (
@@ -289,7 +332,10 @@ const ScheduledRequestProfile = () => {
           patient={patient}
           patientData={patientData}
           doctorData={doctorData}
+<<<<<<< HEAD
           partnerData={partnerData}
+=======
+>>>>>>> 47285b49164018ca344024e79bc19f87a97b9c9d
           type="scheduled"
         />
         <Grid
