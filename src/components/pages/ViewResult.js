@@ -7,8 +7,7 @@ import { makeStyles } from "@mui/styles";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { getDiagnosticTest } from "components/graphQL/useQuery";
-// import useAlert from "helpers/filterHelperFunctions";
-
+// import {useAlert} from "hooks";
 const useStyles = makeStyles((theme) => ({
   gridsWrapper: {
     background: "#fff",

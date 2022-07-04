@@ -4,34 +4,6 @@ import { Typography } from "@mui/material";
 import t from "prop-types";
 import React from "react";
 import { removeEmptyStringValues } from "./func";
-import { useSnackbar } from "notistack";
-
-const useAlert = () => {
-  const { enqueueSnackbar } = useSnackbar();
-
-  const displayMessage = (type, message) => {
-    const networkError = message?.networkError?.result?.errors[0].message;
-    const graphQlError = message?.graphQLErrors?.map((err) => err.message);
-
-    return enqueueSnackbar(
-      <Typography style={{ fontSize: "1.2rem" }}>
-        {networkError ? networkError : graphQlError ? graphQlError : message}
-      </Typography>,
-      {
-        variant: type,
-        preventDuplicate: true,
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "top",
-        },
-        autoHideDuration: 5000,
-      }
-    );
-  };
-
-  return [displayMessage];
-};
-export default useAlert;
 
 export const showErrorMsg = (enqueueSnackbar, errorMsg) => {
   enqueueSnackbar(

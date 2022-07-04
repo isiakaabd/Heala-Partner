@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import { getErrors } from "components/Utilities/Time";
-import useAlert from "helpers/filterHelperFunctions";
+import { useAlert } from "hooks";
 import { useSnackbar } from "notistack";
 import * as Yup from "yup";
 import { FormikControl } from "components/validation";
@@ -227,7 +227,7 @@ const PendingOrderProfile = () => {
     patientData,
     // eslint-disable-next-line
   } = state;
-  console.log(state);
+
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
 

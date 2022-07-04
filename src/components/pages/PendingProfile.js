@@ -17,8 +17,7 @@ import {
   cancelDiagnosticTest,
   scheduleDiagnosticTest,
 } from "components/graphQL/Mutation";
-import useAlert from "helpers/filterHelperFunctions";
-
+import { useAlert } from "hooks";
 import { Typography, Grid, Chip } from "@mui/material";
 import {
   DisplayProfile1,
