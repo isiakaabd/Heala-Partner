@@ -18,7 +18,6 @@ export const UploadTestForm = ({ onSuccess }) => {
   };
 
   const onSubmit = async (values) => {
-    console.log(values);
     try {
       const uploadRes = await uploadTestFile({
         variables: {

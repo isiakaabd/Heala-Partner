@@ -307,7 +307,6 @@ const CompletedOrders = () => {
                           to={`completed-order/${_id}/order`}
                           className={classes.chip}
                           deleteIcon={<ArrowForwardIosIcon />}
-                          onDelete={() => console.log(" ")}
                         />
                       </TableCell>
                     </TableRow>
