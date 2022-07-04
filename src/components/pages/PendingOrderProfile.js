@@ -395,7 +395,6 @@ const PendingOrderProfile = () => {
                     <Typography variant="h6">
                       <li>Drugs : {i.drugName}</li>
                     </Typography>
-
                     <Typography variant="h6">
                       <li>Dosage Quantity: {i.dosageQuantity}</li>
                     </Typography>

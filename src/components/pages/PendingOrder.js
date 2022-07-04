@@ -106,7 +106,6 @@ const useStyles = makeStyles((theme) => ({
 const PendingOrder = () => {
   const classes = useStyles();
   const theme = useTheme();
-
   const [state, setState] = useState([]);
   const orderState = "pending";
   const { data, loading, error } = useQuery(getDrugOrders, {
