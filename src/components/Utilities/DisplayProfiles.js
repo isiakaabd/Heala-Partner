@@ -155,7 +155,7 @@ const DisplayProfiles = (props) => {
             <Grid container direction="column" gap={1}>
               <Grid item>
                 <Typography variant="body1" style={{ color: "#3e5ea9" }}>
-                  Statuss:
+                  Status:
                 </Typography>
               </Grid>
               <Grid item>
