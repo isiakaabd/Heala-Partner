@@ -223,34 +223,30 @@ const ViewCompleted = () => {
               />
             </Grid>
           </Grid>
-          {prescriptions &&
-            prescriptions.map((i, index) => {
-              return (
-                <Grid item container className={classes.card}>
-                  <Grid item>
-                    <Typography variant="h4">
-                      {index + 1} Prescription
-                    </Typography>
-                  </Grid>
+          {prescriptions?.map((i, index) => {
+            return (
+              <Grid item container className={classes.card}>
+                <Grid item>
+                  <Typography variant="h4">{index + 1} Prescription</Typography>
+                </Grid>
+                <Grid item container flexWrap="nowrap" gap={3}>
                   <Grid item container flexWrap="nowrap" gap={3}>
-                    {/* {prescriptions && prescriptions.length > 0 ? ( */}
-                    <Grid item container flexWrap="nowrap" gap={3}>
-                      <ul style={{ padding: "2rem", color: "#606060" }}>
-                        <Typography variant="h4" gutterBottom>
-                          <li>Drugs : {i.drugName}</li>
-                        </Typography>
-                        <Typography variant="h4" gutterBottom>
-                          <li>Dosage Quantity: {i.dosageQuantity}</li>
-                        </Typography>
-                        <Typography variant="h4" gutterBottom>
-                          <li>Drug Price : {i.drugPrice}</li>
-                        </Typography>
-                      </ul>
-                    </Grid>
+                    <ul style={{ padding: "2rem", color: "#606060" }}>
+                      <Typography variant="h4" gutterBottom>
+                        <li>Drugs : {i.drugName}</li>
+                      </Typography>
+                      <Typography variant="h4" gutterBottom>
+                        <li>Dosage Quantity: {i.dosageQuantity}</li>
+                      </Typography>
+                      <Typography variant="h4" gutterBottom>
+                        <li>Drug Price : {i.drugPrice}</li>
+                      </Typography>
+                    </ul>
                   </Grid>
                 </Grid>
-              );
-            })}
+              </Grid>
+            );
+          })}
         </Grid>
       </Grid>
     </>

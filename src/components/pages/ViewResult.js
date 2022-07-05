@@ -133,9 +133,10 @@ const ViewResult = () => {
     patientData,
     tests,
     partnerData,
+    scheduleAt,
     // eslint-disable-next-line
   } = scheduleState;
-
+  console.log(scheduleState);
   return (
     <>
       <Grid container direction="column" style={{ paddingBottom: "2rem" }}>
@@ -153,6 +154,7 @@ const ViewResult = () => {
           doctorData={doctorData}
           patientData={patientData}
           partnerData={partnerData}
+          scheduleAt={scheduleAt}
           type="scheduled"
         />
         <Grid
@@ -174,7 +176,7 @@ const ViewResult = () => {
           >
             <Grid item>
               <Typography variant="body1">
-                {tests && tests.length > 1 ? "Tests" : "Test"}
+                {tests?.length > 1 ? "Tests" : "Test"}
               </Typography>
             </Grid>
             <Grid
@@ -184,10 +186,10 @@ const ViewResult = () => {
               alignItems={{ sm: "flex-start", xs: "center" }}
               gap={2}
             >
-              {tests && tests.length > 0 ? (
-                tests.map((i) => {
+              {tests?.length > 0 ? (
+                tests.map((i, index) => {
                   return (
-                    <Grid item>
+                    <Grid item key={index}>
                       <Chip
                         variant="outlined"
                         label={i.name}

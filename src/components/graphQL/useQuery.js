@@ -410,10 +410,13 @@ export const getDiagnosticTests = gql`
         patientData
         doctorData
         referralId
+        time
+        scheduledAt
         tests {
           price
         }
         note
+        scheduledAt
         sampleCollection
         testResults
         cancellationReason
@@ -471,7 +474,7 @@ export const getDiagnosticTest = gql`
       testId
       status
       patientData
-
+      scheduledAt
       doctorData
       sampleCollection
       testResults

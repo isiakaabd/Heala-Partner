@@ -265,12 +265,14 @@ const ScheduledRequestProfile = () => {
     testId,
     affiliation,
     testOption,
+    scheduledAt,
     doctorData,
     patient,
     patientData,
     partnerData,
     // eslint-disable-next-line
   } = scheduleState;
+
   return (
     <>
       <Grid container direction="column" style={{ paddingBottom: "2rem" }}>
@@ -290,6 +292,7 @@ const ScheduledRequestProfile = () => {
           patientData={patientData}
           doctorData={doctorData}
           partnerData={partnerData}
+          scheduledAt={scheduledAt}
           type="scheduled"
         />
         <Grid

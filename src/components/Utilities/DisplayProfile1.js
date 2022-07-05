@@ -78,8 +78,15 @@ const useStyles = makeStyles((theme) => ({
 const DisplayProfile1 = (props) => {
   const classes = useStyles();
 
-  const { referralId, createdAt, status, type, patientData, partnerData } =
-    props;
+  const {
+    referralId,
+    createdAt,
+    status,
+    type,
+    patientData,
+    scheduledAt,
+    partnerData,
+  } = props;
 
   return (
     <Grid
@@ -177,12 +184,14 @@ const DisplayProfile1 = (props) => {
           <Grid item container direction="column" gap={1}>
             <Grid item>
               <Typography variant="body1" style={{ color: "#3e5ea9" }}>
-                Scheduled Time:
+                Scheduled At:
               </Typography>
             </Grid>
             <Grid item width="100%">
               <Typography variant="h4" style={{ fontWeight: "400" }}>
-                {createdAt ? ` ${timeMoment(createdAt)}` : "No Date "}
+                {scheduledAt
+                  ? ` ${dateMoment(scheduledAt)} | ${timeMoment(scheduledAt)}`
+                  : "No Date "}
               </Typography>
             </Grid>
           </Grid>
