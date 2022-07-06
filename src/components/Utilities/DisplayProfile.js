@@ -52,7 +52,11 @@ const DisplayProfile = (props) => {
             src={patientData?.image}
             sx={{ width: 50, height: 50 }}
           />
-          <Typography variant="h3">{`${patientData?.firstName} ${patientData?.lastName}`}</Typography>
+          <Typography variant="h3">
+            {patientData
+              ? `${patientData?.firstName} ${patientData?.lastName}`
+              : "No Value"}
+          </Typography>
         </Grid>
       </Grid>
       <Grid item>
@@ -101,7 +105,7 @@ const DisplayProfile = (props) => {
           <span style={{ color: theme.palette.common.lightGrey }}>
             {medicalTitle}:
           </span>{" "}
-          {patientData?.dociId?.split("-")[1]}
+          {patientData ? patientData?.dociId?.split("-")[1] : "No Value"}
         </Typography>
       </Grid>
       {type !== "" ? (

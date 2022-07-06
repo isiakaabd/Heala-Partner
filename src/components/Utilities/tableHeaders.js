@@ -476,7 +476,6 @@ export const messagesHeadCells = [
   { id: 2, label: "Order Num" },
   { id: 22, label: "Cancellation's Reason" },
   { id: 3, label: "Patient's Name" },
-  { id: 4, label: "status" },
 ];
 // HCP Patients HEADCELLS
 export const hcpPatientsHeadCells = [

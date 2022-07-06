@@ -136,7 +136,6 @@ const ViewResult = () => {
     scheduleAt,
     // eslint-disable-next-line
   } = scheduleState;
-  console.log(scheduleState);
   return (
     <>
       <Grid container direction="column" style={{ paddingBottom: "2rem" }}>

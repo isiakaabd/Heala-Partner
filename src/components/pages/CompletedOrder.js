@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { dateMoment, timeMoment } from "components/Utilities/Time";
 import prettyMoney from "pretty-money";
+import { debounce } from "helpers/debounce";
 import {
   Button,
   FormControl,
@@ -145,7 +146,6 @@ const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
 
 const CompletedOrder = () => {
   const classes = useStyles();
-  const [searchPartner, setSearchPartner] = useState("");
   const [openFilterPartner, setOpenFilterPartner] = useState(false);
 
   // FILTER PARTNERS SELECT STATES
@@ -175,14 +175,17 @@ const CompletedOrder = () => {
         partnerProviderId,
       },
     });
-  }, [fetchDiagnostics, pageInfo.limit, status, partnerProviderId]);
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (data) {
+      console.log(data);
       setScheduleState(data?.getDiagnosticTests.data);
-      setPageInfo(data.getDiagnosticTests.pageInfo);
+      setPageInfo(data?.getDiagnosticTests.pageInfo);
     }
   }, [data]);
+
   const prettyDollarConfig = {
     currency: "₦",
     position: "before",
@@ -191,6 +194,9 @@ const CompletedOrder = () => {
   };
 
   const { hospitalName, date, categoryName } = filterSelectInput;
+  //eslint-disable-next-line
+  //eslint-disable-next-line
+  const debouncer = useCallback(debounce(fetchDiagnostics), []);
 
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
@@ -213,10 +219,15 @@ const CompletedOrder = () => {
         >
           <Grid item flex={1}>
             <Search
-              value={searchPartner}
-              onChange={(e) => setSearchPartner(e.target.value)}
-              placeholder="Type to search Referrals..."
-              height="5rem"
+              onChange={(e) => {
+                let value = e.target.value;
+                if (value !== "") {
+                  return debouncer({
+                    variables: { referralId: value, partnerProviderId },
+                  });
+                }
+              }}
+              placeholder="Type to search Test by referral ID..."
             />
           </Grid>
           <Grid item>

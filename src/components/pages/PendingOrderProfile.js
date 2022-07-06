@@ -382,6 +382,7 @@ const PendingOrderProfile = () => {
                 alignItems={{ sm: "flex-start", xs: "center" }}
                 md={12}
                 xs={12}
+                key={index}
                 container
                 className={classes.card}
                 padding={{ sm: "min(3rem,4vw)" }}

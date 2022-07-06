@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Grid,
   TableRow,
@@ -37,6 +37,7 @@ import {
   fetchMoreData,
   handlePageChange,
 } from "helpers/filterHelperFunctions";
+import { debounce } from "helpers/debounce";
 const useStyles = makeStyles((theme) => ({
   button: {
     "&.MuiButton-root": {
@@ -152,8 +153,7 @@ const ScheduledRequest = () => {
   const classes = useStyles();
   const status = "scheduled";
   const partnerProviderId = localStorage.getItem("partnerProviderId");
-  const [searchPartner, setSearchPartner] = useState("");
-  const [scheduleState, setScheduleState] = useState(null);
+  const [scheduleState, setScheduleState] = useState([]);
 
   const [fetchDiagnostics, { loading, error, data }] =
     useLazyQuery(getDiagnosticTests);
@@ -173,7 +173,8 @@ const ScheduledRequest = () => {
         partnerProviderId,
       },
     });
-  }, [fetchDiagnostics, partnerProviderId, pageInfo]);
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -182,7 +183,9 @@ const ScheduledRequest = () => {
     }
   }, [data]);
   const [openFilterPartner, setOpenFilterPartner] = useState(false);
-
+  //eslint-disable-next-line
+  //eslint-disable-next-line
+  const debouncer = useCallback(debounce(fetchDiagnostics), []);
   // FILTER PARTNERS SELECT STATES
   const [filterSelectInput, handleSelectedInput] = useFormInput({
     hospitalName: "",
@@ -220,9 +223,15 @@ const ScheduledRequest = () => {
         >
           <Grid item flex={1}>
             <Search
-              value={searchPartner}
-              onChange={(e) => setSearchPartner(e.target.value)}
-              placeholder="Type to search Referrals..."
+              onChange={(e) => {
+                let value = e.target.value;
+                if (value !== "") {
+                  return debouncer({
+                    variables: { referralId: value, partnerProviderId },
+                  });
+                }
+              }}
+              placeholder="Type to search Tests by referral ID..."
               height="5rem"
             />
           </Grid>
@@ -233,7 +242,7 @@ const ScheduledRequest = () => {
             />
           </Grid>
         </Grid>
-        {scheduleState !== null && scheduleState.length > 0 ? (
+        {scheduleState?.length > 0 ? (
           <Grid item container>
             <EnhancedTable
               headCells={partnersHeadCells}

@@ -94,6 +94,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "1.25rem",
       height: "3rem",
       borderRadius: "1.3rem",
+      cursor: "pointer",
       background: theme.palette.common.white,
       color: theme.palette.common.grey,
       "& .MuiChip-deleteIcon": {
@@ -126,6 +127,8 @@ const Pending = () => {
     limit: 10,
     totalDocs: 0,
   });
+  //eslint-disable-next-line
+  const debouncer = useCallback(debounce(fetchDiagnostics), []);
   useEffect(() => {
     fetchDiagnostics({
       variables: {
@@ -134,7 +137,8 @@ const Pending = () => {
         partnerProviderId,
       },
     });
-  }, [fetchDiagnostics, partnerProviderId, pageInfo]);
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -154,8 +158,6 @@ const Pending = () => {
 
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
-
-  const [searchPatient, setSearchPatient] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDialogOpen = () => setIsOpen(true);
@@ -187,9 +189,15 @@ const Pending = () => {
         >
           <Grid item flex={1}>
             <Search
-              value={searchPatient}
-              onChange={(e) => setSearchPatient(e.target.value)}
-              placeholder="Type to search referrals..."
+              onChange={(e) => {
+                let value = e.target.value;
+                if (value !== "") {
+                  return debouncer({
+                    variables: { referralId: value, partnerProviderId },
+                  });
+                }
+              }}
+              placeholder="Type to search Test by referral ID..."
               height="5rem"
             />
           </Grid>

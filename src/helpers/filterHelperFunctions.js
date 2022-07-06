@@ -90,7 +90,7 @@ export const resetFilters = (
 
 export const changeTableLimit = async (limit, fetchFunc, value, partnerId) => {
   try {
-    fetchFunc({
+    await fetchFunc({
       variables: {
         first: limit,
         status: value,
@@ -119,6 +119,7 @@ export const handlePageChange = (
   value,
   partnerId
 ) => {
+  console.log(value);
   const getData = (pageNumber) => {
     fetchDataFN({
       variables: {

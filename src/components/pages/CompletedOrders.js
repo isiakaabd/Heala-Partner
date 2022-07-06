@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Grid,
   Chip,
@@ -10,6 +10,7 @@ import {
   Checkbox,
   TableRow,
 } from "@mui/material";
+import { debounce } from "helpers/debounce";
 import prettyMoney from "pretty-money";
 import {
   FormSelect,
@@ -20,6 +21,10 @@ import {
 } from "components/Utilities";
 import useFormInput from "components/hooks/useFormInput";
 import { makeStyles } from "@mui/styles";
+import {
+  changeTableLimit,
+  handlePageChange,
+} from "helpers/filterHelperFunctions";
 import { Link } from "react-router-dom";
 import { partnersHeadCells } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
@@ -28,7 +33,7 @@ import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { getDrugOrders } from "components/graphQL/useQuery";
 import { NoData, EmptyTable, EnhancedTable } from "components/layouts";
 import { dateMoment, timeMoment } from "components/Utilities/Time";
@@ -139,7 +144,6 @@ const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
 
 const CompletedOrders = () => {
   const classes = useStyles();
-  const [searchPartner, setSearchPartner] = useState("");
   const [state, setState] = useState([]);
   const prettyDollarConfig = {
     currency: "₦",
@@ -148,12 +152,30 @@ const CompletedOrders = () => {
     thousandsDelimiter: ",",
   };
   const [openFilterPartner, setOpenFilterPartner] = useState(false);
-  const orderState = "completed";
-  const { data, loading, error } = useQuery(getDrugOrders, {
-    variables: { status: orderState },
+  const orderStatus = "completed";
+  const [fetchDiagnostics, { data, loading, error }] =
+    useLazyQuery(getDrugOrders);
+  const [pageInfo, setPageInfo] = useState({
+    page: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+    limit: 10,
+    totalDocs: 0,
   });
   useEffect(() => {
-    if (data) return setState(data?.getDrugOrders.data);
+    fetchDiagnostics({
+      variables: {
+        status: orderStatus,
+        first: pageInfo.limit,
+      },
+    });
+  }, [fetchDiagnostics, pageInfo.limit]);
+  useEffect(() => {
+    if (data) {
+      setState(data?.getDrugOrders.data);
+      setPageInfo(data?.getDrugOrders.pageInfo);
+    }
   }, [data]);
 
   // FILTER PARTNERS SELECT STATES
@@ -164,10 +186,9 @@ const CompletedOrders = () => {
   });
 
   const { hospitalName, date, categoryName } = filterSelectInput;
-
-  const { rowsPerPage, selectedRows, page } = useSelector(
-    (state) => state.tables
-  );
+  //eslint-disable-next-line
+  const debouncer = useCallback(debounce(fetchDiagnostics), []);
+  const { selectedRows, page } = useSelector((state) => state.tables);
 
   const { setSelectedRows } = useActions();
   if (loading) return <Loader />;
@@ -190,10 +211,15 @@ const CompletedOrders = () => {
         >
           <Grid item flex={1}>
             <Search
-              value={searchPartner}
-              onChange={(e) => setSearchPartner(e.target.value)}
-              placeholder="Type to search Referrals..."
-              height="5rem"
+              onChange={(e) => {
+                let value = e.target.value;
+                if (value !== "") {
+                  return debouncer({
+                    variables: { orderId: value },
+                  });
+                }
+              }}
+              placeholder="Type to search Test by orderId..."
             />
           </Grid>
           <Grid item>
@@ -209,109 +235,109 @@ const CompletedOrders = () => {
               headCells={partnersHeadCells}
               rows={state}
               page={page}
-              paginationLabel="Patients per page"
+              paginationLabel="orders per page"
               hasCheckbox={true}
+              changeLimit={(e) => {
+                changeTableLimit(e, fetchDiagnostics, orderStatus);
+              }}
+              dataPageInfo={pageInfo}
+              handlePagination={(page) => {
+                handlePageChange(fetchDiagnostics, page, pageInfo, orderStatus);
+              }}
             >
-              {state
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const {
-                    orderId,
-                    createdAt,
-                    prescriptions,
-                    _id,
-                    patientData,
-                  } = row;
-                  const isItemSelected = isSelected(_id, selectedRows);
-                  const x = prescriptions.map((i) => i.drugPrice);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+              {state.map((row, index) => {
+                const { orderId, createdAt, prescriptions, _id, patientData } =
+                  row;
+                const isItemSelected = isSelected(_id, selectedRows);
+                const x = prescriptions.map((i) => i.drugPrice);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={_id}
+                    selected={isItemSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        onClick={() =>
+                          handleSelectedRows(
+                            row.id,
+                            selectedRows,
+                            setSelectedRows
+                          )
+                        }
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          "aria-labelledby": labelId,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      id={labelId}
+                      scope="row"
+                      align="left"
+                      className={classes.tableCell}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={() =>
-                            handleSelectedRows(
-                              row.id,
-                              selectedRows,
-                              setSelectedRows
-                            )
-                          }
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        id={labelId}
-                        scope="row"
-                        align="left"
-                        className={classes.tableCell}
-                      >
-                        {dateMoment(createdAt)}
-                      </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
-                        {timeMoment(createdAt)}
-                      </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
-                        {orderId}
-                      </TableCell>
+                      {dateMoment(createdAt)}
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      {timeMoment(createdAt)}
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      {orderId}
+                    </TableCell>
 
-                      <TableCell align="left" className={classes.tableCell}>
-                        <div
-                          style={{
-                            height: "100%",
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <span style={{ marginRight: "1rem" }}>
-                            <Avatar
-                              alt={`Display Photo of ${patientData?.firstName}`}
-                              src={patientData?.image || displayPhoto}
-                              sx={{ width: 24, height: 24 }}
-                            />
-                          </span>
-                          <span style={{ fontSize: "1.25rem" }}>
-                            {patientData
-                              ? `${patientData?.firstName} ${patientData?.lastName}`
-                              : "No Value"}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
-                        {prettyMoney(
-                          prettyDollarConfig,
-                          x?.reduce(function (accumulator, currentValue) {
-                            return accumulator + currentValue;
-                          }, 0)
-                        )}
-                      </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
-                        {x?.length}
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          label="view order"
-                          variant="outlined"
-                          component={Link}
-                          to={`completed-order/${_id}/order`}
-                          className={classes.chip}
-                          deleteIcon={<ArrowForwardIosIcon />}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                    <TableCell align="left" className={classes.tableCell}>
+                      <div
+                        style={{
+                          height: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span style={{ marginRight: "1rem" }}>
+                          <Avatar
+                            alt={`Display Photo of ${patientData?.firstName}`}
+                            src={patientData?.image || displayPhoto}
+                            sx={{ width: 24, height: 24 }}
+                          />
+                        </span>
+                        <span style={{ fontSize: "1.25rem" }}>
+                          {patientData
+                            ? `${patientData?.firstName} ${patientData?.lastName}`
+                            : "No Value"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      {prettyMoney(
+                        prettyDollarConfig,
+                        x?.reduce(function (accumulator, currentValue) {
+                          return accumulator + currentValue;
+                        }, 0)
+                      )}
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      {x?.length}
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label="view order"
+                        variant="outlined"
+                        component={Link}
+                        to={`completed-order/${_id}/order`}
+                        className={classes.chip}
+                        deleteIcon={<ArrowForwardIosIcon />}
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </EnhancedTable>
           </Grid>
         ) : (

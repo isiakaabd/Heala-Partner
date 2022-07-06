@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { debounce } from "helpers/debounce";
 import {
   Grid,
   Avatar,
@@ -118,6 +119,7 @@ const useStyles = makeStyles((theme) => ({
 const CancelledOrder = () => {
   const classes = useStyles();
   const status = "cancelled";
+
   const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [scheduleState, setScheduleState] = useState([]);
   const [fetchDiagnostics, { loading, error, data }] =
@@ -130,6 +132,8 @@ const CancelledOrder = () => {
     limit: 10,
     totalDocs: 0,
   });
+  //eslint-disable-next-line
+  const debouncer = useCallback(debounce(fetchDiagnostics), []);
   useEffect(() => {
     fetchDiagnostics({
       variables: {
@@ -156,9 +160,6 @@ const CancelledOrder = () => {
     categoryName: "",
   });
   const { hospitalName, date, categoryName } = filterSelectInput;
-
-  const [searchMessage, setSearchMessage] = useState("");
-
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
 
@@ -181,10 +182,15 @@ const CancelledOrder = () => {
         >
           <Grid item flex={1}>
             <Search
-              value={searchMessage}
-              onChange={(e) => setSearchMessage(e.target.value)}
-              placeholder="Type to search Referrals..."
-              height="5rem"
+              onChange={(e) => {
+                let value = e.target.value;
+                if (value !== "") {
+                  return debouncer({
+                    variables: { referralId: value, partnerProviderId },
+                  });
+                }
+              }}
+              placeholder="Type to search Test by referral ID..."
             />
           </Grid>
           <Grid item>

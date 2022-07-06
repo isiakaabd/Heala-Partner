@@ -85,16 +85,25 @@ export const doctor = gql`
   }
 `;
 export const getDrugOrders = gql`
-  query getDrugOrders($status: String, $patient: String) {
-    getDrugOrders(status: $status, patient: $patient) {
+  ${PageInfo}
+  query getDrugOrders(
+    $patient: String
+    $page: Int
+    $first: Int
+    $status: String
+    $orderId: String
+  ) {
+    getDrugOrders(
+      filterBy: { status: $status, patient: $patient, orderId: $orderId }
+      first: $first
+      page: $page
+    ) {
       data {
         _id
         partner
-        patient
         doctor
         createdAt
         orderId
-        status
         reason
         consultationId
         note
@@ -117,6 +126,9 @@ export const getDrugOrders = gql`
           lat
           lng
         }
+      }
+      pageInfo {
+        ...pageDetails
       }
     }
   }
@@ -389,13 +401,18 @@ export const getConsultations = gql`
 export const getDiagnosticTests = gql`
   ${PageInfo}
   query getDiagnosticTests(
-    $status: String!
+    $status: String
     $page: Int
     $first: Int
+    $referralId: String
     $partnerProviderId: String!
   ) {
     getDiagnosticTests(
-      filterBy: { status: $status, partner: $partnerProviderId }
+      filterBy: {
+        referralId: $referralId
+        status: $status
+        partner: $partnerProviderId
+      }
       orderBy: "-createdAt"
       page: $page
       first: $first

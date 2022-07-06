@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Success } from "components/modals";
 import { dateMoment, timeMoment } from "components/Utilities/Time";
 import * as Yup from "yup";
@@ -6,6 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
 import DisablePatient from "components/modals/DeleteOrDisable";
+import { debounce } from "helpers/debounce";
 import {
   Grid,
   FormControl,
@@ -36,7 +37,11 @@ import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import useFormInput from "components/hooks/useFormInput";
-import { useQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import {
+  changeTableLimit,
+  handlePageChange,
+} from "helpers/filterHelperFunctions";
 import { getDrugOrders, cancelDrugOrder } from "components/graphQL/useQuery";
 import { fulfillDrugOrder } from "components/graphQL/Mutation";
 import { NoData, EmptyTable } from "components/layouts";
@@ -134,13 +139,33 @@ const ProcessingOrders = () => {
   const classes = useStyles();
   const [displayMessage] = useAlert();
   const [state, setState] = useState([]);
-  const { data, loading, error } = useQuery(getDrugOrders, {
-    variables: { status: "processing" },
-  });
+
   const [cancelTest] = useMutation(cancelDrugOrder);
   const handleClose = () => setOpenHcpFilter(false);
+  const [fetchDiagnostics, { data, loading, error }] =
+    useLazyQuery(getDrugOrders);
+  const [pageInfo, setPageInfo] = useState({
+    page: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+    limit: 10,
+    totalDocs: 0,
+  });
+  const orderStatus = "pending";
   useEffect(() => {
-    if (data) return setState(data?.getDrugOrders.data);
+    fetchDiagnostics({
+      variables: {
+        status: orderStatus,
+        first: pageInfo.limit,
+      },
+    });
+  }, [fetchDiagnostics, pageInfo.limit]);
+  useEffect(() => {
+    if (data) {
+      setState(data?.getDrugOrders.data);
+      setPageInfo(data?.getDrugOrders.pageInfo);
+    }
   }, [data]);
   const prettyDollarConfig = {
     currency: "₦",
@@ -149,7 +174,6 @@ const ProcessingOrders = () => {
     thousandsDelimiter: ",",
   };
   const history = useHistory();
-  const [searchHcp, setSearchHcp] = useState("");
   const [cancel, setCancel] = useState(false);
   const [open, setOpen] = useState(false);
   const [openDisablePatient, setOpenDisablePatient] = useState(false);
@@ -254,7 +278,8 @@ const ProcessingOrders = () => {
     hospital: "",
     status: "",
   });
-
+  // eslint-disable-next-line
+  const debouncer = useCallback(debounce(fetchDiagnostics), []);
   const { date, specialization, hospital } = selectedInput;
 
   const { rowsPerPage, selectedRows, page } = useSelector(
@@ -274,10 +299,15 @@ const ProcessingOrders = () => {
       >
         <Grid item flex={1}>
           <Search
-            value={searchHcp}
-            onChange={(e) => setSearchHcp(e.target.value)}
-            placeholder="Type to search referrals..."
-            height="5rem"
+            onChange={(e) => {
+              let value = e.target.value;
+              if (value !== "") {
+                return debouncer({
+                  variables: { orderId: value },
+                });
+              }
+            }}
+            placeholder="Type to search Test by orderId..."
           />
         </Grid>
         <Grid item>
@@ -290,8 +320,15 @@ const ProcessingOrders = () => {
             headCells={hcpsHeadCells}
             rows={state}
             page={page}
-            paginationLabel="Patients per page"
+            paginationLabel="orders per page"
             hasCheckbox={true}
+            changeLimit={(e) => {
+              changeTableLimit(e, fetchDiagnostics, orderStatus);
+            }}
+            dataPageInfo={pageInfo}
+            handlePagination={(page) => {
+              handlePageChange(fetchDiagnostics, page, pageInfo, orderStatus);
+            }}
           >
             {state
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

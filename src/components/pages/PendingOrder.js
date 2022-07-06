@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { dateMoment } from "components/Utilities/Time";
 import {
   Grid,
@@ -11,9 +11,19 @@ import {
   Checkbox,
   TableCell,
 } from "@mui/material";
-import { Modals, Search, FilterList, Loader } from "components/Utilities";
-import FormSelect from "components/Utilities/FormSelect";
-import EnhancedTable from "components/layouts/EnhancedTable";
+import {
+  Modals,
+  Search,
+  FormSelect,
+  FilterList,
+  Loader,
+} from "components/Utilities";
+import { EnhancedTable } from "components/layouts";
+import {
+  changeTableLimit,
+  handlePageChange,
+} from "helpers/filterHelperFunctions";
+import { debounce } from "helpers/debounce";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { patientsHeadCells } from "components/Utilities/tableHeaders";
@@ -25,7 +35,7 @@ import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import useFormInput from "components/hooks/useFormInput";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { getDrugOrders } from "components/graphQL/useQuery";
 import { NoData, EmptyTable } from "components/layouts"; //
 import prettyMoney from "pretty-money";
@@ -77,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
     "&.MuiChip-root": {
       fontSize: "1.25rem !important",
       height: "2.7rem",
-
+      cursor: "pointer",
       borderRadius: "1.3rem",
     },
   },
@@ -107,12 +117,30 @@ const PendingOrder = () => {
   const classes = useStyles();
   const theme = useTheme();
   const [state, setState] = useState([]);
-  const orderState = "pending";
-  const { data, loading, error } = useQuery(getDrugOrders, {
-    variables: { status: orderState },
+  const [fetchDiagnostics, { data, loading, error }] =
+    useLazyQuery(getDrugOrders);
+  const [pageInfo, setPageInfo] = useState({
+    page: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+    limit: 10,
+    totalDocs: 0,
   });
+  const orderStatus = "pending";
   useEffect(() => {
-    if (data) return setState(data?.getDrugOrders.data);
+    fetchDiagnostics({
+      variables: {
+        status: orderStatus,
+        first: pageInfo.limit,
+      },
+    });
+  }, [fetchDiagnostics, pageInfo.limit]);
+  useEffect(() => {
+    if (data) {
+      setState(data?.getDrugOrders.data);
+      setPageInfo(data?.getDrugOrders.pageInfo);
+    }
   }, [data]);
 
   const [inputValue, handleInputValue] = useFormInput({
@@ -124,12 +152,10 @@ const PendingOrder = () => {
 
   const { date, plan, gender, status } = inputValue;
 
-  const { rowsPerPage, selectedRows, page } = useSelector(
-    (state) => state.tables
-  );
+  const { selectedRows, page } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
-
-  const [searchPatient, setSearchPatient] = useState("");
+  //eslint-disable-next-line
+  const debouncer = useCallback(debounce(fetchDiagnostics), []);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDialogOpen = () => setIsOpen(true);
@@ -160,10 +186,15 @@ const PendingOrder = () => {
         >
           <Grid item flex={1}>
             <Search
-              value={searchPatient}
-              onChange={(e) => setSearchPatient(e.target.value)}
-              placeholder="Type to search referrals..."
-              height="5rem"
+              onChange={(e) => {
+                let value = e.target.value;
+                if (value !== "") {
+                  return debouncer({
+                    variables: { orderId: value },
+                  });
+                }
+              }}
+              placeholder="Type to search Test by orderId..."
             />
           </Grid>
           <Grid item>
@@ -179,10 +210,17 @@ const PendingOrder = () => {
               page={page}
               paginationLabel="orders per page"
               hasCheckbox={true}
+              changeLimit={(e) => {
+                changeTableLimit(e, fetchDiagnostics, orderStatus);
+              }}
+              dataPageInfo={pageInfo}
+              handlePagination={(page) => {
+                handlePageChange(fetchDiagnostics, page, pageInfo, orderStatus);
+              }}
             >
               {state.length > 0 &&
                 state
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const {
                       orderId,
@@ -297,6 +335,9 @@ const PendingOrder = () => {
                             component={Link}
                             to={`pending-order/${_id}/order`}
                             className={classes.chip}
+                            sx={{
+                              cursor: "pointer",
+                            }}
                             type="pending"
                             deleteIcon={<ArrowForwardIosIcon />}
                           />

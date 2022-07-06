@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { dateMoment, timeMoment } from "components/Utilities/Time";
 import {
-  Chip,
   TableRow,
   Avatar,
   Grid,
@@ -12,12 +11,11 @@ import {
   Button,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { getDrugOrders } from "components/graphQL/useQuery";
 import { NoData, EmptyTable } from "components/layouts"; //
 import useFormInput from "components/hooks/useFormInput";
-import { useTheme } from "@mui/material/styles";
-import EnhancedTable from "components/layouts/EnhancedTable";
+import { EnhancedTable } from "components/layouts/";
 import { messagesHeadCells } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
@@ -25,12 +23,18 @@ import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import {
+  changeTableLimit,
+  handlePageChange,
+} from "helpers/filterHelperFunctions";
+
+import {
   Modals,
   Loader,
   FormSelect,
   FilterList,
   Search,
 } from "components/Utilities";
+import { debounce } from "helpers/debounce";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -116,15 +120,34 @@ const useStyles = makeStyles((theme) => ({
 
 const CancelledOrders = () => {
   const classes = useStyles();
-  const theme = useTheme();
+  // const theme = useTheme();
   const [state, setState] = useState([]);
-  const orderState = "cancelled";
-  const { data, loading, error } = useQuery(getDrugOrders, {
-    variables: { status: orderState },
+  // const orderState = "cancelled";
+  const [fetchDiagnostics, { data, loading, error }] =
+    useLazyQuery(getDrugOrders);
+  const [pageInfo, setPageInfo] = useState({
+    page: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+    limit: 10,
+    totalDocs: 0,
   });
-
+  const status = "cancelled";
   useEffect(() => {
-    if (data) return setState(data?.getDrugOrders.data);
+    console.log(123);
+    fetchDiagnostics({
+      variables: {
+        status,
+        first: pageInfo.limit,
+      },
+    });
+  }, [fetchDiagnostics, pageInfo.limit]);
+  useEffect(() => {
+    if (data) {
+      setState(data?.getDrugOrders.data);
+      setPageInfo(data?.getDrugOrders.pageInfo);
+    }
   }, [data]);
 
   const specializations = ["Dentistry", "Pediatry", "Optometry", "Pathology"];
@@ -137,17 +160,14 @@ const CancelledOrders = () => {
     categoryName: "",
   });
   const { hospitalName, date, categoryName } = filterSelectInput;
+  // eslint-disable-next-line
+  const debouncer = useCallback(debounce(fetchDiagnostics), []);
 
-  const [searchMessage, setSearchMessage] = useState("");
-
-  const { rowsPerPage, selectedRows, page } = useSelector(
-    (state) => state.tables
-  );
+  const { selectedRows, page } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
 
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
-
   return (
     <>
       <Grid
@@ -165,10 +185,15 @@ const CancelledOrders = () => {
         >
           <Grid item flex={1}>
             <Search
-              value={searchMessage}
-              onChange={(e) => setSearchMessage(e.target.value)}
-              placeholder="Type to search Referrals..."
-              height="5rem"
+              onChange={(e) => {
+                let value = e.target.value;
+                if (value !== "") {
+                  return debouncer({
+                    variables: { orderId: value },
+                  });
+                }
+              }}
+              placeholder="Type to search Test by orderId..."
             />
           </Grid>
           <Grid item>
@@ -181,23 +206,23 @@ const CancelledOrders = () => {
         {state.length > 0 ? (
           <Grid item container height="100%" direction="column">
             <EnhancedTable
-              headCells={messagesHeadCells}
               rows={state}
               page={page}
-              paginationLabel="Patients per page"
+              headCells={messagesHeadCells}
+              paginationLabel="orders per page"
               hasCheckbox={true}
+              changeLimit={(e) => {
+                changeTableLimit(e, fetchDiagnostics, status);
+              }}
+              dataPageInfo={pageInfo}
+              handlePagination={(page) => {
+                handlePageChange(fetchDiagnostics, page, pageInfo, "cancelled");
+              }}
             >
               {state
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const {
-                    _id,
-                    createdAt,
-                    orderId,
-                    patientData,
-                    reason,
-                    status,
-                  } = row;
+                  const { _id, createdAt, orderId, patientData, reason } = row;
                   const isItemSelected = isSelected(_id, selectedRows);
 
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -268,22 +293,6 @@ const CancelledOrders = () => {
                               : "No Patient"}
                           </span>
                         </div>
-                      </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
-                        <Chip
-                          label={status}
-                          className={classes.badge}
-                          style={{
-                            background:
-                              row.status === "completed"
-                                ? theme.palette.common.lightGreen
-                                : theme.palette.common.lightRed,
-                            color:
-                              row.status === "completed"
-                                ? theme.palette.common.green
-                                : theme.palette.common.red,
-                          }}
-                        />
                       </TableCell>
                     </TableRow>
                   );
