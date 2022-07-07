@@ -192,7 +192,7 @@ const CancelledOrders = () => {
                   });
                 }
               }}
-              placeholder="Type to search Test by orderId..."
+              placeholder="Type to search Order by orderId..."
             />
           </Grid>
           <Grid item>
