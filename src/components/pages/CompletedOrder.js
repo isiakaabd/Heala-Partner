@@ -222,11 +222,11 @@ const CompletedOrder = () => {
                 let value = e.target.value;
                 if (value !== "") {
                   return debouncer({
-                    variables: { referralId: value, partnerProviderId },
+                    variables: { testId: value, partnerProviderId },
                   });
                 }
               }}
-              placeholder="Type to search Test by referral ID..."
+              placeholder="Type to search Test by test ID..."
             />
           </Grid>
           <Grid item>

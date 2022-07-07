@@ -133,6 +133,8 @@ const PendingOrderProfile = () => {
             query: getDrugOrders,
             variables: {
               status: "pending",
+              partnerProviderId,
+
             },
           },
 
@@ -140,6 +142,8 @@ const PendingOrderProfile = () => {
             query: getDrugOrders,
             variables: {
               status: "processing",
+              partnerProviderId,
+
             },
           },
         ],

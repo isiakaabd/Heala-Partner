@@ -205,7 +205,7 @@ const Patients = () => {
 
                 if (value !== "") {
                   return debouncer({
-                    variables: { dociId: `HEALA-${value.toUpperCase()}` },
+                    variables: { dociId: `HEALA-${value.toUpperCase()}`, },
                   });
                 }
               }}

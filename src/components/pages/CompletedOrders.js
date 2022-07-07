@@ -163,11 +163,14 @@ const CompletedOrders = () => {
     limit: 10,
     totalDocs: 0,
   });
+  const partnerProviderId = localStorage.getItem("partnerProviderId");
+
   useEffect(() => {
     fetchDiagnostics({
       variables: {
         status: orderStatus,
         first: pageInfo.limit,
+        partnerProviderId
       },
     });
   }, [fetchDiagnostics, pageInfo.limit]);
@@ -215,7 +218,7 @@ const CompletedOrders = () => {
                 let value = e.target.value;
                 if (value !== "") {
                   return debouncer({
-                    variables: { orderId: value },
+                    variables: { orderId: value,partnerProviderId },
                   });
                 }
               }}
@@ -224,7 +227,7 @@ const CompletedOrders = () => {
           </Grid>
           <Grid item>
             <FilterList
-              title="Filter"
+              title="Filter Referrals"
               onClick={() => setOpenFilterPartner(true)}
             />
           </Grid>
