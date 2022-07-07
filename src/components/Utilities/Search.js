@@ -12,7 +12,6 @@ const SearchContainer = ({
   onChange,
   ref,
   hasStartIcon = true,
-  autoFocus,
   ...rest
 }) => {
   return (
@@ -20,7 +19,6 @@ const SearchContainer = ({
       <OutlinedInput
         id="input-with-icon-adornment"
         value={value}
-        autoFocus={autoFocus}
         onChange={onChange}
         ref={ref}
         {...rest}
@@ -43,6 +41,7 @@ const SearchContainer = ({
             </InputAdornment>
           )
         }
+        autoFocus
       />
     </Grid>
   );
