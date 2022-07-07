@@ -134,11 +134,14 @@ const CancelledOrders = () => {
     totalDocs: 0,
   });
   const status = "cancelled";
+  const partnerProviderId = localStorage.getItem("partnerProviderId");
+
   useEffect(() => {
     fetchDiagnostics({
       variables: {
         status,
         first: pageInfo.limit,
+        partnerProviderId
       },
     });
   }, [fetchDiagnostics, pageInfo.limit]);
@@ -188,7 +191,7 @@ const CancelledOrders = () => {
                 let value = e.target.value;
                 if (value !== "") {
                   return debouncer({
-                    variables: { orderId: value },
+                    variables: { orderId: value ,partnerProviderId},
                   });
                 }
               }}
@@ -198,7 +201,7 @@ const CancelledOrders = () => {
           <Grid item>
             <FilterList
               onClick={() => setOpenFilterPartner(true)}
-              title="Filter"
+              title="Filter Referrals"
             />
           </Grid>
         </Grid>

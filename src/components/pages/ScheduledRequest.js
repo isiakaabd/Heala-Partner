@@ -227,11 +227,11 @@ const ScheduledRequest = () => {
                 let value = e.target.value;
                 if (value !== "") {
                   return debouncer({
-                    variables: { referralId: value, partnerProviderId },
+                    variables: { testId: value, partnerProviderId },
                   });
                 }
               }}
-              placeholder="Type to search Tests by referral ID..."
+              placeholder="Type to search Tests by test ID..."
               height="5rem"
             />
           </Grid>

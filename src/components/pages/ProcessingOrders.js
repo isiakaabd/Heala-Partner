@@ -153,11 +153,13 @@ const ProcessingOrders = () => {
     totalDocs: 0,
   });
   const orderStatus = "pending";
+
   useEffect(() => {
     fetchDiagnostics({
       variables: {
         status: orderStatus,
         first: pageInfo.limit,
+        partnerProviderId
       },
     });
   }, [fetchDiagnostics, pageInfo.limit]);
@@ -303,15 +305,16 @@ const ProcessingOrders = () => {
               let value = e.target.value;
               if (value !== "") {
                 return debouncer({
-                  variables: { orderId: value },
+                  variables: { orderId: value,partnerProviderId },
                 });
               }
             }}
-            placeholder="Type to search Order by orderId..."
+            placeholder="Type to search Test by orderId..."
           />
         </Grid>
         <Grid item>
-          <FilterList onClick={() => setOpenHcpFilter(true)} title="Filter" />
+          <FilterList onClick={() => setOpenHcpFilter(true)}               title="Filter Referrals"
+/>
         </Grid>
       </Grid>
       {state.length > 0 ? (

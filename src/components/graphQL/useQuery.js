@@ -87,14 +87,19 @@ export const doctor = gql`
 export const getDrugOrders = gql`
   ${PageInfo}
   query getDrugOrders(
-    $patient: String
     $page: Int
     $first: Int
     $status: String
     $orderId: String
+    $partnerProviderId: String!
+
   ) {
     getDrugOrders(
-      filterBy: { status: $status, patient: $patient, orderId: $orderId }
+      filterBy: { 
+        status: $status,
+        partner: $partnerProviderId, 
+        orderId: $orderId 
+      }
       first: $first
       page: $page
       orderBy: "-createdAt"
@@ -407,12 +412,12 @@ export const getDiagnosticTests = gql`
     $status: String
     $page: Int
     $first: Int
-    $referralId: String
+    $testId: String
     $partnerProviderId: String!
   ) {
     getDiagnosticTests(
       filterBy: {
-        referralId: $referralId
+        testId: $testId
         status: $status
         partner: $partnerProviderId
       }

@@ -230,12 +230,16 @@ const ScheduledRequestProfile = () => {
             query: getDiagnosticTests,
             variables: {
               status: "scheduled",
+              partnerProviderId,
+
             },
           },
           {
             query: getDiagnosticTests,
             variables: {
               status: "completed",
+              partnerProviderId,
+
             },
           },
         ],
