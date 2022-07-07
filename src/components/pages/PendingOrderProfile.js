@@ -122,7 +122,6 @@ const PendingOrderProfile = () => {
   const handleDialogOpen = () => setOpenProcess(true);
 
   const onConfirm2 = async () => {
-    setModal(true);
     try {
       await fulfill({
         variables: {
@@ -134,7 +133,6 @@ const PendingOrderProfile = () => {
             variables: {
               status: "pending",
               partnerProviderId,
-
             },
           },
 
@@ -143,7 +141,6 @@ const PendingOrderProfile = () => {
             variables: {
               status: "processing",
               partnerProviderId,
-
             },
           },
         ],

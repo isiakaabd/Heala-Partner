@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { dateMoment } from "components/Utilities/Time";
 import {
   Grid,
@@ -11,6 +11,7 @@ import {
   FormControl,
   FormLabel,
 } from "@mui/material";
+import { debounce } from "helpers/debounce";
 import {
   Loader,
   Modals,
@@ -202,8 +203,7 @@ const Pending = () => {
             />
           </Grid>
           <Grid item>
-            <FilterList               title="Filter Referrals"
- onClick={handleDialogOpen} />
+            <FilterList title="Filter Referrals" onClick={handleDialogOpen} />
           </Grid>
         </Grid>
         {/* The Search and Filter ends here */}
