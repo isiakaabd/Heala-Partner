@@ -135,10 +135,10 @@ const PendingOrder = () => {
       variables: {
         status: orderStatus,
         first: pageInfo.limit,
-        partnerProviderId
+        partnerProviderId,
       },
     });
-  }, [fetchDiagnostics, pageInfo.limit]);
+  }, [fetchDiagnostics, partnerProviderId, pageInfo.limit]);
   useEffect(() => {
     if (data) {
       setState(data?.getDrugOrders.data);
@@ -193,7 +193,7 @@ const PendingOrder = () => {
                 let value = e.target.value;
                 if (value !== "") {
                   return debouncer({
-                    variables: { orderId: value,partnerProviderId },
+                    variables: { orderId: value, partnerProviderId },
                   });
                 }
               }}
@@ -201,8 +201,7 @@ const PendingOrder = () => {
             />
           </Grid>
           <Grid item>
-            <FilterList               title="Filter Referrals"
- onClick={handleDialogOpen} />
+            <FilterList title="Filter Referrals" onClick={handleDialogOpen} />
           </Grid>
         </Grid>
         {/* The Search and Filter ends here */}

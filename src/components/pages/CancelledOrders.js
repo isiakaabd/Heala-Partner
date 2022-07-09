@@ -141,10 +141,10 @@ const CancelledOrders = () => {
       variables: {
         status,
         first: pageInfo.limit,
-        partnerProviderId
+        partnerProviderId,
       },
     });
-  }, [fetchDiagnostics, pageInfo.limit]);
+  }, [fetchDiagnostics, partnerProviderId, pageInfo.limit]);
   useEffect(() => {
     if (data) {
       setState(data?.getDrugOrders.data);
@@ -191,7 +191,7 @@ const CancelledOrders = () => {
                 let value = e.target.value;
                 if (value !== "") {
                   return debouncer({
-                    variables: { orderId: value ,partnerProviderId},
+                    variables: { orderId: value, partnerProviderId },
                   });
                 }
               }}

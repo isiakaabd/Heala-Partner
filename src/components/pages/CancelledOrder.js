@@ -119,7 +119,6 @@ const useStyles = makeStyles((theme) => ({
 const CancelledOrder = () => {
   const classes = useStyles();
   const status = "cancelled";
-
   const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [scheduleState, setScheduleState] = useState([]);
   const [fetchDiagnostics, { loading, error, data }] =

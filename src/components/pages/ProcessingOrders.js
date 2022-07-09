@@ -154,15 +154,7 @@ const ProcessingOrders = () => {
   });
   const orderStatus = "pending";
 
-  useEffect(() => {
-    fetchDiagnostics({
-      variables: {
-        status: orderStatus,
-        first: pageInfo.limit,
-        partnerProviderId
-      },
-    });
-  }, [fetchDiagnostics, pageInfo.limit]);
+ 
   useEffect(() => {
     if (data) {
       setState(data?.getDrugOrders.data);
@@ -228,6 +220,15 @@ const ProcessingOrders = () => {
       displayMessage("error", error);
     }
   };
+   useEffect(() => {
+     fetchDiagnostics({
+       variables: {
+         status: orderStatus,
+         first: pageInfo.limit,
+         partnerProviderId,
+       },
+     });
+   }, [fetchDiagnostics, partnerProviderId, pageInfo.limit]);
 
   const darkButton = {
     background: theme.palette.primary.main,
@@ -305,7 +306,7 @@ const ProcessingOrders = () => {
               let value = e.target.value;
               if (value !== "") {
                 return debouncer({
-                  variables: { orderId: value,partnerProviderId },
+                  variables: { orderId: value, partnerProviderId },
                 });
               }
             }}
@@ -313,8 +314,10 @@ const ProcessingOrders = () => {
           />
         </Grid>
         <Grid item>
-          <FilterList onClick={() => setOpenHcpFilter(true)}               title="Filter Referrals"
-/>
+          <FilterList
+            onClick={() => setOpenHcpFilter(true)}
+            title="Filter Referrals"
+          />
         </Grid>
       </Grid>
       {state.length > 0 ? (

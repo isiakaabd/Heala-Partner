@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
-import { getErrors } from "components/Utilities/Time";
 import { useAlert } from "hooks";
-import { useSnackbar } from "notistack";
 import * as Yup from "yup";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
@@ -13,11 +11,9 @@ import {
   Modals,
 } from "components/Utilities";
 import { NoData } from "components/layouts";
-// import displayPhoto from 'assets/images/avatar.svg'
 import { useTheme } from "@mui/material/styles";
 import DisablePatient from "components/modals/DeleteOrDisable";
 import { dateMoment } from "components/Utilities/Time";
-import Success from "components/modals/Success";
 import { useParams, useHistory } from "react-router-dom";
 import { Chip, Grid, Typography } from "@mui/material";
 import { useQuery, useMutation } from "@apollo/client";
@@ -98,7 +94,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PendingOrderProfile = () => {
-  const { enqueueSnackbar } = useSnackbar();
   const [displayMessage] = useAlert();
   const classes = useStyles();
   const theme = useTheme();
@@ -115,13 +110,12 @@ const PendingOrderProfile = () => {
   const onConfirm = () => setCancel(true);
 
   const [openDisablePatient, setOpenDisablePatient] = useState(false);
-  const [modal, setModal] = useState(false);
   const [cancel, setCancel] = useState(false);
   const [openProcess, setOpenProcess] = useState(false);
   const handleDialogClose = () => setOpenProcess(false);
   const handleDialogOpen = () => setOpenProcess(true);
 
-  const onConfirm2 = async () => {
+  const processOrder = async () => {
     try {
       await fulfill({
         variables: {
@@ -145,18 +139,15 @@ const PendingOrderProfile = () => {
           },
         ],
       });
-      enqueueSnackbar("Test scheduled", {
-        variant: "success",
-      });
+      displayMessage("success", "Test scheduled");
+
       history.push("/processing-order");
+      handleDialogClose();
     } catch (error) {
-      enqueueSnackbar(getErrors(error), {
-        variant: "error",
-      });
+      displayMessage("error", error);
+
       console.error(error);
     }
-
-    setModal(false);
   };
   const [cancelTest] = useMutation(cancelDrugOrder);
 
@@ -443,6 +434,7 @@ const PendingOrderProfile = () => {
           setOpen={setOpenDisablePatient}
           title="Process Order"
           btnValue="process"
+          onConfirm={processOrder}
           confirmationMsg="Process Order"
         />
 
@@ -453,14 +445,6 @@ const PendingOrderProfile = () => {
           btnValue="cancel"
           confirmationMsg="Cancel Referral"
           onConfirm={onConfirm}
-        />
-        <Success
-          open={modal}
-          handleDialogClose={handleDialogClose}
-          title="SUCCESSFUL"
-          titleHeader=""
-          btnValue="Done"
-          confirmationMsg="Your order has been successful"
         />
       </Grid>
       <Modals
@@ -489,7 +473,7 @@ const PendingOrderProfile = () => {
                       placeholder="Enter reason"
                     />
                   </Grid>
-                  <Grid item container sx={{ flexGrow: 1, marginTop: "10rem" }}>
+                  <Grid item container sx={{ flexGrow: 1, marginTop: "5rem" }}>
                     <CustomButton
                       title="Cancel Test"
                       type={darkButton}
