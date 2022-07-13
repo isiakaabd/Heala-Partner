@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-
 import { Grid, Typography, Divider } from "@mui/material";
-import Loader from "components/Utilities/Loader";
 import { useParams } from "react-router-dom";
-import CustomButton from "components/Utilities/CustomButton";
-import PreviousButton from "components/Utilities/PreviousButton";
+import { CustomButton, Loader } from "components/Utilities";
+import { NoData } from "components/layouts";
 import FormikControl from "components/validation/FormikControl";
 import { useTheme } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
@@ -14,7 +12,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { getMessage, getProfile } from "components/graphQL/useQuery";
-
+import useAlert from "hooks/useAlert";
 const useStyles = makeStyles((theme) => ({
   gridWrapper: {
     "&.MuiGrid-item": {
@@ -64,11 +62,12 @@ const Chat = () => {
   const { patientId } = useParams();
   const classes = useStyles();
   const theme = useTheme();
+  const [displayAlert] = useAlert();
   let history = useHistory();
   const [createNewMessage] = useMutation(CREATE_MESSAGE, {
     refetchQueries: [{ query: getMessage }],
   });
-  const { data, loading } = useQuery(getProfile, {
+  const { data, loading, error } = useQuery(getProfile, {
     variables: { profileId: patientId },
   });
   const buttonType = {
@@ -116,7 +115,9 @@ const Chat = () => {
           body: textarea,
         },
       });
+      displayAlert("success", "Message sent successfully");
     } catch (error) {
+      displayAlert("error", error);
       console.log(error);
     }
     onSubmitProps.resetForm();
@@ -124,6 +125,7 @@ const Chat = () => {
   };
 
   if (loading) return <Loader />;
+  if (error) return <NoData />;
   return (
     <Formik
       initialValues={initialValues}
@@ -137,10 +139,7 @@ const Chat = () => {
       {({ isValid, isSubmitting, dirty }) => {
         return (
           <Form>
-            <Grid container direction="column">
-              <Grid item style={{ marginBottom: "3rem" }}>
-                <PreviousButton path={`/patients/${patientId}/profile`} />
-              </Grid>
+            <Grid container direction="column" gap={2}>
               <Grid item container direction="column" alignItems="center">
                 <Grid item>
                   <Typography variant="h4" style={{ marginBottom: "3rem" }}>

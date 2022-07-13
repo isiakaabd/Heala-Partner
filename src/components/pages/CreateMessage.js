@@ -106,7 +106,6 @@ const CreateMessage = () => {
   const onSubmit = async (values, onSubmitProps) => {
     const id = localStorage.getItem("user_id");
     const { subject, textarea, recipient } = values;
-    console.log(subject, recipient);
     try {
       await createNewMessage({
         variables: {
