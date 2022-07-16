@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import FormikControl from "components/validation/FormikControl";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { NoData, EmptyTable } from "components/layouts";
-import { debounce } from "lodash";
+import useAlert from "hooks/useAlert";
+import { defaultPageInfo, patientSearchOptions } from "helpers/mockData";
 import {
   Button,
   Avatar,
@@ -17,8 +18,9 @@ import {
   Modals,
   /* FilterList, */
   Loader,
-  Search,
   CustomButton,
+  PatientFilters,
+  CompoundSearch,
 } from "components/Utilities";
 import { EnhancedTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
@@ -32,11 +34,17 @@ import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import { useLazyQuery } from "@apollo/client";
-import { getPatients } from "components/graphQL/useQuery";
+// import { getPatients } from "components/graphQL/useQuery";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
+  getSearchPlaceholder,
 } from "helpers/filterHelperFunctions";
+import {
+  getPatients,
+  getPatientsByPlan,
+  getPatientsByStatus,
+} from "components/graphQL/useQuery";
 
 const genderType = [
   { key: "Male", value: "0" },
@@ -107,6 +115,25 @@ const useStyles = makeStyles((theme) => ({
 const Patients = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const [displayAlert] = useAlert();
+  const [fetchPatient, { loading, refetch, error, variables }] =
+    useLazyQuery(getPatients);
+  const [
+    fetchPatientByStatus,
+    {
+      loading: byStatusLoading,
+      variables: byStatusVaribles,
+      refetch: byStatusRefetch,
+    },
+  ] = useLazyQuery(getPatientsByStatus);
+  const [
+    fetchPatientByPlan,
+    {
+      loading: byPlanLoading,
+      variables: byPlanVaribles,
+      refetch: byPlanRefetch,
+    },
+  ] = useLazyQuery(getPatientsByPlan);
   const id = localStorage.getItem("partnerProviderId") || "";
 
   const initialValues = {
@@ -124,22 +151,48 @@ const Patients = () => {
       "Enter a current Number"
     ),
   });
-  const [fetchpatient, { loading, error, data }] = useLazyQuery(getPatients);
+  const setTableData = async (response, errMsg) => {
+    response
+      .then(({ data }) => {
+        setPageInfo(data?.profiles?.pageInfo || []);
+        setProfiles(data?.profiles?.data || defaultPageInfo);
+      })
+      .catch((error) => {
+        console.error(error);
+        displayAlert("error", errMsg);
+      });
+  };
 
   useEffect(() => {
-    fetchpatient({
+    fetchPatient({
+      variables: {
+        first: pageInfo.limit,
+      },
+    }).then(({ data }) => {
+      if (data) {
+        setPageInfo(data?.profiles?.pageInfo || []);
+        setProfiles(data?.profiles?.data || defaultPageInfo);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // const [fetchpatient, { loading, error, data }] = useLazyQuery(getPatients);
+
+  useEffect(() => {
+    fetchPatient({
       variables: {
         first: 10,
         providerId: id,
       },
     });
-  }, [fetchpatient, id]);
+  }, [fetchPatient, id]);
 
   const [profiles, setProfiles] = useState([]);
   const onSubmit = async (values) => {
     const { gender } = values;
 
-    await fetchpatient({
+    await fetchPatient({
       variables: {
         gender,
       },
@@ -155,20 +208,16 @@ const Patients = () => {
     totalDocs: 0,
   });
 
-  useEffect(() => {
-    if (data) {
-      setPageInfo(data.profiles.pageInfo);
-      setProfiles(data.profiles.data);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setPageInfo(data.profiles.pageInfo);
+  //     setProfiles(data.profiles.data);
+  //   }
+  // }, [data]);
 
   const { selectedRows } = useSelector((state) => state.tables);
 
   const { setSelectedRows } = useActions();
-
-  const debouncer = useCallback(() => {
-    debounce(fetchpatient, 3000);
-  }, [fetchpatient]);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleDialogClose = () => setIsOpen(false);
@@ -184,40 +233,45 @@ const Patients = () => {
 
   return (
     <>
-      <Grid
-        container
-        direction="column"
-        gap={2}
-        flexWrap="nowrap"
-        height="100%"
-      >
+      <Grid item flex={1} container direction="column">
         <Grid
           item
           container
-          flexDirection={{ md: "row", sm: "row", xs: "column" }}
-          spacing={{ sm: 4, md: 4, xs: 2 }}
+          spacing={2}
           className={classes.searchFilterContainer}
         >
-          <Grid item flex={1}>
-            <Search
-              onChange={(e) => {
-                let value = e.target.value;
-
-                if (value !== "") {
-                  return debouncer({
-                    variables: { dociId: `HEALA-${value.toUpperCase()}`, },
-                  });
-                }
+          {/*  ======= SEARCH INPUT(S) ==========*/}
+          <CompoundSearch
+            queryParams={{ fetchData: fetchPatient, variables, loading }}
+            setPageInfo={(data) => setPageInfo(data?.profiles?.pageInfo || {})}
+            setProfiles={(data) => setProfiles(data?.profiles?.data || [])}
+            getSearchPlaceholder={(filterBy) => getSearchPlaceholder(filterBy)}
+            filterOptions={patientSearchOptions}
+          />
+          {/* ========= FILTERS =========== */}
+          <Grid item container flexWrap="wrap" spacing={4}>
+            <PatientFilters
+              setProfiles={setProfiles}
+              setPageInfo={setPageInfo}
+              queryParams={{
+                patientsParams: { fetchPatient, loading, refetch, variables },
+                patientsByStatusParams: {
+                  byStatusLoading,
+                  byStatusVaribles,
+                  byStatusRefetch,
+                  fetchPatientByStatus,
+                },
+                patientsByPlanParams: {
+                  byPlanLoading,
+                  byPlanVaribles,
+                  byPlanRefetch,
+                  fetchPatientByPlan,
+                },
               }}
-              // onChange={debouncedChangeHandler}
-              placeholder="Search by ID e.g 7NE6ELLO "
-              height="5rem"
             />
           </Grid>
-          {/* <Grid item>
-            <FilterList title="Filter" onClick={handleDialogOpen} />
-          </Grid> */}
         </Grid>
+
         {/* The Search and Filter ends here */}
 
         {profiles.length > 0 ? (
@@ -227,15 +281,16 @@ const Patients = () => {
               rows={profiles}
               paginationLabel="Patients per page"
               hasCheckbox={true}
-              changeLimit={(e) =>
-                changeHospitalTableLimit(fetchpatient, {
+              changeLimit={async (e) => {
+                const res = changeHospitalTableLimit(fetchPatient, {
                   first: e,
                   providerId: id,
-                })
-              }
+                });
+                await setTableData(res, "Failed to change table limit.");
+              }}
               dataPageInfo={pageInfo}
               handlePagination={(page) => {
-                handleHospitalPageChange(fetchpatient, page, pageInfo, {
+                handleHospitalPageChange(fetchPatient, page, pageInfo, {
                   partnerId: id,
                 });
               }}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Copy from "components/Copy";
 import { Avatar, IconButton, Grid, Typography, Badge } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import displayPhoto from "assets/images/avatar.png";
@@ -89,6 +90,12 @@ const HeaderProfile = () => {
     }
     //eslint-disable-next-line
   }, [pharmacy, data]);
+  const returnString = (data) => {
+    let string = data?.profileUrl.split("/");
+
+    if (string) return string[string.length - 1];
+    return null;
+  };
   return (
     <header className={classes.HeaderProfile}>
       <Grid
@@ -125,7 +132,15 @@ const HeaderProfile = () => {
                 className={classes.role}
                 style={{ fontWeight: 300 }}
               >
-                {pharmacyData?.category}
+                {pharmacyData?.profileUrl !== null &&
+                pharmacyData?.category === "hospital" ? (
+                  <Grid item container alignItems="center">
+                    {returnString(pharmacyData?.profileUrl)}
+                    <Copy text={pharmacyData?.profileUrl} name="Profile URL" />
+                  </Grid>
+                ) : (
+                  pharmacyData?.category
+                )}
               </Typography>
             </Grid>
           </Grid>

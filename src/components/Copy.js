@@ -1,24 +1,26 @@
 import React from "react";
-import t from "prop-types";
+import PropTypes from "prop-types";
+import IconButton from "@mui/material/IconButton";
 import { useCopy } from "./hooks/useCopy";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
-const Copy = ({ text, name }) => {
+const Copy = ({ text, name, ...props }) => {
   const { copyToClipBoard } = useCopy();
 
   return (
-    <div
-      style={{ cursor: "pointer" }}
+    <IconButton
       onClick={() => copyToClipBoard(text, name)}
+      sx={{ color: "inherit" }}
+      {...props}
     >
       <ContentCopyIcon />
-    </div>
+    </IconButton>
   );
 };
 
 Copy.propTypes = {
-  text: t.string,
-  name: t.string,
+  text: PropTypes.string,
+  name: PropTypes.string,
 };
 
 export default Copy;

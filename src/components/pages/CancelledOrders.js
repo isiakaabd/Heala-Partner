@@ -13,9 +13,9 @@ import {
 import { makeStyles } from "@mui/styles";
 import { useLazyQuery } from "@apollo/client";
 import { getDrugOrders } from "components/graphQL/useQuery";
-import { NoData, EmptyTable } from "components/layouts"; //
+import { NoData, EmptyTable } from "components/layouts";
 import useFormInput from "components/hooks/useFormInput";
-import { EnhancedTable } from "components/layouts/";
+import { EnhancedTable } from "components/layouts";
 import { messagesHeadCells } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
@@ -120,11 +120,11 @@ const useStyles = makeStyles((theme) => ({
 
 const CancelledOrders = () => {
   const classes = useStyles();
-  // const theme = useTheme();
   const [state, setState] = useState([]);
-  // const orderState = "cancelled";
   const [fetchDiagnostics, { data, loading, error }] =
     useLazyQuery(getDrugOrders);
+  const status = "cancelled";
+  const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [pageInfo, setPageInfo] = useState({
     page: 0,
     totalPages: 1,
@@ -133,8 +133,6 @@ const CancelledOrders = () => {
     limit: 10,
     totalDocs: 0,
   });
-  const status = "cancelled";
-  const partnerProviderId = localStorage.getItem("partnerProviderId");
 
   useEffect(() => {
     fetchDiagnostics({

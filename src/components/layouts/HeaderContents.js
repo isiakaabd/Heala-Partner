@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import { useHistory } from "react-router-dom";
@@ -9,9 +9,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import PropTypes from "prop-types";
 import useApptype from "hooks/useAppType";
 import HeaderProfile from "./HeaderProfile";
-import { useLazyQuery } from "@apollo/client";
 import { useTheme } from "@mui/material/styles";
-import { getPartner } from "components/graphQL/useQuery";
 import { getAppPattern } from "helpers/filterHelperFunctions";
 import { predicateBreadcrumbFromUrl } from "helperFunctions/breadcrumb";
 
@@ -177,12 +175,13 @@ CustomSubHeaderText.propTypes = {
 };
 
 // HEADER DYNAMIC RENDERING COMPONENT
-const HeaderText = (props) => {
+const HeaderText = ({ pharmacyData }) => {
   const { type } = useApptype();
   const classes = useStyles();
   const { pathname } = useLocation();
   const appPattern = getAppPattern(type);
-  const breadcrumbs = React.useMemo(() => {
+
+  const breadcrumbs = useMemo(() => {
     return predicateBreadcrumbFromUrl(appPattern, pathname.substring(1));
   }, [appPattern, pathname]);
 
@@ -191,32 +190,16 @@ const HeaderText = (props) => {
     Patients: null,
   };
 
-  const [pharmacyData, setPharmacyData] = useState([]);
-  const id = localStorage.getItem("AppId");
-  const [pharmacy, { data }] = useLazyQuery(getPartner, {
-    variables: { id },
-  });
-
-  useEffect(() => {
-    (async () => {
-      setTimeout(pharmacy, 300);
-    })();
-    if (data) {
-      setPharmacyData(data.getPartner);
-    }
-    if (data?.getPartner?.category === "hospital") {
-      localStorage.setItem("hospitalID", data.getPartner._id);
-    }
-  }, [pharmacy, data]);
   switch (pathname) {
     case "/dashboard":
       return (
         <div>
+          {console.log(pharmacyData)}
           <Typography variant="h5" className={classes.text} gutterBottom>
             Welcome,
           </Typography>
           <Typography variant="h3" color="primary" className={classes.name}>
-            {pharmacyData ? pharmacyData?.name : ""}
+            {pharmacyData?.name}
           </Typography>
         </div>
       );
@@ -309,12 +292,12 @@ Breadcrumb.propTypes = {
   counts: PropTypes.object,
 };
 
-const HeaderContent = () => {
+const HeaderContent = ({ pharmacyData }) => {
   const classes = useStyles();
   return (
     <Toolbar className={classes.toolbar}>
-      <HeaderText />
-      <HeaderProfile />
+      <HeaderText pharmacyData={pharmacyData} />
+      <HeaderProfile pharmacyData={pharmacyData} />
     </Toolbar>
   );
 };

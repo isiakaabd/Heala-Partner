@@ -152,6 +152,11 @@ export const handlePageChange = (
   }
 };
 
+export const deleteVar = (variable) => {
+  for (const key in variable) {
+    delete variable[key];
+  }
+};
 export const handleHospitalPageChange = (
   fetchDataFN,
   type,
@@ -282,5 +287,41 @@ export const uploadImage = async (file, setProgress) => {
   } catch (error) {
     console.error(error);
     setProgress(100);
+  }
+};
+
+export const getSearchPlaceholder = (filterBy) => {
+  return filterBy === "id"
+    ? "Search by ID e.g 7NE6ELLO"
+    : filterBy === "firstName"
+    ? "Search by first name e.g John"
+    : filterBy === "lastName"
+    ? "Search by last name e.g Doe"
+    : "";
+};
+
+export const filterData = async (filterVaribles, queryParams) => {
+  try {
+    const { fetchData, refetch, variables } = queryParams;
+    const newFilterVaribles = removeEmptyStringValues(filterVaribles);
+    const getData = () => {
+      if (newFilterVaribles === {}) {
+        deleteVar(variables);
+        return refetch();
+      } else {
+        return fetchData({ variables: newFilterVaribles });
+      }
+    };
+
+    const { data } = await getData();
+
+    if (!data) {
+      throw Error("something went wrong while filtering by status");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };

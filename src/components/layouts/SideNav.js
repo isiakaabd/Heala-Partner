@@ -22,7 +22,7 @@ import {
   pharmacyMenu,
   diagnosticsMenu,
 } from "helpers/asideMenus";
-
+import useAlert from "hooks/useAlert";
 const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
   const useStyles = makeStyles((theme) => ({
     aside: {
@@ -131,6 +131,7 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
   const { type } = useAppType();
   const location = useLocation();
   const { logout } = useActions();
+  const [displayMessage] = useAlert();
   const [logout_user] = useMutation(LOGOUT_USER);
   const [Logout, setLogout] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(0);
@@ -152,9 +153,12 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
           user: localStorage.getItem("AppId"),
         },
       });
+
       logout();
+      displayMessage("success", "Logout Successfully");
     } catch (err) {
-      console.log(err.message);
+      displayMessage("error", "Logout Failed");
+      console.error(err.message);
     }
   };
   const handleClick = (menu) => {

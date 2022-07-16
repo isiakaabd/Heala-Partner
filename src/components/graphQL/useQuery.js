@@ -5,6 +5,7 @@ export const getPartner = gql`
     getPartner(accountId: $id) {
       _id
       name
+      profileUrl
       email
       category
       logoImageUrl
@@ -84,6 +85,82 @@ export const doctor = gql`
     }
   }
 `;
+export const getProviders = gql`
+  ${PageInfo}
+  query getProviders(
+    $name: String
+    $userTypeId: String
+    $page: Int
+    $first: Int
+  ) {
+    getProviders(
+      filterBy: { name: $name, userTypeId: $userTypeId }
+      page: $page
+      orderBy: "-createdAt"
+      first: $first
+    ) {
+      provider {
+        _id
+        name
+        icon
+        userTypeId
+        createdAt
+        updatedAt
+      }
+      pageInfo {
+        ...pageDetails
+      }
+    }
+  }
+`;
+// export const getPatients = gql`
+
+//   ${PageInfo}
+//   query findProfiles(
+//     $gender: String
+//     $page: Int
+//     $first: Int
+//     $firstName: String
+//     $lastName: String
+//     $id: String
+//     $provider: String
+//   ) {
+//     profiles(
+//       filterBy: {
+//         gender: $gender
+//         dociId: $id
+//         firstName: $firstName
+//         lastName: $lastName
+//         providerId: $provider
+//       }
+//       orderBy: "-createdAt"
+//       page: $page
+//       first: $first
+//     ) {
+//       data {
+//         _id
+//         firstName
+//         lastName
+//         height
+//         weight
+//         bloodGroup
+//         dociId
+//         genotype
+//         gender
+//         phoneNumber
+//         provider
+//         plan
+//         status
+//         consultations
+//         createdAt
+//         image
+//       }
+//       pageInfo {
+//         ...pageDetails
+//       }
+//     }
+//   }
+// `;
 export const getDrugOrders = gql`
   ${PageInfo}
   query getDrugOrders(
@@ -92,18 +169,16 @@ export const getDrugOrders = gql`
     $status: String
     $orderId: String
     $partnerProviderId: String!
-
   ) {
     getDrugOrders(
-      filterBy: { 
-        status: $status,
-        partner: $partnerProviderId, 
-        orderId: $orderId 
+      filterBy: {
+        status: $status
+        partner: $partnerProviderId
+        orderId: $orderId
       }
       first: $first
       page: $page
       orderBy: "-createdAt"
-
     ) {
       data {
         _id
@@ -133,6 +208,71 @@ export const getDrugOrders = gql`
           lat
           lng
         }
+      }
+      pageInfo {
+        ...pageDetails
+      }
+    }
+  }
+`;
+export const getPatientsByPlan = gql`
+  ${PageInfo}
+  query findProfiles($planId: String, $first: Int, $id: String) {
+    profilesByPlan(
+      filterBy: { planId: $planId }
+      orderBy: "-createdAt"
+      first: $first
+      id: $id
+    ) {
+      data {
+        _id
+        firstName
+        lastName
+        height
+        weight
+        bloodGroup
+        dociId
+        genotype
+        gender
+        phoneNumber
+        provider
+        plan
+        status
+        consultations
+        createdAt
+        image
+      }
+      pageInfo {
+        ...pageDetails
+      }
+    }
+  }
+`;
+export const getPatientsByStatus = gql`
+  ${PageInfo}
+  query findProfiles($status: Boolean, $first: Int) {
+    profilesByStatus(
+      filterBy: { isActive: $status }
+      orderBy: "-createdAt"
+      first: $first
+    ) {
+      data {
+        _id
+        firstName
+        lastName
+        height
+        weight
+        bloodGroup
+        dociId
+        genotype
+        gender
+        phoneNumber
+        provider
+        plan
+        status
+        consultations
+        createdAt
+        image
       }
       pageInfo {
         ...pageDetails
@@ -176,6 +316,50 @@ export const findAllergies = gql`
     }
   }
 `;
+export const getDoctorsProfileByStatus = gql`
+  ${PageInfo}
+  query doctorProfiles(
+    $id: String
+    $firstName: String
+    $lastName: String
+    $gender: String
+    $cadre: String
+    $providerId: String
+    $specialization: String
+    $page: Int
+    $first: Int
+  ) {
+    doctorProfilesByStatus(
+      filterBy: { isActive: $status, role: "doctor" }
+      first: $first
+      page: $page
+    ) {
+      profile {
+        _id
+        firstName
+        lastName
+        gender
+        phoneNumber
+        createdAt
+        updatedAt
+        email
+        hospital
+        specialization
+        dob
+        cadre
+        picture
+        provider
+        consultations
+        status
+        dociId
+      }
+      pageInfo {
+        ...pageDetails
+      }
+    }
+  }
+`;
+
 export const findProfile = gql`
   query findProfile($id: ID!) {
     profile(id: $id) {
@@ -214,8 +398,7 @@ export const getAMessage = gql`
 `;
 export const getDrugOrder = gql`
   query getDrugOrder($id: String!) {
-    getDrugOrder(
-      id: $id) {
+    getDrugOrder(id: $id) {
       _id
       partner
       patient
@@ -603,23 +786,34 @@ export const getDoctorPatients = gql`
 export const getDoctorsProfile = gql`
   ${PageInfo}
   query doctorProfiles(
-    $specialization: String
+    $id: String
+    $firstName: String
+    $lastName: String
+    $gender: String
+    $cadre: String
     $providerId: String
+    $specialization: String
     $page: Int
     $first: Int
   ) {
     doctorProfiles(
-      filterBy: { providerId: $providerId, specialization: $specialization }
-      page: $page
-      orderBy: "-createdAt"
+      filterBy: {
+        dociId: $id
+        firstName: $firstName
+        lastName: $lastName
+        gender: $gender
+        cadre: $cadre
+        providerId: $providerId
+        specialization: $specialization
+      }
       first: $first
+      page: $page
     ) {
       profile {
         _id
         firstName
         lastName
         gender
-
         phoneNumber
         createdAt
         updatedAt
@@ -738,12 +932,20 @@ export const getPatients = gql`
   query findProfiles(
     $gender: String
     $providerId: String
+    $firstName: String
+    $lastName: String
     $page: Int
-    $dociId: String
+    $id: String
     $first: Int
   ) {
     profiles(
-      filterBy: { providerId: $providerId, gender: $gender, dociId: $dociId }
+      filterBy: {
+        providerId: $providerId
+        gender: $gender
+        dociId: $id
+        firstName: $firstName
+        lastName: $lastName
+      }
       orderBy: "-createdAt"
       page: $page
       first: $first

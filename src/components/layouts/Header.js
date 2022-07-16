@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, AppBar, Toolbar, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { makeStyles } from "@mui/styles";
-import HeaderContents from "components/layouts/HeaderContents";
+import { HeaderContents } from "components/layouts";
+import { useLazyQuery } from "@apollo/client";
+import { getPartner } from "components/graphQL/useQuery";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -20,6 +22,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = ({ drawerWidth, handleDrawerToggle }) => {
+  const [pharmacyData, setPharmacyData] = useState([]);
+  const id = localStorage.getItem("AppId");
+  const [pharmacy, { data }] = useLazyQuery(getPartner, {
+    variables: { id },
+  });
+
+  useEffect(() => {
+    (async () => {
+      setTimeout(pharmacy, 300);
+    })();
+    if (data) {
+      setPharmacyData(data.getPartner);
+    }
+    if (data?.getPartner?.category === "hospital") {
+      localStorage.setItem("hospitalID", data.getPartner._id);
+    }
+  }, [pharmacy, data]);
   const classes = useStyles();
   return (
     <AppBar
@@ -50,6 +69,7 @@ const Header = ({ drawerWidth, handleDrawerToggle }) => {
         </Grid>
         <HeaderContents
           drawerWidth={drawerWidth}
+          pharmacyData={pharmacyData}
           handleDrawerToggle={handleDrawerToggle}
         />
       </Toolbar>
