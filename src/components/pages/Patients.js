@@ -3,8 +3,6 @@ import FormikControl from "components/validation/FormikControl";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { NoData, EmptyTable } from "components/layouts";
-
-import { useAlert } from "hooks";
 import { defaultPageInfo, patientSearchOptions } from "helpers/mockData";
 import {
   Button,
@@ -116,7 +114,6 @@ const useStyles = makeStyles((theme) => ({
 const Patients = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const [displayAlert] = useAlert();
   const [fetchPatient, { loading, refetch, error, variables }] =
     useLazyQuery(getPatients);
   const [
@@ -135,7 +132,7 @@ const Patients = () => {
       refetch: byPlanRefetch,
     },
   ] = useLazyQuery(getPatientsByPlan);
-  const id = localStorage.getItem("partnerProviderId") || "";
+  const id = localStorage.getItem("partnerProviderId");
 
   const initialValues = {
     name: "",
@@ -160,7 +157,6 @@ const Patients = () => {
       })
       .catch((error) => {
         console.error(error);
-        displayAlert("error", errMsg);
       });
   };
 
@@ -208,13 +204,6 @@ const Patients = () => {
     limit: 10,
     totalDocs: 0,
   });
-
-  // useEffect(() => {
-  //   if (data) {
-  //     setPageInfo(data.profiles.pageInfo);
-  //     setProfiles(data.profiles.data);
-  //   }
-  // }, [data]);
 
   const { selectedRows } = useSelector((state) => state.tables);
 

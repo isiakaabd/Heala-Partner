@@ -100,18 +100,12 @@ const ReferralTab = () => {
     useLazyQuery(getRefferals);
 
   const classes = useStyles();
-  // const onChange = async (e) => {
-  //   setSearchMail(e);
-  //   if (e === "") {
-  //     refetch();
-  //   } else refetch({ id: e });
-  // };
 
   useEffect(() => {
     fetchRefferals({
       variables: {
         first: pageInfo.limit,
-        providerId: providerId,
+        providerId,
       },
     });
   }, [fetchRefferals, pageInfo, providerId]);
@@ -123,8 +117,9 @@ const ReferralTab = () => {
 
   useEffect(() => {
     if (data) {
-      setReferral(data.getReferrals.referral);
-      setPageInfo(data.getReferrals.pageInfo);
+      const { referral, pageInfo } = data?.getReferrals;
+      setReferral(referral);
+      setPageInfo(pageInfo);
     }
   }, [data]);
 

@@ -19,7 +19,6 @@ import EnhancedTableHeader from "./EnhancedTableHeader";
 import { paginationActionTypes } from "helpers/mockData";
 import { useActions } from "components/hooks/useActions";
 import EnhancedTableToolbar from "./EnhancedTableToolbar";
-//import { handlePageChange } from "helpers/filterHelperFunctions";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -49,11 +48,9 @@ const EnhancedTable = ({
   headCells,
   paginationLabel,
   title,
-  type,
   hasCheckbox,
   changeLimit,
   dataPageInfo,
-  hasPagination = true,
   handlePagination,
 }) => {
   const classes = useStyles();
@@ -86,30 +83,28 @@ const EnhancedTable = ({
             <TableBody>{children}</TableBody>
           </Table>
         </TableContainer>
-        {hasPagination &&
-          (type !== "editRole" ? (
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 15, 25]}
-              component="div"
-              count={dataPageInfo?.totalDocs || 0}
-              rowsPerPage={dataPageInfo?.limit || 5}
-              page={dataPageInfo?.page - 1}
-              labelRowsPerPage={paginationLabel}
-              onPageChange={(e) => e}
-              onRowsPerPageChange={(e) => {
-                changeLimit(parseInt(e.target.value, 10));
+
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 15, 25]}
+          component="div"
+          count={dataPageInfo?.totalDocs || 0}
+          rowsPerPage={dataPageInfo?.limit || 5}
+          page={dataPageInfo?.page - 1}
+          labelRowsPerPage={paginationLabel}
+          onPageChange={(e) => e}
+          onRowsPerPageChange={(e) => {
+            changeLimit(parseInt(e.target.value, 10));
+          }}
+          className={classes.pagination}
+          ActionsComponent={() => (
+            <EnhancedTableAction
+              {...{
+                dataPageInfo,
+                handlePagination,
               }}
-              className={classes.pagination}
-              ActionsComponent={() => (
-                <EnhancedTableAction
-                  {...{
-                    dataPageInfo,
-                    handlePagination,
-                  }}
-                />
-              )}
             />
-          ) : null)}
+          )}
+        />
       </Paper>
     </Box>
   );

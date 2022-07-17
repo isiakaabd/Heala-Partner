@@ -77,7 +77,7 @@ const CompoundSearch = ({
           height="5rem"
           startIcon={
             searchValue.filterBy === "id" ? (
-              <Typography variant="h3">HEALA-</Typography>
+              <Typography variant="h5">HEALA-</Typography>
             ) : null
           }
         />

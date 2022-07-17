@@ -2,6 +2,7 @@ import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import PropTypes from "prop-types";
 import { InputAdornment, OutlinedInput, Grid } from "@mui/material";
+
 const SearchContainer = ({
   width,
   placeholder,
@@ -9,9 +10,9 @@ const SearchContainer = ({
   placeholderWidth,
   value,
   onChange,
-  autoFocus,
   ref,
   hasStartIcon = true,
+  startIcon,
   ...rest
 }) => {
   return (
@@ -35,13 +36,13 @@ const SearchContainer = ({
         placeholder={placeholder}
         inputProps={{ "aria-label": placeholder }}
         startAdornment={
-          hasStartIcon && (
-            <InputAdornment position="start">
-              <SearchIcon style={{ fontSize: "3rem" }} />
-            </InputAdornment>
-          )
+          <InputAdornment position="start">
+            {startIcon
+              ? startIcon
+              : hasStartIcon && <SearchIcon style={{ fontSize: "3rem" }} />}
+          </InputAdornment>
         }
-        autoFocus={autoFocus}
+        autoFocus
       />
     </Grid>
   );
@@ -55,7 +56,7 @@ SearchContainer.propTypes = {
   value: PropTypes.string,
   hasStartIcon: PropTypes.bool,
   onChange: PropTypes.func,
-  autoFocus: PropTypes.bool,
+  startIcon: PropTypes.node,
 };
 
 export default SearchContainer;

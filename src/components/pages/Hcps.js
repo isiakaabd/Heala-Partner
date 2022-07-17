@@ -160,20 +160,25 @@ const Hcps = () => {
   ] = useLazyQuery(getDoctorsProfileByStatus);
 
   useEffect(() => {
-    fetchDoctors({
-      variables: {
-        first: pageInfo.limit,
-      },
-    })
-      .then(({ data }) => {
+    try {
+      async function fetchData() {
+        const { data } = await fetchDoctors({
+          variables: {
+            first: pageInfo.limit,
+            providerId: partnerProviderId,
+          },
+        });
         if (data) {
           setPageInfo(data.doctorProfiles.pageInfo || []);
           setProfiles(data.doctorProfiles.profile || defaultPageInfo);
         }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+        // ...
+      }
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // const [fetchDoctorsProfile, { data, error, loading, refetch }] = useLazyQuery(
@@ -200,6 +205,7 @@ const Hcps = () => {
         displayAlert("error", errMsg);
       });
   };
+
   const [profiles, setProfiles] = useState("");
 
   const [openHcpFilter, setOpenHcpFilter] = useState(false);
@@ -379,12 +385,14 @@ const Hcps = () => {
             rows={profiles}
             paginationLabel="Doctors per page"
             hasCheckbox={true}
-            changeLimit={(e) =>
-              changeHospitalTableLimit(fetchDoctors, {
+            changeLimit={async (e) => {
+              const res = changeHospitalTableLimit(fetchDoctors, {
                 first: e,
                 providerId: partnerProviderId,
-              })
-            }
+              });
+
+              await setTableData(res, "Failed to change table limit");
+            }}
             dataPageInfo={pageInfo}
             handlePagination={async (page) => {
               const res = handleHospitalPageChange(

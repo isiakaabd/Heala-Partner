@@ -104,7 +104,7 @@ export const changeTableLimit = async (limit, fetchFunc, value, partnerId) => {
 
 export const changeHospitalTableLimit = async (fetchFunc, variables) => {
   try {
-    fetchFunc({
+    return fetchFunc({
       variables: variables,
     });
   } catch (error) {

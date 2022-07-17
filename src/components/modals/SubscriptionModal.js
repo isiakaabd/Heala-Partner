@@ -198,6 +198,6 @@ SubscriptionModal.propTypes = {
   edit: PropTypes.bool,
   initialValues: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   validationSchema: PropTypes.object,
-  singleData: PropTypes.object,
+  singleData: PropTypes.string,
   setSingleData: PropTypes.func,
 };
