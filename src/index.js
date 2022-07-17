@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import { store } from "store";
 import { SnackbarProvider } from "notistack";
 import { Typography } from "@mui/material";
-import { Slide } from "@material-ui/core";
+import { Slide } from "@mui/material";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 import {

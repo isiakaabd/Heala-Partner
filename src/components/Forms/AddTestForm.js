@@ -1,7 +1,7 @@
 import React from "react";
 import t from "prop-types";
 import { Formik, Form } from "formik";
-import { useSnackbar } from "notistack";
+import { useAlert } from "hooks";
 import { useTheme } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 import { useMutation } from "@apollo/client";
@@ -9,11 +9,10 @@ import { CustomButton } from "components/Utilities";
 import { FormikControl } from "components/validation";
 import { addTest } from "components/graphQL/Mutation";
 import { addTestValidation } from "helpers/validationSchemas";
-import { handleError, showSuccessMsg } from "helpers/filterHelperFunctions";
 
 export const AddTestForm = ({ onSuccess }) => {
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const [addSingleTest] = useMutation(addTest);
 
   const addTestIntialValues = {
@@ -34,12 +33,12 @@ export const AddTestForm = ({ onSuccess }) => {
         variables: variables,
       });
       if (data) {
-        showSuccessMsg(enqueueSnackbar, "Test added.");
+        displayMessage("success", "Test added.");
         onSuccess();
       }
     } catch (err) {
-      handleError(err, enqueueSnackbar);
-      console.log("failed to add test", err);
+      displayMessage("error", err);
+      console.error(err);
     }
   };
 
@@ -58,7 +57,7 @@ export const AddTestForm = ({ onSuccess }) => {
       validateOnMount={false}
       validateOnBlur={false}
     >
-      {({ isSubmitting, dirty, isValid, setFieldValue, setValues }) => {
+      {({ isSubmitting, dirty, isValid }) => {
         return (
           <Form style={{ marginTop: "1rem" }}>
             <Grid container direction="column" gap={2}>

@@ -2,8 +2,15 @@ import React from "react";
 
 import { makeStyles } from "@mui/styles";
 import CloseIcon from "@mui/icons-material/Close";
-import { Grid, Typography, Stack, Avatar, ModalBox } from "@mui/material";
-import { Paper } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  Typography,
+  Stack,
+  Avatar,
+  Modal,
+  Box,
+} from "@mui/material";
 import TextChat from "components/Utilities/TextChat";
 import displayPhoto from "assets/images/avatar.png";
 import { useSelector } from "react-redux";

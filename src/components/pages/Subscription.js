@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Checkbox, Button, TableRow, TableCell } from "@mui/material";
-import { Loader, Search, CustomButton, Modals } from "components/Utilities";
+import { Loader, CustomButton, Modals } from "components/Utilities";
 import { formatNumber } from "components/Utilities/Time";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
@@ -12,13 +12,11 @@ import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import {
   changeHospitalTableLimit,
-  handleError,
   handleHospitalPageChange,
-  showSuccessMsg,
 } from "helpers/filterHelperFunctions";
 import AddIcon from "@mui/icons-material/Add";
+import { useAlert } from "hooks";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useSnackbar } from "notistack";
 import EditIcon from "@mui/icons-material/Edit";
 import { SubscriptionModal } from "components/modals/SubscriptionModal";
 import DeleteOrDisable from "components/modals/DeleteOrDisable";
@@ -158,7 +156,7 @@ const useStyles = makeStyles((theme) => ({
 const Subscription = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const [pageInfo, setPageInfo] = useState({
     page: 0,
     totalPages: 1,
@@ -203,9 +201,9 @@ const Subscription = () => {
         ],
       });
       refetch();
-      showSuccessMsg(enqueueSnackbar, "subscription deleted successfully");
+      displayMessage("success", "subscription deleted successfully");
     } catch (error) {
-      handleError(enqueueSnackbar, error);
+      displayMessage("error", error);
       console.error(error.message);
     }
   };
@@ -213,8 +211,6 @@ const Subscription = () => {
   const { selectedRows } = useSelector((state) => state.tables);
 
   const { setSelectedRows } = useActions();
-
-  const [searchMail, setSearchMail] = useState("");
 
   const buttonType = {
     background: theme.palette.common.black,
@@ -234,12 +230,6 @@ const Subscription = () => {
     });
   }, [fetchSubscriptions, providerId]);
 
-  const onChange = async (e) => {
-    setSearchMail(e);
-    if (e === "") {
-      refetch();
-    } else refetch({ amount: Number(e) });
-  };
   useEffect(() => {
     if (data) {
       setPlan(data.getPlans.plan);
@@ -273,15 +263,6 @@ const Subscription = () => {
           container
           spacing={{ md: 4, sm: 4, xs: 2 }}
         >
-          <Grid item flex={2}>
-            <Search
-              value={searchMail}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder="Type to search plans by Amount..."
-              height="5rem"
-            />
-          </Grid>
-
           <Grid item>
             <CustomButton
               endIcon={<AddIcon />}

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { getErrors } from "components/Utilities/Time";
-import { useSnackbar } from "notistack";
 import { Grid } from "@mui/material";
 import { useMutation, useQuery } from "@apollo/client";
 import { updatePartner } from "components/graphQL/Mutation";
@@ -11,10 +9,11 @@ import { Formik, Form } from "formik";
 import FormikControl from "components/validation/FormikControl";
 import { getPartner } from "components/graphQL/useQuery";
 import * as Yup from "yup";
+import { useAlert } from "hooks";
 
 const Profile = () => {
   const [update] = useMutation(updatePartner);
-  const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const { loading, error, data } = useQuery(getPartner, {
     variables: {
       id: localStorage.getItem("AppId"),
@@ -62,13 +61,9 @@ const Profile = () => {
           },
         ],
       });
-      enqueueSnackbar("profile updated", {
-        variant: "success",
-      });
+      displayMessage("success", "profile updated");
     } catch (error) {
-      enqueueSnackbar(getErrors(error), {
-        variant: "error",
-      });
+      displayMessage("error", error);
       console.error(error);
     }
   };

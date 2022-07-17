@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getErrors } from "components/Utilities/Time";
-import { useSnackbar } from "notistack";
+import { useAlert } from "hooks";
 import { Grid } from "@mui/material";
 import { useMutation, useQuery } from "@apollo/client";
 import { updatePartner } from "components/graphQL/Mutation";
@@ -16,7 +15,7 @@ import * as Yup from "yup";
 const HospitalProfile = () => {
   const [update] = useMutation(updatePartner);
   const history = useHistory();
-  const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const { loading, error, data } = useQuery(getPartner, {
     variables: {
       id: localStorage.getItem("AppId"),
@@ -62,14 +61,10 @@ const HospitalProfile = () => {
           },
         ],
       });
-      history.push("/hsettings");
-      enqueueSnackbar("profile updated", {
-        variant: "success",
-      });
+      history.push("/hospital-settings");
+      displayMessage("success", "profile updated");
     } catch (error) {
-      enqueueSnackbar(getErrors(error), {
-        variant: "error",
-      });
+      displayMessage("error", error);
     }
     console.error(error);
   };

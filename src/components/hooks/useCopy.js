@@ -1,5 +1,6 @@
-import t from "prop-types";
-import useAlert from "hooks/useAlert";
+import Proptypes from "prop-types";
+
+import { useAlert } from "hooks";
 
 export const useCopy = () => {
   const [displayMessage] = useAlert();
@@ -20,6 +21,6 @@ export const useCopy = () => {
 };
 
 useCopy.PropTypes = {
-  text: t.string,
-  name: t.string,
+  text: Proptypes.string.isRequired,
+  name: Proptypes.string.isRequired,
 };

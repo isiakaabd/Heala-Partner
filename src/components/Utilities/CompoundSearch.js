@@ -13,9 +13,8 @@ const CompoundSearch = ({
   getSearchPlaceholder,
   filterOptions,
 }) => {
-  console.log(queryParams);
   const theme = useTheme();
-  const { displayAlert } = useAlert();
+  const [displayAlert] = useAlert();
   const { fetchData, variables, loading } = queryParams;
   const [searchValue, setSearchValue] = useState({
     value: "",

@@ -3,7 +3,8 @@ import FormikControl from "components/validation/FormikControl";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { NoData, EmptyTable } from "components/layouts";
-import useAlert from "hooks/useAlert";
+
+import { useAlert } from "hooks";
 import { defaultPageInfo, patientSearchOptions } from "helpers/mockData";
 import {
   Button,

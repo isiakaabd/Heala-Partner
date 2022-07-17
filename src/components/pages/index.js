@@ -24,7 +24,6 @@ export { default as ScheduledRequest } from "./ScheduledRequest";
 export { default as ScheduledRequestProfile } from "./ScheduledRequestProfile";
 export { default as Setting } from "./Setting";
 export { default as Consultations } from "./Consultations";
-export { default as CreateEmail } from "./CreateEmail";
 export { default as CreateMessage } from "./CreateMessage";
 export { default as Email } from "./Email";
 export { default as Finance } from "./Finance";
@@ -56,7 +55,7 @@ export { default as Settings } from "./Settings";
 export { default as SingleHCP } from "./SingleHCP";
 export { default as SinglePatient } from "./SinglePatient";
 export { default as Subscription } from "./Subscription";
-export { default as ViewMail } from "./ViewMail";
+
 export { default as ViewReferral } from "./ViewReferral";
 export { default as WaitingList } from "./WaitingList";
 export { default as WaitingListDetails } from "./WaitingListDetails";

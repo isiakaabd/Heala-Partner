@@ -1,6 +1,5 @@
-import React, { useRef, useState } from "react";
-
-import { useSnackbar } from "notistack";
+import React, { useRef, useEffect, useState } from "react";
+import { useAlert } from "hooks";
 import { makeStyles } from "@mui/styles";
 import { Field, ErrorMessage } from "formik";
 import {
@@ -16,10 +15,8 @@ import { Loader, TextError } from "components/Utilities";
 import { RequiredIcon } from "components/Typography";
 import {
   compressAndUploadImage,
-  showErrorMsg,
-  showSuccessMsg,
   uploadImage,
-} from "../../helpers/filterHelperFunctions";
+} from "helpers/filterHelperFunctions";
 
 const useStyles = makeStyles((theme) => ({
   FormLabel: {
@@ -52,19 +49,19 @@ const useStyles = makeStyles((theme) => ({
 export const Formiks = ({ name, setFieldValue, onBlur }) => {
   const fileRef = useRef(null);
   const classes = useStyles();
-  const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const [preview, setPreview] = useState("");
-  const [isCompleted, setIsCompleted] = React.useState(null);
+  const [isCompleted, setIsCompleted] = useState(null);
   const [progress, setProgress] = useState();
-  const [isCompressing, setIsCompressing] = React.useState(false);
+  const [isCompressing, setIsCompressing] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     isCompleted === "passed" &&
-      showSuccessMsg(enqueueSnackbar, "Image upload complete.");
+      displayMessage("success", "Image upload complete.");
     if (isCompleted === "failed") {
-      showErrorMsg(enqueueSnackbar, "Image upload failed, Try again.");
+      displayMessage("error", "Image upload failed, Try again.");
     }
-  }, [isCompleted, enqueueSnackbar]);
+  }, [isCompleted, displayMessage]);
 
   const onChange = async (e) => {
     const file = e.target.files[0];

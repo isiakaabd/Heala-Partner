@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import * as Yup from "yup";
-import { useSnackbar } from "notistack";
+import { useAlert } from "hooks";
 import { ReactComponent as HealaIconW } from "assets/images/logo-white1.svg";
 import { LoginInput } from "components/validation";
 import { Formik, Form } from "formik";
@@ -12,9 +12,7 @@ import {
   Checkbox,
   Avatar,
   InputAdornment,
-  Alert,
 } from "@mui/material";
-
 import { CustomButton } from "components/Utilities";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -26,7 +24,6 @@ import { Login_USER } from "components/graphQL/Mutation";
 import { useMutation } from "@apollo/client";
 import { setAccessToken } from "../../accessToken";
 import { useActions } from "components/hooks/useActions";
-import { handleError, showErrorMsg } from "helpers/filterHelperFunctions";
 
 const useStyles = makeStyles((theme) => ({
   form: theme.mixins.toolbar,
@@ -76,9 +73,8 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const history = useHistory();
-  const [alert, setAlert] = useState(null);
   const [loginInfo] = useMutation(Login_USER);
   const { loginUser, loginFailue } = useActions();
 
@@ -123,9 +119,10 @@ const Login = () => {
             type: "success",
           },
         });
+        displayMessage("success", "Login successful");
         history.push("/dashboard");
       } else {
-        showErrorMsg(enqueueSnackbar, "Please login using a Partner account");
+        displayMessage("error", "Please login using a Partner account");
       }
       onSubmitProps.resetForm({
         values: {
@@ -134,20 +131,15 @@ const Login = () => {
         },
       });
     } catch (error) {
-      console.error("Failed to login", error);
-      handleError(error, enqueueSnackbar);
+      console.error(error);
+      displayMessage("error", "Failed to login");
       loginFailue({
         message: error.message,
         type: "error",
       });
     }
   };
-  useEffect(() => {
-    let x = setTimeout(() => {
-      setAlert(null);
-    }, 3000);
-    return () => clearTimeout(x);
-  }, [alert]);
+
   return (
     <Grid
       container
@@ -222,19 +214,7 @@ const Login = () => {
                             LOGIN TO PARTNER ACCOUNT
                           </Typography>
                         </Grid>
-                        {alert && alert !== null && (
-                          <Alert
-                            sx={{
-                              justifyContent: "center",
-                              alignItems: "center",
-                              width: "100%",
-                            }}
-                            variant="filled"
-                            severity={alert.type}
-                          >
-                            {alert.message}
-                          </Alert>
-                        )}
+
                         <Grid item container md={12} sm={10}>
                           <LoginInput
                             label="Email"

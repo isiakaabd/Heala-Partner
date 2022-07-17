@@ -8,7 +8,6 @@ import { Formik, Form } from "formik";
 import FormikControl from "components/validation/FormikControl";
 import {
   Grid,
-  Alert,
   Typography,
   TableRow,
   TableCell,
@@ -16,6 +15,7 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
+import { useAlert } from "hooks";
 import { deleteAppointment } from "components/graphQL/Mutation";
 import {
   changeHospitalTableLimit,
@@ -101,17 +101,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/* const filterOptions = [
-  { id: 0, value: "Name" },
-  { id: 1, value: "Date" },
-  { id: 2, value: "Description" },
-]; */
-
 const PatientAppointment = () => {
   const [updateAppoint] = useMutation(updateAppointment);
   const [deleteAppointments] = useMutation(deleteAppointment);
   const [pageInfo, setPageInfo] = useState([]);
-  const [alert, setAlert] = useState(null);
+  const [displayMessage] = useAlert();
   const [editId, setEditid] = useState(null);
   const [doctorId, setDoctorId] = useState(null);
   const handleDelete = (id) => {
@@ -138,22 +132,11 @@ const PatientAppointment = () => {
           },
         ],
       });
-      setAlert({
-        message: "appointment deleted successfully",
-        type: "success",
-      });
-      setTimeout(() => {
-        setAlert(null);
-      }, 5000);
+      displayMessage("success", "appointment deleted successfully");
     } catch (error) {
-      setAlert({
-        message: "appointment  not successfully deleted",
-        type: "danger",
-      });
-      setTimeout(() => {
-        setAlert(null);
-      }, 5000);
-      console.log(error);
+      displayMessage("error", "appointment  not successfully deleted");
+
+      console.error(error);
     }
   };
   const [deleteModal, setdeleteModal] = useState(false);
@@ -226,7 +209,7 @@ const PatientAppointment = () => {
   const [getPatientsAppointment, { loading, data, error }] =
     useLazyQuery(getAppoint);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getPatientsAppointment({
       variables: {
         id: patientId,
@@ -280,15 +263,6 @@ const PatientAppointment = () => {
   if (loading) return <Loader />;
   return (
     <>
-      {alert && Object.keys(alert).length > 0 && (
-        <Alert
-          variant="filled"
-          severity={alert.type}
-          sx={{ justifyContent: "center", width: "70%", margin: "0 auto" }}
-        >
-          {alert.message}
-        </Alert>
-      )}
       <Grid
         container
         direction="column"
@@ -307,13 +281,6 @@ const PatientAppointment = () => {
             <Grid item flex={1}>
               <Typography variant="h2">Appointments</Typography>
             </Grid>
-            {/* <Grid item>
-              <FilterList
-                onClick={handlePatientOpen}
-                options={filterOptions}
-                title="Filter"
-              />
-            </Grid> */}
           </Grid>
           {patientAppointment.length > 0 ? (
             <Grid item container height="100%" direction="column">

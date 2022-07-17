@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Loader, Search } from "components/Utilities";
+import { Loader, Filter } from "components/Utilities";
 
 import {
   TableRow,
@@ -24,12 +24,15 @@ import { useLazyQuery } from "@apollo/client";
 import { getRefferals } from "components/graphQL/useQuery";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 // import Filter from "components/Forms/Filters";
-
+import {
+  referralFilterBy,
+  referralPageDefaultFilterValues,
+} from "helpers/mockData";
 import { Link } from "react-router-dom";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
-  // onFilterValueChange,
+  onFilterValueChange,
 } from "helpers/filterHelperFunctions";
 
 const useStyles = makeStyles((theme) => ({
@@ -89,16 +92,20 @@ const ReferralTab = () => {
   });
   const providerId = localStorage.getItem("partnerProviderId");
   const theme = useTheme();
-  const [fetchRefferals, { loading, error, data, refetch }] =
+  const [filterValues, setFilterValues] = useState(
+    referralPageDefaultFilterValues
+  );
+
+  const [fetchRefferals, { loading, error, data, refetch, variables }] =
     useLazyQuery(getRefferals);
 
   const classes = useStyles();
-  const onChange = async (e) => {
-    setSearchMail(e);
-    if (e === "") {
-      refetch();
-    } else refetch({ id: e });
-  };
+  // const onChange = async (e) => {
+  //   setSearchMail(e);
+  //   if (e === "") {
+  //     refetch();
+  //   } else refetch({ id: e });
+  // };
 
   useEffect(() => {
     fetchRefferals({
@@ -111,7 +118,6 @@ const ReferralTab = () => {
 
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
-  const [searchMail, setSearchMail] = useState("");
 
   const [referral, setReferral] = useState([]);
 
@@ -140,21 +146,27 @@ const ReferralTab = () => {
           spacing={{ sm: 4, md: 4, xs: 2 }}
           container
         >
-          <Grid item flex={1}>
-            <Search
-              value={searchMail}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder="Type to search referrals by ID e.g 1Ntqaazu..."
-              height="5rem"
+          <Grid item>
+            <Filter
+              onHandleChange={(e) =>
+                onFilterValueChange(
+                  e,
+                  "type",
+                  filterValues,
+                  setFilterValues,
+                  fetchRefferals,
+                  variables,
+                  refetch
+                )
+              }
+              options={referralFilterBy}
+              name="status"
+              placeholder="By Type"
+              value={filterValues.type}
             />
           </Grid>
-          {/* <Grid item>
-            <FilterList title="Filter" onClick={handleDialogOpen} />
-          </Grid> */}
         </Grid>
-        {loading ? (
-          <Loader />
-        ) : referral?.length > 0 ? (
+        {referral?.length > 0 ? (
           <Grid item container>
             <EnhancedTable
               headCells={referralHeaderss}

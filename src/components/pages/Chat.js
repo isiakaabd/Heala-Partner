@@ -12,7 +12,8 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { getMessage, getProfile } from "components/graphQL/useQuery";
-import useAlert from "hooks/useAlert";
+
+import { useAlert } from "hooks";
 const useStyles = makeStyles((theme) => ({
   gridWrapper: {
     "&.MuiGrid-item": {

@@ -1,26 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import t from "prop-types";
 import { Formik, Form } from "formik";
-import { useSnackbar } from "notistack";
+import { useAlert } from "hooks";
 import { useTheme } from "@mui/material/styles";
-import { Grid, Typography } from "@mui/material";
-
+import { Grid } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { CustomButton } from "components/Utilities";
 import { FormikControl } from "components/validation";
 import { UPDATE_TEST } from "components/graphQL/Mutation";
 import { editTestValidation } from "helpers/validationSchemas";
-import {
-  handleError,
-  showSuccessMsg,
-} from "../../helpers/filterHelperFunctions";
 import { CustomSelect } from "components/validation/Select";
 
 export const EditTestForm = ({ onSuccess, data }) => {
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const [updateTest] = useMutation(UPDATE_TEST);
-  const [value, setValue] = React.useState("Hours");
+  const [value, setValue] = useState("Hours");
   const tatArr = data.tat.split(" ");
   const initialValues = {
     id: data?._id,
@@ -44,12 +39,12 @@ export const EditTestForm = ({ onSuccess, data }) => {
         variables: variables,
       });
       if (data) {
-        showSuccessMsg(enqueueSnackbar, "Test Updated.");
+        displayMessage("success", "Test Updated.");
         onSuccess();
       }
     } catch (err) {
-      handleError(err, enqueueSnackbar);
-      console.log("failed to update test", err);
+      displayMessage("error", err);
+      console.error(err);
     }
   };
 
@@ -68,8 +63,7 @@ export const EditTestForm = ({ onSuccess, data }) => {
       validateOnMount={false}
       validateOnBlur={false}
     >
-      {({ isSubmitting, dirty, isValid, setFieldValue, setValues }) => {
-        /* setValues(initialValues); */
+      {({ isSubmitting }) => {
         return (
           <Form style={{ marginTop: "1rem" }}>
             <Grid container direction="column" gap={2}>

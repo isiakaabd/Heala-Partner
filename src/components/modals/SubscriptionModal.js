@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { CustomButton } from "components/Utilities";
-import { useSnackbar } from "notistack";
+import { useAlert } from "hooks";
 import { Formik, Form } from "formik";
 import FormikControl from "components/validation/FormikControl";
 import { formatNumber } from "components/Utilities/Time";
@@ -11,7 +11,6 @@ import { getSinglePlan, getPlans } from "components/graphQL/useQuery";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import * as Yup from "yup";
 import { useTheme } from "@mui/material/styles";
-import { handleError, showSuccessMsg } from "helpers/filterHelperFunctions";
 
 export const SubscriptionModal = ({
   handleDialogClose,
@@ -22,7 +21,7 @@ export const SubscriptionModal = ({
   singleData,
 }) => {
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
+  const [displayMessage] = useAlert();
   const [createPlan] = useMutation(CREATE_PLAN, {
     refetchQueries: [
       {
@@ -93,9 +92,9 @@ export const SubscriptionModal = ({
             provider,
           },
         });
-        showSuccessMsg(enqueueSnackbar, "Subscription Changed.");
+        displayMessage("success", "Subscription Changed.");
       } catch (error) {
-        handleError(error, enqueueSnackbar);
+        displayMessage("error", error);
       }
     } else if (type === "add") {
       try {
@@ -108,9 +107,9 @@ export const SubscriptionModal = ({
             provider,
           },
         });
-        showSuccessMsg(enqueueSnackbar, "Subscription Created.");
+        displayMessage("success", "Subscription Created.");
       } catch (error) {
-        handleError(error, enqueueSnackbar);
+        displayMessage("error", error);
         console.error(error);
       }
     }

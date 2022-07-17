@@ -22,7 +22,8 @@ import {
   pharmacyMenu,
   diagnosticsMenu,
 } from "helpers/asideMenus";
-import useAlert from "hooks/useAlert";
+
+import { useAlert } from "hooks";
 const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
   const useStyles = makeStyles((theme) => ({
     aside: {

@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import t from "prop-types";
 import { Grid } from "@mui/material";
 import { Filter } from "components/Utilities";
-import useAlert from "hooks/useAlert";
+import { useAlert } from "hooks";
 import {
   genderType,
   patientsProfileDefaultFilterByValues,
-  /* statusFilterBy, */
 } from "helpers/mockData";
 import { deleteVar, filterData } from "helpers/filterHelperFunctions";
 import { getPlans, getProviders } from "components/graphQL/useQuery";
@@ -20,19 +19,14 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
   const [fetchProviders] = useLazyQuery(getProviders);
   const [providerId, setProviderId] = useState(null);
   const [filterPlanValue, setFilterPlanValue] = useState("");
-  const [statusFilterValue, setStatusFilterValue] = useState("");
+  const [setStatusFilterValue] = useState("");
   const { patientsParams, patientsByStatusParams, patientsByPlanParams } =
     queryParams;
   const { fetchPatient, loading, refetch, variables } = patientsParams;
   const [profileFilterValues, setProfileFilterValues] = useState(
     patientsProfileDefaultFilterByValues
   );
-  const {
-    byStatusLoading,
-    /* byStatusVaribles,
-    byStatusRefetch,
-    fetchPatientByStatus, */
-  } = patientsByStatusParams;
+  const { byStatusLoading } = patientsByStatusParams;
   const { byPlanLoading, byPlanVaribles, byPlanRefetch, fetchPatientByPlan } =
     patientsByPlanParams;
 

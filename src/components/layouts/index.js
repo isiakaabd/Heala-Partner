@@ -6,7 +6,6 @@ export { default as EnhancedTableHeader } from "./EnhancedTableHeader";
 export { default as EnhancedTableToolbar } from "./EnhancedTableToolbar";
 export { default as HospitalHeaderContent } from "./HospitalHeaderContent";
 export { default as HeaderContents } from "./HeaderContents";
-export { default as HospitalHeader } from "../depreciated/HospitalHeader";
 export { default as HeadersContents } from "./HeadersContents";
 export { default as HospitalDashboardChart } from "./HospitalDashboardChart";
 export { default as Headers } from "./Headers";

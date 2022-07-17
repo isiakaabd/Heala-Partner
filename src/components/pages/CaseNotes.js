@@ -362,7 +362,7 @@ const CaseNotes = () => {
                 <Grid item>
                   <Chip
                     variant="contained"
-                    label={status}
+                    label={status ? status : "No Value"}
                     className={classes.infoBadge}
                   />
                 </Grid>

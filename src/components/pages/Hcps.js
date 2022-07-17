@@ -7,8 +7,6 @@ import FormikControl from "components/validation/FormikControl";
 import { useMutation, useLazyQuery } from "@apollo/client";
 import { makeStyles } from "@mui/styles";
 import {
-  /* FilterList, */
-  Search,
   Modals,
   Loader,
   CompoundSearch,
@@ -16,7 +14,8 @@ import {
   CustomButton,
 } from "components/Utilities";
 import AddIcon from "@mui/icons-material/Add";
-import useAlert from "hooks/useAlert";
+
+import { useAlert } from "hooks";
 import { useTheme } from "@mui/material/styles";
 import EnhancedTable from "components/layouts/EnhancedTable";
 import { hcpsHeadCells5 } from "components/Utilities/tableHeaders";
@@ -35,7 +34,6 @@ import {
   Chip,
   Avatar,
 } from "@mui/material";
-// import { getDoctorsProfile } from "components/graphQL/useQuery";
 import { createDOctorProfile } from "components/graphQL/Mutation";
 import { timeConverter } from "components/Utilities/Time";
 import {
@@ -43,21 +41,11 @@ import {
   getSearchPlaceholder,
   handleHospitalPageChange,
 } from "helpers/filterHelperFunctions";
-import {
-  addDocInitialValues,
-  /* cadreFilterBy, */
-  defaultPageInfo,
-  docCadreOptions,
-  docSpecializationsOptions,
-  doctorsSearchOptions,
-  genderType,
-} from "helpers/mockData";
+import { defaultPageInfo, doctorsSearchOptions } from "helpers/mockData";
 import {
   getDoctorsProfile,
   getDoctorsProfileByStatus,
 } from "components/graphQL/useQuery";
-
-// const statusType = ["Active", "Blocked"];
 
 const useStyles = makeStyles((theme) => ({
   searchGrid: {
@@ -213,12 +201,6 @@ const Hcps = () => {
       });
   };
   const [profiles, setProfiles] = useState("");
-  // useEffect(() => {
-  //   if (data) {
-  //     setProfiles(data.doctorProfiles.profile);
-  //     setPageInfo(data.doctorProfiles.pageInfo);
-  //   }
-  // }, [data]);
 
   const [openHcpFilter, setOpenHcpFilter] = useState(false);
   const [openAddHcp, setOpenAddHcp] = useState(false);
@@ -404,11 +386,17 @@ const Hcps = () => {
               })
             }
             dataPageInfo={pageInfo}
-            handlePagination={(page) =>
-              handleHospitalPageChange(fetchDoctors, page, pageInfo, {
-                providerId: partnerProviderId,
-              })
-            }
+            handlePagination={async (page) => {
+              const res = handleHospitalPageChange(
+                fetchDoctors,
+                page,
+                pageInfo,
+                {
+                  providerId: partnerProviderId,
+                }
+              );
+              await setTableData(res, "Failed to change page.");
+            }}
           >
             {profiles.map((row, index) => {
               const {

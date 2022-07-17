@@ -1,11 +1,12 @@
-import React from "react";
+import { useContext } from "react";
 import AppTypeContext from "store/contexts/AppTypeContext";
-
+import { useAlert } from "hooks";
 const useApptype = () => {
-  const context = React.useContext(AppTypeContext);
+  const context = useContext(AppTypeContext);
+  const [displayMessage] = useAlert();
 
   if (context === undefined) {
-    throw new Error("useAppType must be used within AppTypeContext");
+    displayMessage("error", "useAppType must be used within AppTypeContext");
   }
 
   return context;
