@@ -91,9 +91,8 @@ const HeaderProfile = () => {
     //eslint-disable-next-line
   }, [pharmacy, data]);
   const returnString = (data) => {
-    let string = data?.profileUrl.split("/");
-
-    if (string) return string[string.length - 1];
+    let string = data?.split("/");
+    if (string) return string[string?.length - 1];
     return null;
   };
   return (
@@ -107,10 +106,10 @@ const HeaderProfile = () => {
       >
         <Grid item>
           <Avatar
-            alt={pharmacyData.name}
+            alt={pharmacyData?.name}
             src={
-              pharmacyData.logoImageUrl
-                ? pharmacyData.logoImageUrl
+              pharmacyData?.logoImageUrl
+                ? pharmacyData?.logoImageUrl
                 : displayPhoto
             }
           />

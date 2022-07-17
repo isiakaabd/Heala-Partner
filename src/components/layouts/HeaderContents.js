@@ -194,7 +194,6 @@ const HeaderText = ({ pharmacyData }) => {
     case "/dashboard":
       return (
         <div>
-          {console.log(pharmacyData)}
           <Typography variant="h5" className={classes.text} gutterBottom>
             Welcome,
           </Typography>
