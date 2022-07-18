@@ -333,6 +333,7 @@ export const getDoctorsProfileByStatus = gql`
       filterBy: { isActive: $status, role: "doctor" }
       first: $first
       page: $page
+      providerId: $providerId
     ) {
       profile {
         _id

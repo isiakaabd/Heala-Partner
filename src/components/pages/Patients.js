@@ -280,9 +280,7 @@ const Patients = () => {
               }}
               dataPageInfo={pageInfo}
               handlePagination={(page) => {
-                handleHospitalPageChange(fetchPatient, page, pageInfo, {
-                  partnerId: id,
-                });
+                handleHospitalPageChange(fetchPatient, page, pageInfo, id);
               }}
             >
               {profiles.map((row, index) => {

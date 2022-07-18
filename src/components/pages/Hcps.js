@@ -181,22 +181,12 @@ const Hcps = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // const [fetchDoctorsProfile, { data, error, loading, refetch }] = useLazyQuery(
-  //   getDoctorsProfile,
-  //   { notifyOnNetworkStatusChange: true }
-  // );
 
-  // useEffect(() => {
-  //   fetchDoctorsProfile({
-  //     variables: {
-  //       providerId: partnerProviderId,
-  //       first: 10,
-  //     },
-  //   });
-  // }, [fetchDoctorsProfile, partnerProviderId]);
   const setTableData = async (response, errMsg) => {
+    console.log(response);
     response
       .then(({ data }) => {
+        console.log(data);
         setPageInfo(data.doctorProfiles.pageInfo || []);
         setProfiles(data.doctorProfiles.profile || defaultPageInfo);
       })
@@ -364,6 +354,7 @@ const Hcps = () => {
         >
           <DoctorFilters
             setProfiles={setProfiles}
+            partnerProviderId={partnerProviderId}
             setPageInfo={setPageInfo}
             queryParams={{
               doctorsParams: { fetchDoctors, loading, refetch, variables },
@@ -386,7 +377,7 @@ const Hcps = () => {
             paginationLabel="Doctors per page"
             hasCheckbox={true}
             changeLimit={async (e) => {
-              const res = changeHospitalTableLimit(fetchDoctors, {
+              const res = await changeHospitalTableLimit(fetchDoctors, {
                 first: e,
                 providerId: partnerProviderId,
               });
@@ -399,10 +390,9 @@ const Hcps = () => {
                 fetchDoctors,
                 page,
                 pageInfo,
-                {
-                  providerId: partnerProviderId,
-                }
+                partnerProviderId
               );
+              console.log(res);
               await setTableData(res, "Failed to change page.");
             }}
           >

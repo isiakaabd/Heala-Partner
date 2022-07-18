@@ -157,18 +157,13 @@ export const deleteVar = (variable) => {
     delete variable[key];
   }
 };
-export const handleHospitalPageChange = (
-  fetchDataFN,
-  type,
-  pageInfo,
-  variables
-) => {
+export const handleHospitalPageChange = (fetchDataFN, type, pageInfo, id) => {
   const getData = (pageNumber) => {
-    fetchDataFN({
+    return fetchDataFN({
       variables: {
         page: pageNumber,
-        first: pageInfo.limit,
-        ...variables,
+        providerId: id,
+        first: pageInfo?.limit || 10,
       },
     });
   };
@@ -301,15 +296,19 @@ export const getSearchPlaceholder = (filterBy) => {
 };
 
 export const filterData = async (filterVaribles, queryParams) => {
+  console.log(filterVaribles);
+  const partnerProviderId = localStorage.getItem("partnerProviderId");
   try {
     const { fetchData, refetch, variables } = queryParams;
     const newFilterVaribles = removeEmptyStringValues(filterVaribles);
+    const x = { ...newFilterVaribles, providerId: partnerProviderId };
+    console.log(x);
     const getData = () => {
       if (newFilterVaribles === {}) {
         deleteVar(variables);
         return refetch();
       } else {
-        return fetchData({ variables: newFilterVaribles });
+        return fetchData({ variables: x });
       }
     };
 

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import t from "prop-types";
 import { Grid } from "@mui/material";
-
 import { Filter } from "components/Utilities";
-
 import { useAlert } from "hooks";
 import {
   cadreOptions,
@@ -11,29 +9,38 @@ import {
   doctorsProfileDefaultFilterByValues,
   genderType,
   specializationOptions,
-  statusFilterBy,
+  // statusFilterBy,
 } from "helpers/mockData";
 import { deleteVar, filterData } from "helpers/filterHelperFunctions";
 import { getProviders } from "components/graphQL/useQuery";
 import { useLazyQuery } from "@apollo/client";
 
-const DoctorFilters = ({ setProfiles, setPageInfo, queryParams }) => {
-  const { displayAlert } = useAlert();
-  const [statusFilterValue, setStatusFilterValue] = useState("");
-  const [providers, setProviders] = useState([]);
+const DoctorFilters = ({
+  setProfiles,
+  setPageInfo,
+  queryParams,
+  partnerProviderId,
+}) => {
+  const [displayAlert] = useAlert();
+  const [_, setStatusFilterValue] = useState("");
+  const [__, setProviders] = useState([]);
   const [profileFilterValues, setProfileFilterValues] = useState(
     doctorsProfileDefaultFilterByValues
   ); // gender cadre specialization providerId
-  const [fetchProviders] = useLazyQuery(getProviders);
+  const [fetchProviders] = useLazyQuery(getProviders, {
+    variables: {
+      providerId: partnerProviderId,
+    },
+  });
   const { doctorsParams, doctorsByStatusParams } = queryParams;
   const { fetchDoctors, loading, refetch, variables } = doctorsParams;
   const {
     byStatusLoading,
-    byStatusVaribles,
-    byStatusRefetch,
-    fetchDoctorsByStatus,
+    // byStatusVaribles,
+    // byStatusRefetch,
+    // fetchDoctorsByStatus,
   } = doctorsByStatusParams;
-
+  console.log(_, __);
   useEffect(() => {
     fetchProviders()
       .then(({ data }) => {
@@ -62,6 +69,7 @@ const DoctorFilters = ({ setProfiles, setPageInfo, queryParams }) => {
         fetchData: fetchDoctors,
         refetch,
         variables,
+        providerId: localStorage.getItem("partnerProviderId"),
       })
         .then((data) => {
           setPageInfo(data.doctorProfiles.pageInfo || []);
@@ -76,31 +84,30 @@ const DoctorFilters = ({ setProfiles, setPageInfo, queryParams }) => {
     }
   };
 
-  const onFilterStatusChange = async (value) => {
-    try {
-      setProfileFilterValues(doctorsProfileDefaultFilterByValues);
-      deleteVar(byStatusVaribles);
-      setStatusFilterValue(value);
-      const filterVariables = { status: value };
-
-      filterData(filterVariables, {
-        fetchData: fetchDoctorsByStatus,
-        refetch: byStatusRefetch,
-        variables: byStatusVaribles,
-      })
-        .then((data) => {
-          console.log(data);
-          setProfiles(data?.doctorProfilesByStatus?.profile || []);
-          setPageInfo(data?.doctorProfilesByStatus?.pageInfo || {});
-        })
-        .catch(() => {
-          refresh(setStatusFilterValue, "");
-        });
-    } catch (error) {
-      console.error(error);
-      refresh(setStatusFilterValue, "");
-    }
-  };
+  // const onFilterStatusChange = async (value) => {
+  //   try {
+  //     setProfileFilterValues(doctorsProfileDefaultFilterByValues);
+  //     deleteVar(byStatusVaribles);
+  //     setStatusFilterValue(value);
+  //     const filterVariables = { status: value };
+  //     filterData(filterVariables, {
+  //       fetchData: fetchDoctorsByStatus,
+  //       refetch: byStatusRefetch,
+  //       variables: byStatusVaribles,
+  //     })
+  //       .then((data) => {
+  //         console.log(data);
+  //         setProfiles(data?.doctorProfilesByStatus?.profile || []);
+  //         setPageInfo(data?.doctorProfilesByStatus?.pageInfo || {});
+  //       })
+  //       .catch(() => {
+  //         refresh(setStatusFilterValue, "");
+  //       });
+  //   } catch (error) {
+  //     console.error(error);
+  //     refresh(setStatusFilterValue, "");
+  //   }
+  // };
 
   const refresh = async (setFilterValue, defaultVal) => {
     displayAlert("error", `Something went wrong while filtering. Try again.`);
@@ -161,18 +168,6 @@ const DoctorFilters = ({ setProfiles, setPageInfo, queryParams }) => {
               hasClearBtn: true,
               disavle: loading || byStatusLoading,
             },
-            {
-              label: "",
-              onHandleChange: (e) =>
-                onFilterProfileChange("providerId", e?.target?.value),
-              onClickClearBtn: () => onFilterProfileChange("providerId", ""),
-              options: providers,
-              name: "providerId",
-              placeholder: "By provider",
-              value: profileFilterValues.providerId,
-              hasClearBtn: true,
-              disavle: loading || byStatusLoading,
-            },
           ].map((filter, idx) => {
             return (
               <Grid item key={`${idx}-${filter.name}`}>
@@ -194,7 +189,7 @@ const DoctorFilters = ({ setProfiles, setPageInfo, queryParams }) => {
       </Grid>
 
       {/* FILTER BY STATUS */}
-      <Grid item>
+      {/* <Grid item>
         <Filter
           label="By Status"
           onHandleChange={(e) => onFilterStatusChange(e?.target?.value)}
@@ -206,7 +201,7 @@ const DoctorFilters = ({ setProfiles, setPageInfo, queryParams }) => {
           hasClearBtn={true}
           disable={loading || byStatusLoading}
         />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

@@ -12,14 +12,14 @@ import { getPlans, getProviders } from "components/graphQL/useQuery";
 import { useLazyQuery } from "@apollo/client";
 
 const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
-  const { displayAlert } = useAlert();
-  const [plans, setPlans] = useState([]);
+  const [displayAlert] = useAlert();
+  const [__, setPlans] = useState([]);
   const [fetchPlans] = useLazyQuery(getPlans);
-  const [providers, setProviders] = useState([]);
+  const [___, setProviders] = useState([]);
   const [fetchProviders] = useLazyQuery(getProviders);
   const [providerId, setProviderId] = useState(null);
-  const [filterPlanValue, setFilterPlanValue] = useState("");
-  const [setStatusFilterValue] = useState("");
+  // const [____, setFilterPlanValue] = useState("");
+  const [_, setStatusFilterValue] = useState("");
   const { patientsParams, patientsByStatusParams, patientsByPlanParams } =
     queryParams;
   const { fetchPatient, loading, refetch, variables } = patientsParams;
@@ -27,9 +27,11 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
     patientsProfileDefaultFilterByValues
   );
   const { byStatusLoading } = patientsByStatusParams;
-  const { byPlanLoading, byPlanVaribles, byPlanRefetch, fetchPatientByPlan } =
-    patientsByPlanParams;
-
+  const {
+    byPlanLoading,
+    // byPlanVaribles, byPlanRefetch, fetchPatientByPlan
+  } = patientsByPlanParams;
+  console.log(_, __, ___);
   useEffect(() => {
     fetchProviders()
       .then(({ data }) => {
@@ -113,39 +115,39 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
     }
   }; */
 
-  const onFilterPlanChange = async (value) => {
-    try {
-      if (value === "") {
-        setProfileFilterValues({
-          ...patientsProfileDefaultFilterByValues,
-        });
-      } else {
-        setProfileFilterValues({
-          ...patientsProfileDefaultFilterByValues,
-          provider: profileFilterValues.provider,
-        });
-      }
-      deleteVar(byPlanVaribles);
-      setFilterPlanValue(value);
-      const filterVariables = { planId: value };
+  // const onFilterPlanChange = async (value) => {
+  //   try {
+  //     if (value === "") {
+  //       setProfileFilterValues({
+  //         ...patientsProfileDefaultFilterByValues,
+  //       });
+  //     } else {
+  //       setProfileFilterValues({
+  //         ...patientsProfileDefaultFilterByValues,
+  //         provider: profileFilterValues.provider,
+  //       });
+  //     }
+  //     deleteVar(byPlanVaribles);
+  //     setFilterPlanValue(value);
+  //     const filterVariables = { planId: value };
 
-      filterData(filterVariables, {
-        fetchData: fetchPatientByPlan,
-        refetch: byPlanRefetch,
-        variables: byPlanVaribles,
-      })
-        .then((data) => {
-          setProfiles(data?.profilesByPlan?.data || []);
-          setPageInfo(data?.profilesByPlan?.pageInfo || {});
-        })
-        .catch(() => {
-          refresh(setStatusFilterValue, "");
-        });
-    } catch (error) {
-      console.error(error);
-      refresh(setStatusFilterValue, "");
-    }
-  };
+  //     filterData(filterVariables, {
+  //       fetchData: fetchPatientByPlan,
+  //       refetch: byPlanRefetch,
+  //       variables: byPlanVaribles,
+  //     })
+  //       .then((data) => {
+  //         setProfiles(data?.profilesByPlan?.data || []);
+  //         setPageInfo(data?.profilesByPlan?.pageInfo || {});
+  //       })
+  //       .catch(() => {
+  //         refresh(setStatusFilterValue, "");
+  //       });
+  //   } catch (error) {
+  //     console.error(error);
+  //     refresh(setStatusFilterValue, "");
+  //   }
+  // };
 
   const refresh = async (setFilterValue, defaultVal) => {
     displayAlert("error", `Something went wrong while filtering. Try again.`);
@@ -183,7 +185,7 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
       </Grid>
 
       {/* FILTER BY PROVIDER AND PLAN */}
-      <Grid item>
+      {/* <Grid item>
         <Filter
           label="By Provider and Plan"
           onHandleChange={(e) =>
@@ -212,7 +214,7 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
             disable={loading || byStatusLoading || byPlanLoading}
           />
         </Grid>
-      )}
+      )} */}
 
       {/* FILTER BY STATUS */}
       {/* <Grid item>
