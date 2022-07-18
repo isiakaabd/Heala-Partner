@@ -70,6 +70,8 @@ export const hcpsHeadCells5 = [
 export const messagesHeadCell = [
   { id: 0, label: "Date" },
   { id: 9, label: "Referral ID" },
+  { id: 91, label: "Test ID" },
+
   { id: 2, label: "Cancellation Reasons" },
   { id: 3, label: "Patient's Name" },
 ];
@@ -462,7 +464,7 @@ export const hcpsHeadCells = [
 export const partnersHeadCells = [
   { id: 0, label: "Date" },
   { id: 1, label: "Time" },
-  { id: 2, label: "Order Num" },
+  { id: 2, label: "Test ID" },
   { id: 3, label: "Patient's Name" },
   { id: 120, label: "Test Amount" },
   { id: 12, label: "Total Test" },

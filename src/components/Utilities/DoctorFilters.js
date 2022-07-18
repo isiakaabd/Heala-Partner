@@ -22,6 +22,7 @@ const DoctorFilters = ({
   partnerProviderId,
 }) => {
   const [displayAlert] = useAlert();
+
   const [_, setStatusFilterValue] = useState("");
   const [__, setProviders] = useState([]);
   const [profileFilterValues, setProfileFilterValues] = useState(
@@ -206,9 +207,9 @@ const DoctorFilters = ({
   );
 };
 DoctorFilters.propTypes = {
-  setProfiles: t.func.isRequired,
-  setPageInfo: t.func.isRequired,
-  queryParams: t.object.isRequired,
+  setProfiles: t.func,
+  setPageInfo: t.func,
+  queryParams: t.object,
 };
 
 export default DoctorFilters;

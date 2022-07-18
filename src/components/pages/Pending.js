@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { dateMoment } from "components/Utilities/Time";
+import { useTheme } from "@mui/material/styles";
 import {
   Grid,
   Avatar,
@@ -11,12 +12,12 @@ import {
   FormControl,
   FormLabel,
 } from "@mui/material";
-import { debounce } from "helpers/debounce";
 import {
   Loader,
   Modals,
   Search,
-  FilterList,
+  // FilterList,
+  CustomButton,
   FormSelect,
 } from "components/Utilities";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
@@ -115,7 +116,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Pending = () => {
   const classes = useStyles();
+  const theme = useTheme();
   const [pendingState, setPendingState] = useState([]);
+  const [search, setSearch] = useState("");
   const status = "pending";
   const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [fetchDiagnostics, { data, loading, error }] =
@@ -129,7 +132,7 @@ const Pending = () => {
     totalDocs: 0,
   });
   //eslint-disable-next-line
-  const debouncer = useCallback(debounce(fetchDiagnostics), []);
+
   useEffect(() => {
     fetchDiagnostics({
       variables: {
@@ -156,12 +159,30 @@ const Pending = () => {
   });
 
   const { date, plan } = inputValue;
+  const buttonType = {
+    background: theme.palette.common.black,
+    hover: theme.palette.primary.main,
+    active: theme.palette.primary.dark,
+  };
 
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleDialogOpen = () => setIsOpen(true);
+  // const handleDialogOpen = () => setIsOpen(true);
+  const handleSubmitSearch = async () => {
+    try {
+      const { data } = await fetchDiagnostics({
+        variables: { testId: search, status, partnerProviderId },
+      });
+      if (data) {
+        setPendingState(data?.getDiagnosticTests.data);
+        setPageInfo(data.getDiagnosticTests.pageInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleDialogClose = () => setIsOpen(false);
   if (loading) return <Loader />;
@@ -182,28 +203,22 @@ const Pending = () => {
         gap={2}
         flexWrap="nowrap"
       >
-        <Grid
-          item
-          container
-          flexDirection={{ md: "row", sm: "row", xs: "column" }}
-          spacing={{ md: 4, sm: 4, xs: 2 }}
-        >
+        <Grid item container spacing={{ md: 4, sm: 4, xs: 2 }}>
           <Grid item flex={1}>
             <Search
-              onChange={(e) => {
-                let value = e.target.value;
-                if (value !== "") {
-                  return debouncer({
-                    variables: { testId: value, partnerProviderId },
-                  });
-                }
-              }}
               placeholder="Type to search Test by test ID..."
               height="5rem"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </Grid>
           <Grid item>
-            <FilterList title="Filter Referrals" onClick={handleDialogOpen} />
+            <CustomButton
+              title="Search"
+              type={buttonType}
+              disabled={!search}
+              onClick={handleSubmitSearch}
+            />
           </Grid>
         </Grid>
         {/* The Search and Filter ends here */}

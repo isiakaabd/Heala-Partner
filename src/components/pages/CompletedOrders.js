@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Chip,
@@ -10,14 +10,14 @@ import {
   Checkbox,
   TableRow,
 } from "@mui/material";
-import { debounce } from "helpers/debounce";
+import { useTheme } from "@mui/material/styles";
 import prettyMoney from "pretty-money";
 import {
   FormSelect,
   Loader,
+  CustomButton,
   Modals,
   Search,
-  FilterList,
 } from "components/Utilities";
 import useFormInput from "components/hooks/useFormInput";
 import { makeStyles } from "@mui/styles";
@@ -144,12 +144,20 @@ const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
 
 const CompletedOrders = () => {
   const classes = useStyles();
+  const theme = useTheme();
   const [state, setState] = useState([]);
+  const [search, setSearch] = useState("");
   const prettyDollarConfig = {
     currency: "₦",
     position: "before",
     spaced: false,
     thousandsDelimiter: ",",
+  };
+
+  const buttonType = {
+    background: theme.palette.common.black,
+    hover: theme.palette.primary.main,
+    active: theme.palette.primary.dark,
   };
   const [openFilterPartner, setOpenFilterPartner] = useState(false);
   const orderStatus = "completed";
@@ -180,7 +188,19 @@ const CompletedOrders = () => {
       setPageInfo(data?.getDrugOrders.pageInfo);
     }
   }, [data]);
-
+  const handleSubmitSearch = async () => {
+    try {
+      const { data } = await fetchDiagnostics({
+        variables: { orderId: search, status: orderStatus, partnerProviderId },
+      });
+      if (data) {
+        setState(data?.getDrugOrders.data);
+        setPageInfo(data.getDrugOrders.pageInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
   // FILTER PARTNERS SELECT STATES
   const [filterSelectInput, handleSelectedInput] = useFormInput({
     hospitalName: "",
@@ -189,8 +209,7 @@ const CompletedOrders = () => {
   });
 
   const { hospitalName, date, categoryName } = filterSelectInput;
-  //eslint-disable-next-line
-  const debouncer = useCallback(debounce(fetchDiagnostics), []);
+
   const { selectedRows, page } = useSelector((state) => state.tables);
 
   const { setSelectedRows } = useActions();
@@ -206,29 +225,20 @@ const CompletedOrders = () => {
         flexWrap="nowrap"
         height="100%"
       >
-        <Grid
-          item
-          container
-          flexDirection={{ md: "row", sm: "row", xs: "column" }}
-          spacing={{ md: 4, sm: 4, xs: 2 }}
-        >
+        <Grid item container spacing={{ md: 4, sm: 4, xs: 2 }}>
           <Grid item flex={1}>
             <Search
-              onChange={(e) => {
-                let value = e.target.value;
-                if (value !== "") {
-                  return debouncer({
-                    variables: { orderId: value, partnerProviderId },
-                  });
-                }
-              }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Type to search Order by orderId..."
             />
           </Grid>
           <Grid item>
-            <FilterList
-              title="Filter Referrals"
-              onClick={() => setOpenFilterPartner(true)}
+            <CustomButton
+              title="Search"
+              type={buttonType}
+              disabled={!search}
+              onClick={handleSubmitSearch}
             />
           </Grid>
         </Grid>

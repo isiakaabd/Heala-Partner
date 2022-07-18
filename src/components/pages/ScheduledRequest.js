@@ -18,7 +18,7 @@ import {
   Modals,
   FormSelect,
   Search,
-  FilterList,
+  CustomButton,
   Loader,
 } from "components/Utilities";
 import { Link } from "react-router-dom";
@@ -37,7 +37,7 @@ import {
   fetchMoreData,
   handlePageChange,
 } from "helpers/filterHelperFunctions";
-import { debounce } from "helpers/debounce";
+import { useTheme } from "@mui/material/styles";
 const useStyles = makeStyles((theme) => ({
   button: {
     "&.MuiButton-root": {
@@ -151,6 +151,13 @@ const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
 
 const ScheduledRequest = () => {
   const classes = useStyles();
+  const [search, setSearch] = useState("");
+  const theme = useTheme();
+  const buttonType = {
+    background: theme.palette.common.black,
+    hover: theme.palette.primary.main,
+    active: theme.palette.primary.dark,
+  };
   const status = "scheduled";
   const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [scheduleState, setScheduleState] = useState([]);
@@ -185,14 +192,27 @@ const ScheduledRequest = () => {
   const [openFilterPartner, setOpenFilterPartner] = useState(false);
   //eslint-disable-next-line
   //eslint-disable-next-line
-  const debouncer = useCallback(debounce(fetchDiagnostics), []);
+
   // FILTER PARTNERS SELECT STATES
   const [filterSelectInput, handleSelectedInput] = useFormInput({
     hospitalName: "",
     date: "",
     categoryName: "",
   });
-
+  const handleSubmitSearch = useCallback(async () => {
+    try {
+      const { data } = await fetchDiagnostics({
+        variables: { testId: search, status, partnerProviderId },
+      });
+      if (data) {
+        setScheduleState(data?.getDiagnosticTests.data);
+        setPageInfo(data.getDiagnosticTests.pageInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    //eslint-disable-next-line
+  }, [search]);
   const { hospitalName, date, categoryName } = filterSelectInput;
   const prettyDollarConfig = {
     currency: "₦",
@@ -223,22 +243,18 @@ const ScheduledRequest = () => {
         >
           <Grid item flex={1}>
             <Search
-              onChange={(e) => {
-                let value = e.target.value;
-                if (value !== "") {
-                  return debouncer({
-                    variables: { testId: value, partnerProviderId },
-                  });
-                }
-              }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Type to search Tests by test ID..."
               height="5rem"
             />
           </Grid>
           <Grid item>
-            <FilterList
-              title="Filter Referrals"
-              onClick={() => setOpenFilterPartner(true)}
+            <CustomButton
+              title="Search"
+              type={buttonType}
+              disabled={!search}
+              onClick={handleSubmitSearch}
             />
           </Grid>
         </Grid>

@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { dateMoment, timeMoment } from "components/Utilities/Time";
 import prettyMoney from "pretty-money";
-import { debounce } from "helpers/debounce";
 import {
   Button,
   FormControl,
@@ -19,7 +18,7 @@ import {
   FormSelect,
   Search,
   Modals,
-  FilterList,
+  CustomButton,
 } from "components/Utilities";
 import useFormInput from "components/hooks/useFormInput";
 import { makeStyles } from "@mui/styles";
@@ -29,6 +28,7 @@ import { partnersHeadCells } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
+import { useTheme } from "@mui/material/styles";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -147,7 +147,7 @@ const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
 const CompletedOrder = () => {
   const classes = useStyles();
   const [openFilterPartner, setOpenFilterPartner] = useState(false);
-
+  const [search, setSearch] = useState("");
   // FILTER PARTNERS SELECT STATES
   const [filterSelectInput, handleSelectedInput] = useFormInput({
     hospitalName: "",
@@ -155,6 +155,7 @@ const CompletedOrder = () => {
     categoryName: "",
   });
   const [scheduleState, setScheduleState] = useState([]);
+  const theme = useTheme();
   const status = "completed";
   const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [fetchDiagnostics, { data, loading, error }] =
@@ -191,11 +192,27 @@ const CompletedOrder = () => {
     spaced: false,
     thousandsDelimiter: ",",
   };
-
+  const handleSubmitSearch = async () => {
+    try {
+      const { data } = await fetchDiagnostics({
+        variables: { testId: search, status, partnerProviderId },
+      });
+      if (data) {
+        setScheduleState(data?.getDiagnosticTests.data);
+        setPageInfo(data.getDiagnosticTests.pageInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const buttonType = {
+    background: theme.palette.common.black,
+    hover: theme.palette.primary.main,
+    active: theme.palette.primary.dark,
+  };
   const { hospitalName, date, categoryName } = filterSelectInput;
   //eslint-disable-next-line
   //eslint-disable-next-line
-  const debouncer = useCallback(debounce(fetchDiagnostics), []);
 
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
@@ -210,29 +227,20 @@ const CompletedOrder = () => {
         flexWrap="nowrap"
         height="100%"
       >
-        <Grid
-          item
-          container
-          flexDirection={{ md: "row", sm: "row", xs: "column" }}
-          spacing={{ md: 4, sm: 4, xs: 2 }}
-        >
+        <Grid item container spacing={{ md: 4, sm: 4, xs: 2 }}>
           <Grid item flex={1}>
             <Search
-              onChange={(e) => {
-                let value = e.target.value;
-                if (value !== "") {
-                  return debouncer({
-                    variables: { testId: value, partnerProviderId },
-                  });
-                }
-              }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Type to search Test by test ID..."
             />
           </Grid>
           <Grid item>
-            <FilterList
-              title="Filter Referrals"
-              onClick={() => setOpenFilterPartner(true)}
+            <CustomButton
+              title="Search"
+              type={buttonType}
+              disabled={!search}
+              onClick={handleSubmitSearch}
             />
           </Grid>
         </Grid>

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { debounce } from "helpers/debounce";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Avatar,
@@ -17,7 +16,7 @@ import {
   Search,
   Modals,
   Loader,
-  FilterList,
+  CustomButton,
   FormSelect,
 } from "components/Utilities";
 import useFormInput from "components/hooks/useFormInput";
@@ -29,6 +28,7 @@ import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import { useLazyQuery } from "@apollo/client";
 import { getDiagnosticTests } from "components/graphQL/useQuery";
+import { useTheme } from "@mui/material/styles";
 import {
   changeTableLimit,
   handlePageChange,
@@ -117,6 +117,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CancelledOrder = () => {
+  const theme = useTheme();
+  const [search, setSearch] = useState("");
   const classes = useStyles();
   const status = "cancelled";
   const partnerProviderId = localStorage.getItem("partnerProviderId");
@@ -132,7 +134,19 @@ const CancelledOrder = () => {
     totalDocs: 0,
   });
   //eslint-disable-next-line
-  const debouncer = useCallback(debounce(fetchDiagnostics), []);
+  const handleSubmitSearch = async () => {
+    try {
+      const { data } = await fetchDiagnostics({
+        variables: { testId: search, status, partnerProviderId },
+      });
+      if (data) {
+        setScheduleState(data?.getDiagnosticTests.data);
+        setPageInfo(data.getDiagnosticTests.pageInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
   useEffect(() => {
     fetchDiagnostics({
       variables: {
@@ -161,6 +175,11 @@ const CancelledOrder = () => {
   const { hospitalName, date, categoryName } = filterSelectInput;
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
+  const buttonType = {
+    background: theme.palette.common.black,
+    hover: theme.palette.primary.main,
+    active: theme.palette.primary.dark,
+  };
 
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
@@ -173,30 +192,25 @@ const CancelledOrder = () => {
         height="100%"
         flexWrap="nowrap"
       >
-        <Grid
-          item
-          container
-          flexDirection={{ md: "row", sm: "row", xs: "column" }}
-          spacing={{ md: 4, sm: 4, xs: 2 }}
-        >
+        <Grid item container spacing={{ md: 4, sm: 4, xs: 2 }}>
           <Grid item flex={1}>
             <Search
-              onChange={(e) => {
-                let value = e.target.value;
-                if (value !== "") {
-                  return debouncer({
-                    variables: { testId: value, partnerProviderId },
-                  });
-                }
-              }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Type to search Test by test ID..."
             />
           </Grid>
           <Grid item>
-            <FilterList
+            <CustomButton
+              title="Search"
+              type={buttonType}
+              disabled={!search}
+              onClick={handleSubmitSearch}
+            />
+            {/* <FilterList
               onClick={() => setOpenFilterPartner(true)}
               title="Filter Referrals"
-            />
+            /> */}
           </Grid>
         </Grid>
         {scheduleState.length > 0 ? (
@@ -231,6 +245,7 @@ const CancelledOrder = () => {
                   _id,
                   referralId,
                   patientData,
+                  testId,
                   cancellationReason,
                 } = row;
                 const isItemSelected = isSelected(row.id, selectedRows);
@@ -268,6 +283,9 @@ const CancelledOrder = () => {
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       {referralId}
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      {testId}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       {cancellationReason}

@@ -15,7 +15,7 @@ import {
   Modals,
   Search,
   FormSelect,
-  FilterList,
+  CustomButton,
   Loader,
 } from "components/Utilities";
 import { EnhancedTable } from "components/layouts";
@@ -114,6 +114,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PendingOrder = () => {
+  const [search, setSearch] = useState("");
   const classes = useStyles();
   const theme = useTheme();
   const [state, setState] = useState([]);
@@ -161,7 +162,25 @@ const PendingOrder = () => {
   const debouncer = useCallback(debounce(fetchDiagnostics), []);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleDialogOpen = () => setIsOpen(true);
+  // const handleDialogOpen = () => setIsOpen(true);
+  const handleSubmitSearch = async () => {
+    try {
+      const { data } = await fetchDiagnostics({
+        variables: { orderId: search, status, partnerProviderId },
+      });
+      if (data) {
+        setState(data?.getDrugOrders.data);
+        setPageInfo(data.getDrugOrders.pageInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const buttonType = {
+    background: theme.palette.common.black,
+    hover: theme.palette.primary.main,
+    active: theme.palette.primary.dark,
+  };
   const handleDialogClose = () => setIsOpen(false);
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
@@ -181,27 +200,21 @@ const PendingOrder = () => {
         flexWrap="nowrap"
         height="100%"
       >
-        <Grid
-          item
-          container
-          flexDirection={{ md: "row", sm: "row", xs: "column" }}
-          spacing={{ md: 4, sm: 4, xs: 2 }}
-        >
+        <Grid item container spacing={{ md: 4, sm: 4, xs: 2 }}>
           <Grid item flex={1}>
             <Search
-              onChange={(e) => {
-                let value = e.target.value;
-                if (value !== "") {
-                  return debouncer({
-                    variables: { orderId: value, partnerProviderId },
-                  });
-                }
-              }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Type to search Order by orderId..."
             />
           </Grid>
           <Grid item>
-            <FilterList title="Filter Referrals" onClick={handleDialogOpen} />
+            <CustomButton
+              title="Search"
+              type={buttonType}
+              disabled={!search}
+              onClick={handleSubmitSearch}
+            />{" "}
           </Grid>
         </Grid>
         {/* The Search and Filter ends here */}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Success } from "components/modals";
 import { dateMoment, timeMoment } from "components/Utilities/Time";
 import * as Yup from "yup";
@@ -6,7 +6,6 @@ import { useTheme } from "@mui/material/styles";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
 import DisablePatient from "components/modals/DeleteOrDisable";
-import { debounce } from "helpers/debounce";
 import {
   Grid,
   FormControl,
@@ -23,7 +22,6 @@ import {
   FormSelect,
   Modals,
   Search,
-  FilterList,
   Loader,
   CustomButton,
 } from "components/Utilities";
@@ -154,7 +152,6 @@ const ProcessingOrders = () => {
   });
   const orderStatus = "pending";
 
- 
   useEffect(() => {
     if (data) {
       setState(data?.getDrugOrders.data);
@@ -168,6 +165,7 @@ const ProcessingOrders = () => {
     thousandsDelimiter: ",",
   };
   const history = useHistory();
+  const [search, setSearch] = useState("");
   const [cancel, setCancel] = useState(false);
   const [open, setOpen] = useState(false);
   const [openDisablePatient, setOpenDisablePatient] = useState(false);
@@ -220,15 +218,15 @@ const ProcessingOrders = () => {
       displayMessage("error", error);
     }
   };
-   useEffect(() => {
-     fetchDiagnostics({
-       variables: {
-         status: orderStatus,
-         first: pageInfo.limit,
-         partnerProviderId,
-       },
-     });
-   }, [fetchDiagnostics, partnerProviderId, pageInfo.limit]);
+  useEffect(() => {
+    fetchDiagnostics({
+      variables: {
+        status: orderStatus,
+        first: pageInfo.limit,
+        partnerProviderId,
+      },
+    });
+  }, [fetchDiagnostics, partnerProviderId, pageInfo.limit]);
 
   const darkButton = {
     background: theme.palette.primary.main,
@@ -282,9 +280,25 @@ const ProcessingOrders = () => {
     status: "",
   });
   // eslint-disable-next-line
-  const debouncer = useCallback(debounce(fetchDiagnostics), []);
   const { date, specialization, hospital } = selectedInput;
-
+  const handleSubmitSearch = async () => {
+    try {
+      const { data } = await fetchDiagnostics({
+        variables: { testId: search, status: orderStatus, partnerProviderId },
+      });
+      if (data) {
+        setState(data?.getDrugOrders.data);
+        setPageInfo(data?.getDrugOrders.pageInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const buttonType = {
+    background: theme.palette.common.black,
+    hover: theme.palette.primary.main,
+    active: theme.palette.primary.dark,
+  };
   const { rowsPerPage, selectedRows, page } = useSelector(
     (state) => state.tables
   );
@@ -294,29 +308,20 @@ const ProcessingOrders = () => {
 
   return (
     <Grid container direction="column" gap={2} flexWrap="nowrap" height="100%">
-      <Grid
-        item
-        container
-        flexDirection={{ md: "row", sm: "row", xs: "column" }}
-        spacing={{ md: 4, sm: 4, xs: 2 }}
-      >
+      <Grid item container spacing={{ md: 4, sm: 4, xs: 2 }}>
         <Grid item flex={1}>
           <Search
-            onChange={(e) => {
-              let value = e.target.value;
-              if (value !== "") {
-                return debouncer({
-                  variables: { orderId: value, partnerProviderId },
-                });
-              }
-            }}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Type to search Test by orderId..."
           />
         </Grid>
         <Grid item>
-          <FilterList
-            onClick={() => setOpenHcpFilter(true)}
-            title="Filter Referrals"
+          <CustomButton
+            title="Search"
+            type={buttonType}
+            disabled={!search}
+            onClick={handleSubmitSearch}
           />
         </Grid>
       </Grid>

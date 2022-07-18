@@ -392,7 +392,7 @@ const Hcps = () => {
                 pageInfo,
                 partnerProviderId
               );
-              console.log(res);
+
               await setTableData(res, "Failed to change page.");
             }}
           >

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import t from "prop-types";
-import useAlert from "../../hooks/useAlert";
+import { useAlert } from "hooks";
 import { useTheme } from "@mui/material/styles";
 import { Grid, Typography } from "@mui/material";
 import { deleteVar } from "helpers/filterHelperFunctions";

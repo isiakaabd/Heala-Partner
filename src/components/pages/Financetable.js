@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
+  changeHospitalTableLimit,
+  handleHospitalPageChange,
+} from "helpers/filterHelperFunctions";
+import {
   Grid,
   Typography,
   Avatar,
@@ -23,9 +27,10 @@ import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import { Loader } from "components/Utilities";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { getEarningStats } from "components/graphQL/useQuery";
-
+import { defaultPageInfo } from "helpers/mockData";
+import { useAlert } from "hooks";
 const useStyles = makeStyles((theme) => ({
   searchGrid: {
     "&.css-13i4rnv-MuiGrid-root": {
@@ -89,32 +94,61 @@ const useStyles = makeStyles((theme) => ({
 const Financetable = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const [displayAlert] = useAlert();
+  const partnerProviderId = localStorage.getItem("partnerProviderId");
+  const [profiles, setProfiles] = useState("");
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
-  const [pageInfo, setPageInfo] = useState([]);
-  const { loading, data, error, refetch } = useQuery(getEarningStats, {
-    variables: {
-      providerId: localStorage.getItem("partnerProviderId"),
-    },
-    notifyOnNetworkStatusChange: true,
+  const [fetchDoctors, { error, loading }] = useLazyQuery(getEarningStats);
+
+  const [pageInfo, setPageInfo] = useState({
+    page: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+    limit: 10,
+    totalDocs: 0,
   });
-  const [earning, setEarning] = useState([]);
-  const fetchMoreFunc = (_, newPage) => {
-    refetch({ page: newPage });
-  };
 
   useEffect(() => {
-    if (data) {
-      setEarning(data.getEarningStats.earningData.data);
-      setPageInfo(data.getEarningStats.earningData.PageInfo);
+    try {
+      async function fetchData() {
+        const { data } = await fetchDoctors({
+          variables: {
+            first: pageInfo.limit,
+            providerId: partnerProviderId,
+          },
+        });
+        if (data) {
+          setPageInfo(data.getEarningStats.earningData.PageInfo || []);
+          setProfiles(data.getEarningStats.earningData.data || defaultPageInfo);
+        }
+        // ...
+      }
+      fetchData();
+    } catch (err) {
+      console.error(err);
     }
-  }, [earning, data]);
 
-  const [rowsPerPage, setRowsPerPage] = useState(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const setTableData = async (response, errMsg) => {
+    response
+      .then(({ data }) => {
+        setPageInfo(data.getEarningStats.earningData.PageInfo || []);
+        setProfiles(data.getEarningStats.earningData.data || defaultPageInfo);
+      })
+      .catch((error) => {
+        console.error(error);
+        displayAlert("error", errMsg);
+      });
+  };
+
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
-  const { page, totalPages, hasNextPage, hasPrevPage, limit, totalDocs } =
-    pageInfo;
+  // const { page, totalPages, hasNextPage, hasPrevPage, limit, totalDocs } =
+  //   pageInfo;
 
   return (
     <Grid container direction="column" gap={2} height="100%">
@@ -129,24 +163,33 @@ const Financetable = () => {
             <TrendingDownIcon color="success" className={classes.cardIcon} />
           </Grid>
         </Grid>
-        {earning.length > 0 ? (
+        {profiles.length > 0 ? (
           <Grid item container>
             <EnhancedTable
               headCells={financeHeader}
-              rows={earning}
+              rows={profiles}
               paginationLabel="finance per page"
-              page={+page}
-              limit={limit}
-              totalPages={totalPages}
-              totalDocs={totalDocs}
-              rowsPerPage={rowsPerPage}
-              setRowsPerPage={setRowsPerPage}
-              hasNextPage={hasNextPage}
-              hasPrevPage={hasPrevPage}
-              handleChangePage={fetchMoreFunc}
               hasCheckbox={true}
+              dataPageInfo={pageInfo}
+              changeLimit={async (e) => {
+                const res = await changeHospitalTableLimit(fetchDoctors, {
+                  first: e,
+                  providerId: partnerProviderId,
+                });
+
+                await setTableData(res, "Failed to change table limit");
+              }}
+              handlePagination={async (page) => {
+                const res = handleHospitalPageChange(
+                  fetchDoctors,
+                  page,
+                  pageInfo,
+                  partnerProviderId
+                );
+                await setTableData(res, "Failed to change page.");
+              }}
             >
-              {earning.map((row, index) => {
+              {profiles.map((row, index) => {
                 const { doctorData, createdAt, balance } = row;
                 const { firstName, picture, lastName, specialization } =
                   doctorData[0];

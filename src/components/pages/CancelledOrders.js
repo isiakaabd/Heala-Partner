@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { dateMoment, timeMoment } from "components/Utilities/Time";
 import {
   TableRow,
@@ -31,10 +31,10 @@ import {
   Modals,
   Loader,
   FormSelect,
-  FilterList,
+  CustomButton,
   Search,
 } from "components/Utilities";
-import { debounce } from "helpers/debounce";
+import { useTheme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -120,6 +120,8 @@ const useStyles = makeStyles((theme) => ({
 
 const CancelledOrders = () => {
   const classes = useStyles();
+  const theme = useTheme();
+  const [search, setSearch] = useState("");
   const [state, setState] = useState([]);
   const [fetchDiagnostics, { data, loading, error }] =
     useLazyQuery(getDrugOrders);
@@ -154,6 +156,24 @@ const CancelledOrders = () => {
   const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
   const dates = ["Hello", "World", "Goodbye", "World"];
   const [openFilterPartner, setOpenFilterPartner] = useState(false);
+  const handleSubmitSearch = async () => {
+    try {
+      const { data } = await fetchDiagnostics({
+        variables: { orderId: search, status, partnerProviderId },
+      });
+      if (data) {
+        setState(data?.getDrugOrders.data);
+        setPageInfo(data.getDrugOrders.pageInfo);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const buttonType = {
+    background: theme.palette.common.black,
+    hover: theme.palette.primary.main,
+    active: theme.palette.primary.dark,
+  };
   const [filterSelectInput, handleSelectedInput] = useFormInput({
     hospitalName: "",
     date: "",
@@ -161,7 +181,6 @@ const CancelledOrders = () => {
   });
   const { hospitalName, date, categoryName } = filterSelectInput;
   // eslint-disable-next-line
-  const debouncer = useCallback(debounce(fetchDiagnostics), []);
 
   const { selectedRows, page } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
@@ -177,29 +196,20 @@ const CancelledOrders = () => {
         flexWrap="nowrap"
         height="100%"
       >
-        <Grid
-          item
-          container
-          flexDirection={{ md: "row", sm: "row", xs: "column" }}
-          spacing={{ md: 4, sm: 4, xs: 2 }}
-        >
+        <Grid item container spacing={{ md: 4, sm: 4, xs: 2 }}>
           <Grid item flex={1}>
             <Search
-              onChange={(e) => {
-                let value = e.target.value;
-                if (value !== "") {
-                  return debouncer({
-                    variables: { orderId: value, partnerProviderId },
-                  });
-                }
-              }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Type to search Order by orderId..."
             />
           </Grid>
           <Grid item>
-            <FilterList
-              onClick={() => setOpenFilterPartner(true)}
-              title="Filter Referrals"
+            <CustomButton
+              title="Search"
+              type={buttonType}
+              disabled={!search}
+              onClick={handleSubmitSearch}
             />
           </Grid>
         </Grid>
