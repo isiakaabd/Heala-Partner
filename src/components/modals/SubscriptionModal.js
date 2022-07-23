@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { CustomButton } from "components/Utilities";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import { Formik, Form } from "formik";
 import FormikControl from "components/validation/FormikControl";
 import { formatNumber } from "components/Utilities/Time";
@@ -21,7 +21,7 @@ export const SubscriptionModal = ({
   singleData,
 }) => {
   const theme = useTheme();
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const [createPlan] = useMutation(CREATE_PLAN, {
     refetchQueries: [
       {

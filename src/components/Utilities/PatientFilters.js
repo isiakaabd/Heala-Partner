@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import t from "prop-types";
 import { Grid } from "@mui/material";
 import { Filter } from "components/Utilities";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import {
   genderType,
   patientsProfileDefaultFilterByValues,
@@ -12,7 +12,7 @@ import { getPlans, getProviders } from "components/graphQL/useQuery";
 import { useLazyQuery } from "@apollo/client";
 
 const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
-  const [displayAlert] = useAlert();
+  const { displayMessage } = useAlert();
   const [__, setPlans] = useState([]);
   const [fetchPlans] = useLazyQuery(getPlans);
   const [___, setProviders] = useState([]);
@@ -150,7 +150,7 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
   // };
 
   const refresh = async (setFilterValue, defaultVal) => {
-    displayAlert("error", `Something went wrong while filtering. Try again.`);
+    displayMessage("error", `Something went wrong while filtering. Try again.`);
     setFilterValue(defaultVal);
 
     deleteVar(variables);
@@ -162,7 +162,8 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
       })
       .catch((error) => {
         console.error(error);
-        displayAlert("error", `Failed to get patients data, Try again`);
+
+        displayMessage("error", `Failed to get patients data, Try again`);
       });
   };
   return (

@@ -15,7 +15,7 @@ import {
 } from "components/Utilities";
 import AddIcon from "@mui/icons-material/Add";
 
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import { useTheme } from "@mui/material/styles";
 import EnhancedTable from "components/layouts/EnhancedTable";
 import { hcpsHeadCells5 } from "components/Utilities/tableHeaders";
@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Hcps = () => {
   const classes = useStyles();
-  const [displayAlert] = useAlert();
+  const { displayMessage } = useAlert();
   const theme = useTheme();
   const [pageInfo, setPageInfo] = useState({
     page: 0,
@@ -192,7 +192,8 @@ const Hcps = () => {
       })
       .catch((error) => {
         console.error(error);
-        displayAlert("error", errMsg);
+
+        displayMessage("error", errMsg);
       });
   };
 
@@ -367,7 +368,6 @@ const Hcps = () => {
             }}
           />
         </Grid>
-        {/* </Grid> */}
       </Grid>
       {profiles.length > 0 ? (
         <Grid item container height="100%" direction="column">

@@ -17,7 +17,7 @@ import {
   cancelDiagnosticTest,
   scheduleDiagnosticTest,
 } from "components/graphQL/Mutation";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import { Typography, Grid, Chip } from "@mui/material";
 import {
   DisplayProfile1,
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PendingProfile = () => {
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const initialValues = {
     reason: "",
   };

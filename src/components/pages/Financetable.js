@@ -30,7 +30,7 @@ import { Loader } from "components/Utilities";
 import { useLazyQuery } from "@apollo/client";
 import { getEarningStats } from "components/graphQL/useQuery";
 import { defaultPageInfo } from "helpers/mockData";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 const useStyles = makeStyles((theme) => ({
   searchGrid: {
     "&.css-13i4rnv-MuiGrid-root": {
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
 const Financetable = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const [displayAlert] = useAlert();
+  const { displayMessage } = useAlert();
   const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [profiles, setProfiles] = useState("");
   const { selectedRows } = useSelector((state) => state.tables);
@@ -141,7 +141,8 @@ const Financetable = () => {
       })
       .catch((error) => {
         console.error(error);
-        displayAlert("error", errMsg);
+
+        displayMessage("error", errMsg);
       });
   };
 

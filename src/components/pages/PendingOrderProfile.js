@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import * as Yup from "yup";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PendingOrderProfile = () => {
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const classes = useStyles();
   const theme = useTheme();
   const { orderId } = useParams();

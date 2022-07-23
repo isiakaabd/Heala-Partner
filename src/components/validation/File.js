@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import { makeStyles } from "@mui/styles";
 import { Field, ErrorMessage } from "formik";
 import {
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 export const Formiks = ({ name, setFieldValue, onBlur }) => {
   const fileRef = useRef(null);
   const classes = useStyles();
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const [preview, setPreview] = useState("");
   const [isCompleted, setIsCompleted] = useState(null);
   const [progress, setProgress] = useState();

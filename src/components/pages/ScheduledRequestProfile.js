@@ -5,7 +5,7 @@ import {
   CustomButton,
   DisplayProfile1,
 } from "components/Utilities";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import * as Yup from "yup";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 const ScheduledRequestProfile = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const history = useHistory();
 
   const { scheduleId } = useParams();
@@ -231,7 +231,6 @@ const ScheduledRequestProfile = () => {
             variables: {
               status: "scheduled",
               partnerProviderId,
-
             },
           },
           {
@@ -239,7 +238,6 @@ const ScheduledRequestProfile = () => {
             variables: {
               status: "completed",
               partnerProviderId,
-
             },
           },
         ],

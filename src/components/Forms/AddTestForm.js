@@ -1,7 +1,7 @@
 import React from "react";
 import t from "prop-types";
 import { Formik, Form } from "formik";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import { useTheme } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 import { useMutation } from "@apollo/client";
@@ -12,7 +12,7 @@ import { addTestValidation } from "helpers/validationSchemas";
 
 export const AddTestForm = ({ onSuccess }) => {
   const theme = useTheme();
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const [addSingleTest] = useMutation(addTest);
 
   const addTestIntialValues = {
