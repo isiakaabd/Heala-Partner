@@ -13,7 +13,7 @@ import {
 
 import logo from "assets/images/logo.svg";
 import { setSideNav } from "helpers/func";
-import useAppType from "../../hooks/useAppType";
+import useAppType from "../hooks/useAppType";
 import { useActions } from "components/hooks/useActions";
 import { LOGOUT_USER } from "components/graphQL/Mutation";
 import DeleteOrDisable from "components/modals/DeleteOrDisable";
@@ -23,7 +23,7 @@ import {
   diagnosticsMenu,
 } from "helpers/asideMenus";
 
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
   const useStyles = makeStyles((theme) => ({
     aside: {
@@ -132,7 +132,7 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
   const { type } = useAppType();
   const location = useLocation();
   const { logout } = useActions();
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const [logout_user] = useMutation(LOGOUT_USER);
   const [Logout, setLogout] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(0);

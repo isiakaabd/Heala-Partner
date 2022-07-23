@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import * as Yup from "yup";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import { ReactComponent as HealaIconW } from "assets/images/logo-white1.svg";
 import { LoginInput } from "components/validation";
 import { Formik, Form } from "formik";
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const history = useHistory();
   const [loginInfo] = useMutation(Login_USER);
   const { loginUser, loginFailue } = useActions();

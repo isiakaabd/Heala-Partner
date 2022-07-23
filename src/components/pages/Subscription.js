@@ -15,7 +15,7 @@ import {
   handleHospitalPageChange,
 } from "helpers/filterHelperFunctions";
 import AddIcon from "@mui/icons-material/Add";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { SubscriptionModal } from "components/modals/SubscriptionModal";
@@ -156,7 +156,7 @@ const useStyles = makeStyles((theme) => ({
 const Subscription = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const [pageInfo, setPageInfo] = useState({
     page: 0,
     totalPages: 1,

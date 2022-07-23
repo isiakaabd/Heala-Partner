@@ -15,7 +15,7 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import { deleteAppointment } from "components/graphQL/Mutation";
 import {
   changeHospitalTableLimit,
@@ -105,7 +105,7 @@ const PatientAppointment = () => {
   const [updateAppoint] = useMutation(updateAppointment);
   const [deleteAppointments] = useMutation(deleteAppointment);
   const [pageInfo, setPageInfo] = useState([]);
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const [editId, setEditid] = useState(null);
   const [doctorId, setDoctorId] = useState(null);
   const handleDelete = (id) => {

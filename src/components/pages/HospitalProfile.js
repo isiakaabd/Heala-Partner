@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import { Grid } from "@mui/material";
 import { useMutation, useQuery } from "@apollo/client";
 import { updatePartner } from "components/graphQL/Mutation";
@@ -15,7 +15,7 @@ import * as Yup from "yup";
 const HospitalProfile = () => {
   const [update] = useMutation(updatePartner);
   const history = useHistory();
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const { loading, error, data } = useQuery(getPartner, {
     variables: {
       id: localStorage.getItem("AppId"),

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import t from "prop-types";
-import { useAlert } from "hooks";
+import Proptypes from "prop-types";
+import { useAlert } from "components/hooks";
 import { useTheme } from "@mui/material/styles";
 import { Grid, Typography } from "@mui/material";
 import { deleteVar } from "helpers/filterHelperFunctions";
@@ -14,7 +14,7 @@ const CompoundSearch = ({
   filterOptions,
 }) => {
   const theme = useTheme();
-  const [displayAlert] = useAlert();
+  const { displayMessage } = useAlert();
   const { fetchData, variables, loading } = queryParams;
   const [searchValue, setSearchValue] = useState({
     value: "",
@@ -34,7 +34,8 @@ const CompoundSearch = ({
       }).then(({ data }) => {
         if (!data) {
           deleteVar(variables);
-          displayAlert("error", `Couldn't search for ${searchVal}`);
+
+          displayMessage("error", `Couldn't search for ${searchVal}`);
           throw Error(`Couldn't search for ${searchVal}`);
         }
         setProfiles(data); // set outside
@@ -44,7 +45,8 @@ const CompoundSearch = ({
     } catch (error) {
       deleteVar(variables);
       console.error(error);
-      displayAlert("error", `Couldn't search for ${searchVal}`);
+
+      displayMessage("error", `Couldn't search for ${searchVal}`);
     }
   };
 
@@ -94,11 +96,11 @@ const CompoundSearch = ({
 };
 
 CompoundSearch.propTypes = {
-  queryParams: t.object,
-  setPageInfo: t.func,
-  setProfiles: t.func,
-  getSearchPlaceholder: t.func,
-  filterOptions: t.array,
+  queryParams: Proptypes.object,
+  setPageInfo: Proptypes.func,
+  setProfiles: Proptypes.func,
+  getSearchPlaceholder: Proptypes.func,
+  filterOptions: Proptypes.array,
 };
 
 export default CompoundSearch;
