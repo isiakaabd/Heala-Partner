@@ -24,7 +24,7 @@ test("calling the display message function", async () => {
   const { result } = renderHook(() => useCopy());
 
   jest.spyOn(navigator.clipboard, "writeText");
-  jest.spyOn(useAlert().displayMessage, "displayMessages");
+  jest.spyOn(useAlert().displayMessage, "displayMessage");
   act(() => {
     result.current.copyToClipBoard("This is a copied text", "text");
   });
