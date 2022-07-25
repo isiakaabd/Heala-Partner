@@ -40,6 +40,9 @@ const ReferralTab = lazy(() => import("components/pages/ReferralTab"));
 const HospitalSettings = lazy(() =>
   import("components/pages/HospitalSettings")
 );
+const SubscriptionIncome = lazy(() =>
+  import("components/pages/SubscriptionIncome")
+);
 const WaitingListDetails = lazy(() =>
   import("components/pages/WaitingListDetails")
 );
@@ -185,6 +188,12 @@ const Hospital = () => {
         <PrivateRoute exact path="/finance" component={Finance} />
         <PrivateRoute exact path="/finance/earnings" component={Financetable} />
         <PrivateRoute exact path="/finance/payouts" component={Payout} />
+        <PrivateRoute
+          exact
+          path="/finance/sub-income"
+          component={SubscriptionIncome}
+        />
+
         <PrivateRoute
           exact
           path="/referrals/:referralId"

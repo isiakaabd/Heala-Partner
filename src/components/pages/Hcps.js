@@ -183,7 +183,6 @@ const Hcps = () => {
   }, []);
 
   const setTableData = async (response, errMsg) => {
-    console.log(response);
     response
       .then(({ data }) => {
         console.log(data);

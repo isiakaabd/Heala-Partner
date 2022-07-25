@@ -27,6 +27,7 @@ export { default as Consultations } from "./Consultations";
 export { default as CreateMessage } from "./CreateMessage";
 export { default as Email } from "./Email";
 export { default as Finance } from "./Finance";
+export { default as SubscriptionIncome } from "./SubscriptionIncome";
 export { default as Financetable } from "./Financetable";
 export { default as HcpAppointments } from "./HcpAppointments";
 export { default as HcpAvailability } from "./HcpAvailability";

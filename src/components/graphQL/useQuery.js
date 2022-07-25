@@ -836,8 +836,12 @@ export const getDoctorsProfile = gql`
   }
 `;
 export const getEarningStats = gql`
-  query getEarningStats($q: String, $page: Int, $providerId: String) {
-    getEarningStats(filterBy: { providerId: $providerId }, q: $q, page: $page) {
+  query getEarningStats($page: Int, $providerId: String) {
+    getEarningStats(
+      filterBy: { providerId: $providerId }
+      q: "365"
+      page: $page
+    ) {
       totalEarnings
       totalPayout
       earningData
@@ -972,6 +976,20 @@ export const getPatients = gql`
       pageInfo {
         ...pageDetails
       }
+    }
+  }
+`;
+
+export const getSubscriptionsIncome = gql`
+  query getEarningStats($first: Int, $page: Int, $providerId: String) {
+    getEarningStats(
+      filterBy: { providerId: $providerId }
+      q: "365"
+      page: $page
+      orderBy: "-createdAt"
+      first: $first
+    ) {
+      subscriptionIncomeData
     }
   }
 `;

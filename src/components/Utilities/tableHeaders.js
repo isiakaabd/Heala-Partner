@@ -193,8 +193,27 @@ export const financeHeader = [
     id: 3,
     label: "Subscription Plan",
   },
+];
+export const earningHead = [
   {
-    id: 4,
+    id: 0,
+    label: "Entry Date",
+  },
+  {
+    id: 1,
+    label: "Time",
+  },
+  {
+    id: 2,
+    label: "Name",
+  },
+
+  {
+    id: 3,
+    label: "Subscription Plan",
+  },
+  {
+    id: 31,
     label: "Amount",
   },
 ];

@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
-  changeHospitalTableLimit,
-  handleHospitalPageChange,
-} from "helpers/filterHelperFunctions";
-import {
   Grid,
   Typography,
-  Avatar,
   TableCell,
   TableRow,
   Checkbox,
+  Avatar,
 } from "@mui/material";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import {
@@ -20,7 +16,7 @@ import {
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
-import { earningHead } from "components/Utilities/tableHeaders";
+import { financeHeader } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
@@ -28,16 +24,15 @@ import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import { Loader } from "components/Utilities";
 import { useLazyQuery } from "@apollo/client";
-import { getEarningStats } from "components/graphQL/useQuery";
+import { getSubscriptionsIncome } from "components/graphQL/useQuery";
 import { defaultPageInfo } from "helpers/mockData";
+import {
+  changeHospitalTableLimit,
+  handleHospitalPageChange,
+} from "helpers/filterHelperFunctions";
 import { useAlert } from "components/hooks";
+
 const useStyles = makeStyles((theme) => ({
-  searchGrid: {
-    "&.css-13i4rnv-MuiGrid-root": {
-      flex: 1,
-      marginRight: "5rem",
-    },
-  },
   button: {
     "&.css-1zf5oc-MuiButtonBase-root-MuiButton-root": {
       background: "#fff",
@@ -91,24 +86,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Financetable = () => {
+const SubscriptionIncome = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const { displayMessage } = useAlert();
-  const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [profiles, setProfiles] = useState("");
+  const { displayMessage } = useAlert();
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
-  const [fetchDoctors, { error, loading }] = useLazyQuery(getEarningStats);
+  const [pageInfo, setPageInfo] = useState(defaultPageInfo);
 
-  const [pageInfo, setPageInfo] = useState({
-    page: 0,
-    totalPages: 1,
-    hasNextPage: false,
-    hasPrevPage: false,
-    limit: 10,
-    totalDocs: 0,
-  });
+  const [fetchDoctors, { error, loading }] = useLazyQuery(
+    getSubscriptionsIncome
+  );
+
+  const setTableData = async (response, errMsg) => {
+    try {
+      setPageInfo(
+        response.getEarningStats.subscriptionIncomeData.PageInfo || []
+      );
+      setProfiles(
+        response.getEarningStats.subscriptionIncomeData.data || defaultPageInfo
+      );
+    } catch (error) {
+      console.error(error);
+      displayMessage("error", error);
+    }
+  };
+  const partnerProviderId = localStorage.getItem("partnerProviderId");
 
   useEffect(() => {
     try {
@@ -120,8 +124,12 @@ const Financetable = () => {
           },
         });
         if (data) {
-          setPageInfo(data.getEarningStats.earningData.PageInfo || []);
-          setProfiles(data.getEarningStats.earningData.data || defaultPageInfo);
+          setPageInfo(
+            data.getEarningStats.subscriptionIncomeData.PageInfo || []
+          );
+          setProfiles(
+            data.getEarningStats.subscriptionIncomeData.data || defaultPageInfo
+          );
         }
         // ...
       }
@@ -133,26 +141,15 @@ const Financetable = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const setTableData = async (response, errMsg) => {
-    try {
-      setPageInfo(response.getEarningStats.earningData.PageInfo || []);
-      setProfiles(response.getEarningStats.earningData.data || defaultPageInfo);
-    } catch (error) {
-      console.error(error);
-      displayMessage("error", error);
-    }
-  };
-
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
-
   return (
     <Grid container direction="column" gap={2} height="100%">
       <>
         <Grid item container gap={1} alignItems="center">
-          <Grid item>
+          <Grid item flex={1}>
             <Typography noWrap variant="h1" component="div" color="#2D2F39">
-              Earnings table
+              Subscription Earnings table
             </Typography>
           </Grid>
           <Grid item className={classes.iconWrapper}>
@@ -162,7 +159,7 @@ const Financetable = () => {
         {profiles.length > 0 ? (
           <Grid item container>
             <EnhancedTable
-              headCells={earningHead}
+              headCells={financeHeader}
               rows={profiles}
               paginationLabel="finance per page"
               hasCheckbox={true}
@@ -172,7 +169,7 @@ const Financetable = () => {
                   first: e,
                   providerId: partnerProviderId,
                 });
-
+                console.log(res);
                 await setTableData(res.data, "Failed to change table limit");
               }}
               handlePagination={async (page) => {
@@ -182,13 +179,12 @@ const Financetable = () => {
                   pageInfo,
                   partnerProviderId
                 );
-                await setTableData(res.data, "Failed to change page.");
+                await setTableData(res, "Failed to change page.");
               }}
             >
               {profiles.map((row, index) => {
-                const { doctorData, createdAt, balance, _id } = row;
-                const { firstName, picture, lastName, specialization } =
-                  doctorData[0];
+                const { createdAt, amount, _id, patientData } = row;
+                const { firstName, image, lastName } = patientData || {};
                 const isItemSelected = isSelected(_id, selectedRows);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -232,34 +228,38 @@ const Financetable = () => {
                       {timeMoment(createdAt)}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
-                      <div
-                        style={{
-                          height: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={firstName ? firstName : "image"}
-                            src={doctorData ? picture : displayPhoto}
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
-                        <span style={{ fontSize: "1.25rem" }}>
-                          {doctorData ? `${firstName} ${lastName}` : "No Data"}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell align="left" className={classes.tableCell}>
-                      {specialization ? specialization : "No Value"}
+                      {patientData && patientData !== {} ? (
+                        <div
+                          style={{
+                            height: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span style={{ marginRight: "1rem" }}>
+                            <Avatar
+                              alt={firstName ? firstName : "image"}
+                              src={patientData ? image : displayPhoto}
+                              sx={{ width: 24, height: 24 }}
+                            />
+                          </span>
+                          <span style={{ fontSize: "1.25rem" }}>
+                            {patientData &&
+                              `${firstName && firstName} ${
+                                lastName && lastName
+                              }`}
+                          </span>
+                        </div>
+                      ) : (
+                        "No name"
+                      )}
                     </TableCell>
                     <TableCell
                       align="left"
                       className={classes.tableCell}
                       style={{ color: theme.palette.common.red }}
                     >
-                      {formatNumber(balance.toFixed(2))}
+                      {formatNumber(amount.toFixed(2))}
                     </TableCell>
                   </TableRow>
                 );
@@ -268,7 +268,7 @@ const Financetable = () => {
           </Grid>
         ) : (
           <EmptyTable
-            headCells={earningHead}
+            headCells={financeHeader}
             paginationLabel="Finance  per page"
           />
         )}
@@ -277,4 +277,4 @@ const Financetable = () => {
   );
 };
 
-export default Financetable;
+export default SubscriptionIncome;
