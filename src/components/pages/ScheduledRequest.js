@@ -190,8 +190,6 @@ const ScheduledRequest = () => {
     }
   }, [data]);
   const [openFilterPartner, setOpenFilterPartner] = useState(false);
-  //eslint-disable-next-line
-  //eslint-disable-next-line
 
   // FILTER PARTNERS SELECT STATES
   const [filterSelectInput, handleSelectedInput] = useFormInput({

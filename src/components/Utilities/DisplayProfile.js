@@ -79,7 +79,7 @@ const DisplayProfile = (props) => {
               <Typography variant="h4">
                 <span style={{ color: theme.palette.common.lightGrey }}>
                   Status:
-                </span>{" "}
+                </span>
                 <Chip
                   label={patientData?.status}
                   color={patientData?.status === "Active" ? "success" : "error"}
