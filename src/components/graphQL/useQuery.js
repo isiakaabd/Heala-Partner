@@ -993,28 +993,42 @@ export const getSubscriptionsIncome = gql`
     }
   }
 `;
+// patientStats
+// doctorStats
+// totalEarnings
+// totalPayout
+// appointmentStats
+// subscribers
+// availabilityCalendar {
+//   _id
+//   doctor
+//   doctorData
+//   day
+//   available
+//   times {
+//     start
+//     stop
+//   }
+//   createdAt
+//   updatedAt
+// }
 export const dashboard = gql`
   query getStats($providerId: String, $q: String) {
     getStats(filterBy: { providerId: $providerId }, q: $q) {
-      patientStats
-      doctorStats
-      totalEarnings
-      totalPayout
-      appointmentStats
-      subscribers
-      availabilityCalendar {
-        _id
-        doctor
-        doctorData
-        day
-        available
-        times {
-          start
-          stop
-        }
-        createdAt
-        updatedAt
+      patientStats {
+        totalActive
+        totalInactive
+        activeChartData
+        inactiveChartData
       }
+      doctorStats {
+        totalActive
+        totalInactive
+        activeChartData
+        inactiveChartData
+      }
+      totalActiveSubscribers
+      totalInactiveSubscribers
     }
   }
 `;

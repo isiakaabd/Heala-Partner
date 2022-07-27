@@ -314,6 +314,7 @@ const Login = () => {
                           variant="contained"
                           title="Login"
                           type={greenButton}
+                          role="button"
                           borderRadius={20}
                           className={classes.btn}
                           isSubmitting={isSubmitting}
