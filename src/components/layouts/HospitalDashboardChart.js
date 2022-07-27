@@ -99,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HopsitalDashboardChart = ({ data, refetch }) => {
+  console.log(data);
   const classes = useStyles();
   const theme = useTheme();
 
@@ -114,35 +115,54 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
   const [patients, setPatients] = useState([]);
   const [doctorStats, setDoctorStats] = useState([]);
   const [appointmentStats, setAppointmentStats] = useState([]);
-  const [subscribers, setsubscribers] = useState([]);
-  const [totalEarning, setTotalEarning] = useState([]);
-  const [totalPayouts, setTotalPayouts] = useState([]);
+  const [totalActiveSubscribers, setTotalActiveSubscribers] = useState(0);
+  const [totalInactiveSubscribers, setTotalInactiveSubscribers] = useState(0);
+  const [totalEarning, setTotalEarning] = useState(0);
+  const [totalPayouts, setTotalPayouts] = useState(0);
+  const [activePatientsChartData, setActivePatientsChartData] = useState([]);
+  const [activeChartDoctorsData, setActiveDoctorChartData] = useState([]);
+  const [inActiveChartPatientsData, setInActiveChartPatientsData] = useState(
+    []
+  );
+  const [inActiveChartDoctorsData, setInActiveChartDoctorssData] = useState([]);
 
   useEffect(() => {
     const {
       // eslint-disable-next-line
       patientStats,
       doctorStats,
+      totalActiveSubscribers,
+      totalInactiveSubscribers,
       appointmentStats,
-      subscribers,
+      // subscribers,
       totalEarnings,
       totalPayout,
     } = data?.getStats;
     setPatients(patientStats);
     setDoctorStats(doctorStats);
+    setActivePatientsChartData(patientStats?.activeChartData);
+    setInActiveChartPatientsData(patientStats?.inactiveChartData);
     setAppointmentStats(appointmentStats);
-    setsubscribers(subscribers);
-    setTotalEarning(totalEarnings);
-    setTotalPayouts(totalPayout);
+    setActiveDoctorChartData(doctorStats?.activeChartData);
+    setInActiveChartDoctorssData(doctorStats?.inactiveChartData);
+    setAppointmentStats(appointmentStats);
+    setTotalActiveSubscribers(totalActiveSubscribers);
+    setTotalInactiveSubscribers(totalInactiveSubscribers);
+    setTotalEarning(totalEarnings ? totalEarning : 0);
+    setTotalPayouts(totalPayout ? totalPayout : 0);
     const value = financialPercent(totalEarnings, totalPayout);
     setFinances(value);
+    //eslint-disable-next-line
   }, [data]);
 
-  const financialValue = financialPercent(totalEarning, totalPayouts);
+  const financialValue = financialPercent(0, 0);
+  // financialPercent(totalEarning, totalPayouts);
   const [selectedTimeframe, setSelectedTimeframe] = useState(0);
   const [finances, setFinances] = useState(financialValue);
-  const { activeDoctors, inactiveDoctors } = doctorStats;
-  const { activePatients, inactivePatients } = patients;
+  const { totalActive: activeDoctors, totalInactive: inactiveDoctors } =
+    doctorStats;
+  const { totalActive: activePatients, totalInactive: inactivePatients } =
+    patients;
   const totalDoc = activeDoctors + inactiveDoctors;
   const totalPatient = activePatients + inactivePatients;
   const patientPercentage = returnpercent(activePatients, inactivePatients);
@@ -253,6 +273,8 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
             selectedTimeframe={selectedTimeframe}
             setSelectedTimeframe={setSelectedTimeframe}
             doctorStats={doctorStats}
+            inactiveChartData={inActiveChartPatientsData}
+            activeChartData={activePatientsChartData}
           />
 
           {/* Line */}
@@ -266,7 +288,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               <Grid container direction="column">
                 <Grid item>
                   <Typography variant="h3" gutterBottom>
-                    {doctorStats?.activeDoctors}
+                    {doctorStats?.totalActive}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -292,7 +314,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               <Grid container direction="column" justifyContent="center">
                 <Grid item>
                   <Typography variant="h3" gutterBottom>
-                    {doctorStats?.inactiveDoctors}
+                    {doctorStats?.totalInactive}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -396,7 +418,8 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
             timeFrames={timeFrames}
             selectedTimeframe={selectedTimeframe}
             setSelectedTimeframe={setSelectedTimeframe}
-            doctorStats={patients}
+            inactiveChartData={inActiveChartDoctorsData}
+            activeChartData={activeChartDoctorsData}
           />
 
           {/* Line */}
@@ -410,7 +433,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               <Grid container direction="column">
                 <Grid item>
                   <Typography variant="h3" gutterBottom>
-                    {data && patients.activePatients}
+                    {data && patients.totalActive}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -436,7 +459,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               <Grid container direction="column" justifyContent="center">
                 <Grid item>
                   <Typography variant="h3" gutterBottom>
-                    {patients && patients.inactivePatients}
+                    {patients?.totalInactive}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -480,7 +503,8 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
             timeFrames={timeFrames}
             selectedTimeframe={selectedTimeframe}
             setSelectedTimeframe={setSelectedTimeframe}
-            doctorStats={subscribers}
+            inactiveChartData={[]}
+            activeChartData={[]}
             type="subscriber"
           />
 
@@ -495,7 +519,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               <Grid container direction="column">
                 <Grid item>
                   <Typography variant="h3" gutterBottom>
-                    {data && subscribers.totalActiveSubscribers}
+                    {data && totalActiveSubscribers}
                   </Typography>{" "}
                 </Grid>
                 <Grid item>
@@ -521,7 +545,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               <Grid container direction="column" justifyContent="center">
                 <Grid item>
                   <Typography variant="h3" gutterBottom>
-                    {data && subscribers.totalInactiveSubscribers}
+                    {data && totalInactiveSubscribers}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -703,7 +727,9 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
 
                     <Grid item direction="column">
                       <Typography variant="h5">
-                        {data && appointmentStats.totalUpcoming}
+                        {appointmentStats?.totalUpcoming
+                          ? appointmentStats?.totalUpcoming
+                          : 0}
                       </Typography>
 
                       <Typography
@@ -729,7 +755,9 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
                       <Grid container direction="column">
                         <Grid item>
                           <Typography variant="h4">
-                            {appointmentStats && appointmentStats.totalPast}
+                            {appointmentStats?.totalPast
+                              ? appointmentStats?.totalPast
+                              : 0}
                           </Typography>
                         </Grid>
                         <Grid item>
