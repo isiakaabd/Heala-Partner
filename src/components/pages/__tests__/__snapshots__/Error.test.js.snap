@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`if it matches snapshot 1`] = `
+<div
+  className="MuiGrid-root MuiGrid-container css-1suhs9t-MuiGrid-root"
+>
+  <div
+    className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+  >
+    <img
+      alt="logo"
+      src="logo.svg"
+      sx={
+        Object {
+          "display": "inline-block",
+          "height": "5rem",
+          "marginBottom": "auto",
+        }
+      }
+    />
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-container MuiGrid-item css-o0tur6-MuiGrid-root"
+  >
+    <h1
+      className="MuiTypography-root MuiTypography-h1 MuiTypography-gutterBottom css-1igxvx0-MuiTypography-root"
+    >
+      Oops..!!!
+    </h1>
+    <h4
+      className="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+    >
+      Something Went Wrong...
+    </h4>
+  </div>
+</div>
+`;

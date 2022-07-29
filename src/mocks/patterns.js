@@ -23,7 +23,7 @@ const hospitalPatterns = {
   Finance: "finance",
   "Earnings table": "finance/earnings",
   Payouts: "finance/payouts",
-  "Pending payouts": "finance/pending",
+  "Subscriptions Earnings table": "finance/sub-income",
 
   // REFERRALS PATTERNS
   Referrals: "referrals",

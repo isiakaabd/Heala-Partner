@@ -10,6 +10,7 @@ export { default as HeadersContents } from "./HeadersContents";
 export { default as HospitalDashboardChart } from "./HospitalDashboardChart";
 export { default as Headers } from "./Headers";
 export { default as Header } from "./Header";
+export { default as SideNav } from "./SideNav";
 export { default as HeadersProfile } from "./HeadersProfile";
 export { default as HospitalHeaderProfile } from "./HospitalHeaderProfile";
 export { default as HeaderProfile } from "./HeaderProfile";

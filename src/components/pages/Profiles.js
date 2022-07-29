@@ -9,11 +9,11 @@ import { Formik, Form } from "formik";
 import FormikControl from "components/validation/FormikControl";
 import { getPartner } from "components/graphQL/useQuery";
 import * as Yup from "yup";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 
 const Profile = () => {
   const [update] = useMutation(updatePartner);
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const { loading, error, data } = useQuery(getPartner, {
     variables: {
       id: localStorage.getItem("AppId"),

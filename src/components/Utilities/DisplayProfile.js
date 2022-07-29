@@ -48,7 +48,7 @@ const DisplayProfile = (props) => {
       <Grid item>
         <Grid container gap={2} alignItems="center">
           <Avatar
-            alt={`Display Photo`}
+            alt={`Display Photo of ${patientData.firstName} ${patientData.lastName}`}
             src={patientData?.image}
             sx={{ width: 50, height: 50 }}
           />
@@ -79,7 +79,7 @@ const DisplayProfile = (props) => {
               <Typography variant="h4">
                 <span style={{ color: theme.palette.common.lightGrey }}>
                   Status:
-                </span>{" "}
+                </span>
                 <Chip
                   label={patientData?.status}
                   color={patientData?.status === "Active" ? "success" : "error"}

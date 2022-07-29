@@ -10,7 +10,7 @@ import {
   TableCell,
 } from "@mui/material";
 import { timeMoment, dateMoment } from "components/Utilities/Time";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import { Loader } from "components/Utilities";
 import { useLazyQuery } from "@apollo/client";
 import { getEarningStats } from "components/graphQL/useQuery";
@@ -94,7 +94,7 @@ const Payout = () => {
   const theme = useTheme();
   const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [profiles, setProfiles] = useState("");
-  const [displayAlert] = useAlert();
+  const { displayMessage } = useAlert();
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
   const [fetchDoctors, { error, loading }] = useLazyQuery(getEarningStats);
@@ -139,7 +139,7 @@ const Payout = () => {
       })
       .catch((error) => {
         console.error(error);
-        displayAlert("error", errMsg);
+        displayMessage("error", error);
       });
   };
   if (loading) return <Loader />;

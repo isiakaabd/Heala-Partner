@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import t from "prop-types";
 import { Grid } from "@mui/material";
 import { Filter } from "components/Utilities";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 import {
   cadreOptions,
   defaultPageInfo,
@@ -21,7 +21,7 @@ const DoctorFilters = ({
   queryParams,
   partnerProviderId,
 }) => {
-  const [displayAlert] = useAlert();
+  const { displayMessage } = useAlert();
 
   const [_, setStatusFilterValue] = useState("");
   const [__, setProviders] = useState([]);
@@ -111,7 +111,7 @@ const DoctorFilters = ({
   // };
 
   const refresh = async (setFilterValue, defaultVal) => {
-    displayAlert("error", `Something went wrong while filtering. Try again.`);
+    displayMessage("error", `Something went wrong while filtering. Try again.`);
     setFilterValue(defaultVal);
 
     deleteVar(variables);
@@ -123,7 +123,8 @@ const DoctorFilters = ({
       })
       .catch((error) => {
         console.error(error);
-        displayAlert("error", `Failed to get patients data, Try again`);
+
+        displayMessage("error", `Failed to get patients data, Try again`);
       });
   };
   return (

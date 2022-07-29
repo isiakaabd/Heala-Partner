@@ -836,8 +836,12 @@ export const getDoctorsProfile = gql`
   }
 `;
 export const getEarningStats = gql`
-  query getEarningStats($q: String, $page: Int, $providerId: String) {
-    getEarningStats(filterBy: { providerId: $providerId }, q: $q, page: $page) {
+  query getEarningStats($page: Int, $providerId: String) {
+    getEarningStats(
+      filterBy: { providerId: $providerId }
+      q: "365"
+      page: $page
+    ) {
       totalEarnings
       totalPayout
       earningData
@@ -975,28 +979,56 @@ export const getPatients = gql`
     }
   }
 `;
+
+export const getSubscriptionsIncome = gql`
+  query getEarningStats($first: Int, $page: Int, $providerId: String) {
+    getEarningStats(
+      filterBy: { providerId: $providerId }
+      q: "365"
+      page: $page
+      orderBy: "-createdAt"
+      first: $first
+    ) {
+      subscriptionIncomeData
+    }
+  }
+`;
+// patientStats
+// doctorStats
+// totalEarnings
+// totalPayout
+// appointmentStats
+// subscribers
+// availabilityCalendar {
+//   _id
+//   doctor
+//   doctorData
+//   day
+//   available
+//   times {
+//     start
+//     stop
+//   }
+//   createdAt
+//   updatedAt
+// }
 export const dashboard = gql`
   query getStats($providerId: String, $q: String) {
     getStats(filterBy: { providerId: $providerId }, q: $q) {
-      patientStats
-      doctorStats
-      totalEarnings
-      totalPayout
-      appointmentStats
-      subscribers
-      availabilityCalendar {
-        _id
-        doctor
-        doctorData
-        day
-        available
-        times {
-          start
-          stop
-        }
-        createdAt
-        updatedAt
+      patientStats {
+        totalActive
+        totalInactive
+        activeChartData
+        inactiveChartData
       }
+      doctorStats {
+        totalActive
+        totalInactive
+        activeChartData
+        inactiveChartData
+      }
+      totalActiveSubscribers
+      totalInactiveSubscribers
     }
   }
 `;

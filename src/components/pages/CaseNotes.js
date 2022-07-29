@@ -87,12 +87,10 @@ const CaseNotes = () => {
   }, [data, id]);
 
   const [isOpen, setIsOpen] = useState(false);
-  const handleDialogOpen = () => {
-    setIsOpen(true);
-  };
-  const handleDialogClose = () => {
-    setIsOpen(false);
-  };
+  const handleDialogOpen = () => setIsOpen(true);
+
+  const handleDialogClose = () => setIsOpen(false);
+
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
   const {

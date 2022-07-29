@@ -44,7 +44,7 @@ import { getDrugOrders, cancelDrugOrder } from "components/graphQL/useQuery";
 import { fulfillDrugOrder } from "components/graphQL/Mutation";
 import { NoData, EmptyTable } from "components/layouts";
 import prettyMoney from "pretty-money";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 const dates = ["Hello", "World", "Goodbye", "World"];
 const specializations = ["Dentistry", "Pediatry", "Optometry", "Pathology"];
 const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
@@ -135,7 +135,7 @@ const useStyles = makeStyles((theme) => ({
 const ProcessingOrders = () => {
   const theme = useTheme();
   const classes = useStyles();
-  const [displayMessage] = useAlert();
+  const { displayMessage } = useAlert();
   const [state, setState] = useState([]);
 
   const [cancelTest] = useMutation(cancelDrugOrder);

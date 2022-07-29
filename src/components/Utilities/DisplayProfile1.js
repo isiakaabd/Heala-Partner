@@ -208,6 +208,18 @@ const DisplayProfile1 = (props) => {
             </Typography>
           </Grid>
         </Grid>
+        <Grid item container direction="column" gap={1}>
+          <Grid item>
+            <Typography variant="body1" style={{ color: "#3e5ea9" }}>
+              Patient's Number
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h4" style={{ fontWeight: "400" }}>
+              {patientData ? patientData.phoneNumber : "No Phone Number"}
+            </Typography>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );

@@ -1,8 +1,7 @@
 import React from "react";
 import { Typography, Grid } from "@mui/material";
 import logo from "assets/images/logo.svg";
-const Error = ({ error }) => {
-  console.log(error);
+const Error = () => {
   return (
     <Grid
       container

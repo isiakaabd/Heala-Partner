@@ -7,7 +7,7 @@ import { Typography, Toolbar, Grid } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import PropTypes from "prop-types";
-import useApptype from "hooks/useAppType";
+import { useApptype } from "components/hooks";
 import HeaderProfile from "./HeaderProfile";
 import { useTheme } from "@mui/material/styles";
 import { getAppPattern } from "helpers/filterHelperFunctions";

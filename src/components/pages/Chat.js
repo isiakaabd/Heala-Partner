@@ -13,7 +13,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { getMessage, getProfile } from "components/graphQL/useQuery";
 
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 const useStyles = makeStyles((theme) => ({
   gridWrapper: {
     "&.MuiGrid-item": {
@@ -63,7 +63,7 @@ const Chat = () => {
   const { patientId } = useParams();
   const classes = useStyles();
   const theme = useTheme();
-  const [displayAlert] = useAlert();
+  const { displayMessage } = useAlert();
   let history = useHistory();
   const [createNewMessage] = useMutation(CREATE_MESSAGE, {
     refetchQueries: [{ query: getMessage }],
@@ -116,9 +116,10 @@ const Chat = () => {
           body: textarea,
         },
       });
-      displayAlert("success", "Message sent successfully");
+
+      displayMessage("success", "Message sent successfully");
     } catch (error) {
-      displayAlert("error", error);
+      displayMessage("error", error);
       console.log(error);
     }
     onSubmitProps.resetForm();

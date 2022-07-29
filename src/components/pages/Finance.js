@@ -108,7 +108,6 @@ const Finance = () => {
   const [form, setForm] = useState("");
   const { data, error, loading, refetch } = useQuery(getEarningStats, {
     variables: {
-      q: "365",
       providerId: localStorage.getItem("partnerProviderId"),
     },
   });
@@ -231,7 +230,7 @@ const Finance = () => {
                         color: theme.palette.common.lightGrey,
                       }}
                     >
-                      Total earnings
+                      Total Earnings
                     </Typography>
                   </Grid>
                 </Grid>
@@ -272,7 +271,7 @@ const Finance = () => {
                         color: theme.palette.common.lightGrey,
                       }}
                     >
-                      Total withdrawal
+                      Total Expenditure
                     </Typography>
                   </Grid>
                 </Grid>
@@ -289,7 +288,7 @@ const Finance = () => {
           <Grid item container flexDirection="column">
             <Link to="/finance/payouts" style={{ textDecoration: "none" }}>
               <Card
-                title="Payouts Table"
+                title="Doctor Payout"
                 background={theme.palette.common.lightRed}
               >
                 <TrendingUpIcon color="error" className={classes.cardIcon} />
@@ -302,7 +301,7 @@ const Finance = () => {
           <Grid item container flexDirection="column">
             <Link to="/finance/earnings" style={{ textDecoration: "none" }}>
               <Card
-                title="Earnings Table"
+                title="Doctor Earnings"
                 background={theme.palette.common.lightGreen}
               >
                 <Grid className={classes.iconWrapper}>
@@ -318,9 +317,9 @@ const Finance = () => {
         {/* 3 */}
         <Grid item container md={4} sm={4} xs={12}>
           <Grid item container flexDirection="column">
-            <Link to="/finance/payout" style={{ textDecoration: "none" }}>
+            <Link to="/finance/sub-income" style={{ textDecoration: "none" }}>
               <Card
-                title="Payout Table"
+                title="Subscription Income"
                 background={theme.palette.common.lightGreen}
               >
                 <Grid className={classes.iconWrapper}>

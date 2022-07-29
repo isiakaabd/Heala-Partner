@@ -4,23 +4,36 @@ import { Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Line } from "react-chartjs-2";
 
-const LineChart2 = ({ doctorStats, type }) => {
+const LineChart2 = ({ activeChartData, inactiveChartData, type }) => {
   const theme = useTheme();
   const [actives, setActives] = useState([]);
   const [inActives, setInActives] = useState([]);
+
   useEffect(() => {
-    const doc = doctorStats.oneYear;
-    if (doc && doc.inactiveCount) {
-      const z = doc.inactiveCount.map((i) => i.count);
+    if (inactiveChartData) {
+      const z = inactiveChartData.map((i) => i?.sum);
       setInActives(z);
     }
-    if (doc && doc.activeCount) {
-      const z = doc.activeCount.map((i) => i.count);
+    if (activeChartData) {
+      const z = activeChartData.map((i) => i?.sum);
       setActives(z);
     }
-  }, [doctorStats, type]);
+  }, [activeChartData, inactiveChartData, type]);
   const data = {
-    labels: ["1 DAY", "5 DAYS", "1 MONTH", "3 MONTHS", "1 YEAR"],
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mar",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
     datasets: [
       {
         label: "Active",
@@ -52,7 +65,6 @@ const LineChart2 = ({ doctorStats, type }) => {
 
   const options = {
     locale: "fr",
-    // maintainAspectRatio: false,
     scales: {
       y: {
         beginAtZero: true,
@@ -102,7 +114,9 @@ const LineChart2 = ({ doctorStats, type }) => {
     },
   };
   function hover(event, chartElement) {
-    event.target.style.cursor = chartElement[0] ? "pointer" : "default";
+    return (event.target.style.cursor = chartElement[0]
+      ? "pointer"
+      : "default");
   }
   function colorItem(tooltipItem) {
     const tooltipTitleColor =

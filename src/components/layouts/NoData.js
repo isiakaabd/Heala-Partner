@@ -6,7 +6,7 @@ const NoData = ({ error }) => {
     <Grid
       container
       alignItems="center"
-      direction="column"
+      flexDirection="column"
       height="50vh"
       justifyContent="center"
     >

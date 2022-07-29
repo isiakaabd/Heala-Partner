@@ -20,7 +20,7 @@ import {
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
-import { financeHeader } from "components/Utilities/tableHeaders";
+import { earningHead } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
@@ -30,7 +30,7 @@ import { Loader } from "components/Utilities";
 import { useLazyQuery } from "@apollo/client";
 import { getEarningStats } from "components/graphQL/useQuery";
 import { defaultPageInfo } from "helpers/mockData";
-import { useAlert } from "hooks";
+import { useAlert } from "components/hooks";
 const useStyles = makeStyles((theme) => ({
   searchGrid: {
     "&.css-13i4rnv-MuiGrid-root": {
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
 const Financetable = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const [displayAlert] = useAlert();
+  const { displayMessage } = useAlert();
   const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [profiles, setProfiles] = useState("");
   const { selectedRows } = useSelector((state) => state.tables);
@@ -134,21 +134,17 @@ const Financetable = () => {
   }, []);
 
   const setTableData = async (response, errMsg) => {
-    response
-      .then(({ data }) => {
-        setPageInfo(data.getEarningStats.earningData.PageInfo || []);
-        setProfiles(data.getEarningStats.earningData.data || defaultPageInfo);
-      })
-      .catch((error) => {
-        console.error(error);
-        displayAlert("error", errMsg);
-      });
+    try {
+      setPageInfo(response.getEarningStats.earningData.PageInfo || []);
+      setProfiles(response.getEarningStats.earningData.data || defaultPageInfo);
+    } catch (error) {
+      console.error(error);
+      displayMessage("error", error);
+    }
   };
 
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
-  // const { page, totalPages, hasNextPage, hasPrevPage, limit, totalDocs } =
-  //   pageInfo;
 
   return (
     <Grid container direction="column" gap={2} height="100%">
@@ -166,7 +162,7 @@ const Financetable = () => {
         {profiles.length > 0 ? (
           <Grid item container>
             <EnhancedTable
-              headCells={financeHeader}
+              headCells={earningHead}
               rows={profiles}
               paginationLabel="finance per page"
               hasCheckbox={true}
@@ -177,7 +173,7 @@ const Financetable = () => {
                   providerId: partnerProviderId,
                 });
 
-                await setTableData(res, "Failed to change table limit");
+                await setTableData(res.data, "Failed to change table limit");
               }}
               handlePagination={async (page) => {
                 const res = handleHospitalPageChange(
@@ -186,14 +182,14 @@ const Financetable = () => {
                   pageInfo,
                   partnerProviderId
                 );
-                await setTableData(res, "Failed to change page.");
+                await setTableData(res.data, "Failed to change page.");
               }}
             >
               {profiles.map((row, index) => {
-                const { doctorData, createdAt, balance } = row;
+                const { doctorData, createdAt, balance, _id } = row;
                 const { firstName, picture, lastName, specialization } =
                   doctorData[0];
-                const isItemSelected = isSelected(row._id, selectedRows);
+                const isItemSelected = isSelected(_id, selectedRows);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -202,17 +198,13 @@ const Financetable = () => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row._id}
+                    key={_id}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
                         onClick={() =>
-                          handleSelectedRows(
-                            row.id,
-                            selectedRows,
-                            setSelectedRows
-                          )
+                          handleSelectedRows(_id, selectedRows, setSelectedRows)
                         }
                         color="primary"
                         checked={isItemSelected}
@@ -255,7 +247,7 @@ const Financetable = () => {
                           />
                         </span>
                         <span style={{ fontSize: "1.25rem" }}>
-                          {doctorData && `${firstName} ${lastName}`}
+                          {doctorData ? `${firstName} ${lastName}` : "No Data"}
                         </span>
                       </div>
                     </TableCell>
@@ -276,7 +268,7 @@ const Financetable = () => {
           </Grid>
         ) : (
           <EmptyTable
-            headCells={financeHeader}
+            headCells={earningHead}
             paginationLabel="Finance  per page"
           />
         )}
