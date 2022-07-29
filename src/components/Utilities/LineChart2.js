@@ -8,17 +8,13 @@ const LineChart2 = ({ type, graphState }) => {
   const theme = useTheme();
   const [state, setState] = useState("active");
   const [chartData, setChartData] = useState([]);
-
+  const lightGreen = "rgba(45, 211, 158, .3)";
+  const lightBlue = "rgba(62, 94, 169, .3)";
   useEffect(() => {
     const z = graphState?.data?.map((i) => i?.sum);
     setState(graphState?.state);
     setChartData(z);
-
-    // if (activeChartData) {
-    //   const z = activeChartData.map((i) => i?.sum);
-    //   setActives(z);
-    // }
-  }, [type, graphState?.data, graphState?.state]);
+  }, [type, graphState]);
   const data = {
     labels: [
       "Jan",
@@ -38,7 +34,7 @@ const LineChart2 = ({ type, graphState }) => {
       {
         label: state,
         data: chartData,
-        fill: false,
+        fill: true,
         cursor: "pointer",
         borderColor:
           state === "active"
@@ -48,43 +44,39 @@ const LineChart2 = ({ type, graphState }) => {
           state === "active"
             ? theme.palette.common.green
             : theme.palette.common.red,
-        pointBorderColor: "#fff",
-        pointRadius: 5,
-        pointHoverRadius: 7,
-        pointBorderWidth: 2,
-        tension: 0.5,
+        pointBorderColor:
+          state === "active"
+            ? theme.palette.common.green
+            : theme.palette.common.red,
+        pointRadius: 2,
+        pointHoverRadius: 5,
+        pointHoverColor: "#00f",
+        pointBorderWidth: 3,
+        tension: 0.4,
       },
-      // {
-      //   label: "Inactive",
-      //   data: inActives,
-      //   fill: false,
-      //   borderColor: theme.palette.common.red,
-      //   pointBackgroundColor: theme.palette.common.red,
-      //   pointBorderColor: "#fff",
-      //   pointRadius: 5,
-      //   pointHoverRadius: 7,
-      //   pointBorderWidth: 2,
-      //   tension: 0.5,
-      // },
     ],
   };
 
   const options = {
+    responsive: true,
     locale: "fr",
     scales: {
       y: {
-        beginAtZero: true,
+        beginAtZero: false,
+        fillColor: state === "active" ? lightGreen : lightBlue,
         grid: {
-          color: "#ffff",
-          borderDash: [5, 8],
-          display: false,
+          color: state === "active" ? lightGreen : lightBlue,
+          borderColor: state === "active" ? lightGreen : lightBlue,
+          borderDash: [2, 2],
+          display: true,
         },
       },
       x: {
         grid: {
-          color: "#ffff",
-          borderDash: [5, 8],
-          display: false,
+          color: state === "active" ? lightGreen : lightBlue,
+          borderDash: [2, 2],
+          borderColor: state === "active" ? lightGreen : lightBlue,
+          display: true,
         },
         display: true,
       },
@@ -97,16 +89,24 @@ const LineChart2 = ({ type, graphState }) => {
         backgroundColor: "#fff",
         titleColor: colorItem,
         onHover: hover,
-        bodyColor: theme.palette.common.lightGrey,
+        bodyColor:
+          state === "active"
+            ? theme.palette.common.green
+            : theme.palette.common.red,
+        // theme.palette.common.lightGrey,
         titleAlign: "left",
         bodyAlign: "left",
-        borderColor: "rgba(0, 0, 0, 0.05)",
-        borderWidth: 2,
+        borderColor:
+          state === "active"
+            ? theme.palette.common.green
+            : theme.palette.common.red,
+        // "rgba(0, 0, 0, 0.05)",
+        borderWidth: 1,
         displayColors: true,
         boxHeight: 0,
         boxWidth: 0,
         yAlign: "bottom",
-        usePointStyle: true,
+        usePointStyle: false,
         callbacks: {
           labelPointStyle: (context) => {
             return {

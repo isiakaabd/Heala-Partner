@@ -25,7 +25,7 @@ import { ArrowDownwardOutlined } from "@mui/icons-material";
 
 const useStyles = makeStyles((theme) => ({
   chartCard: {
-    background: "#fff",
+    // background: "#fff",
     borderRadius: "1rem",
   },
   chartImg: {
