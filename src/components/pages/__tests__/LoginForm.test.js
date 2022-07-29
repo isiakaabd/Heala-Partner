@@ -1,7 +1,7 @@
 import Login from "../Login";
 import React from "react";
-import { render, cleanup, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { render, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { store } from "store";
 import { ApolloProvider } from "@apollo/client";
@@ -10,6 +10,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { Provider } from "react-redux";
 import MockTheme from "../Utils/MockTheme";
 import { mockLogin } from "../Utils/mockquery";
+import { LoginForm } from "../forms";
 
 afterEach(cleanup);
 const mockDisplayMessage = jest.fn();
@@ -22,22 +23,20 @@ jest.mock("../../hooks/useAlert", () => () => {
     displayMessage: mockDisplayMessage,
   };
 });
-// const onSubmit = jest.fn();
+const handleSubmit = jest.fn();
 
 describe("<Login />", () => {
   const div = document.createElement("div");
   const { getByRole, getByText } = render(
     <BrowserRouter>
-      <MockedProvider mocks={mockLogin} addTypename={false}>
-        <MockTheme>
-          <ApolloProvider client={{}}>
-            <Provider store={store}>
-              <Login />
-            </Provider>
-          </ApolloProvider>
-        </MockTheme>
-      </MockedProvider>
+      {/* //   <MockedProvider mocks={mockLogin} addTypename={false}> */}
+      <MockTheme>
+        {/* //       <ApolloProvider client={{}}> */}
+        {/* //         <Provider store={store}> */}
+        <LoginForm onSubmit={handleSubmit} />
+      </MockTheme>
     </BrowserRouter>,
+    //
     div
   );
   const button = getByRole("button");
@@ -56,16 +55,16 @@ describe("<Login />", () => {
   // "@testing-library/user-event": "^12.1.10",
   it("click on the login Button", async () => {
     const user = userEvent.setup();
-    await user.type(email, "hospital@heala.ng");
-    await user.type(password, "60328840");
-    await user.click(button);
+    await userEvent.type(email, "hospital@heala.ng");
+    await userEvent.type(password, "60328840");
+    await userEvent.click(button);
     // expect(email.textContent).toMatch("hospital@heala.ng");
 
     await waitFor(() => {
-      // expect(onSubmit).toHaveBeenCalledWith({
-      //   email: "hospital@heala.ng",
-      //   password: "60328840",
-      // });
+      expect(handleSubmit).toHaveBeenCalledWith({
+        email: "hospital@heala.ng",
+        password: "60328840",
+      });
       expect(email).toHaveValue("hospital@heala.ng");
       expect(mockDisplayMessage).toHaveBeenCalledWith(
         "success",

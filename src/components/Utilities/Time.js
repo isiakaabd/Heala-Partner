@@ -57,6 +57,10 @@ export const selectOptions = [
   { key: "Nov", value: "11" },
   { key: "Jan", value: "1" },
 ];
+export const newOptions = [
+  { key: "Active", value: "active" },
+  { key: "Inactive", value: "inactive" },
+];
 export const formatNumber = (num) => {
   return new Intl.NumberFormat().format(num);
 };

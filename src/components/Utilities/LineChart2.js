@@ -4,21 +4,21 @@ import { Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Line } from "react-chartjs-2";
 
-const LineChart2 = ({ activeChartData, inactiveChartData, type }) => {
+const LineChart2 = ({ type, graphState }) => {
   const theme = useTheme();
-  const [actives, setActives] = useState([]);
-  const [inActives, setInActives] = useState([]);
+  const [state, setState] = useState("active");
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    if (inactiveChartData) {
-      const z = inactiveChartData.map((i) => i?.sum);
-      setInActives(z);
-    }
-    if (activeChartData) {
-      const z = activeChartData.map((i) => i?.sum);
-      setActives(z);
-    }
-  }, [activeChartData, inactiveChartData, type]);
+    const z = graphState?.data?.map((i) => i?.sum);
+    setState(graphState?.state);
+    setChartData(z);
+
+    // if (activeChartData) {
+    //   const z = activeChartData.map((i) => i?.sum);
+    //   setActives(z);
+    // }
+  }, [type, graphState?.data, graphState?.state]);
   const data = {
     labels: [
       "Jan",
@@ -36,30 +36,36 @@ const LineChart2 = ({ activeChartData, inactiveChartData, type }) => {
     ],
     datasets: [
       {
-        label: "Active",
-        data: actives,
+        label: state,
+        data: chartData,
         fill: false,
         cursor: "pointer",
-        borderColor: theme.palette.common.green,
-        pointBackgroundColor: theme.palette.common.green,
+        borderColor:
+          state === "active"
+            ? theme.palette.common.green
+            : theme.palette.common.red,
+        pointBackgroundColor:
+          state === "active"
+            ? theme.palette.common.green
+            : theme.palette.common.red,
         pointBorderColor: "#fff",
         pointRadius: 5,
         pointHoverRadius: 7,
         pointBorderWidth: 2,
         tension: 0.5,
       },
-      {
-        label: "Inactive",
-        data: inActives,
-        fill: false,
-        borderColor: theme.palette.common.red,
-        pointBackgroundColor: theme.palette.common.red,
-        pointBorderColor: "#fff",
-        pointRadius: 5,
-        pointHoverRadius: 7,
-        pointBorderWidth: 2,
-        tension: 0.5,
-      },
+      // {
+      //   label: "Inactive",
+      //   data: inActives,
+      //   fill: false,
+      //   borderColor: theme.palette.common.red,
+      //   pointBackgroundColor: theme.palette.common.red,
+      //   pointBorderColor: "#fff",
+      //   pointRadius: 5,
+      //   pointHoverRadius: 7,
+      //   pointBorderWidth: 2,
+      //   tension: 0.5,
+      // },
     ],
   };
 
