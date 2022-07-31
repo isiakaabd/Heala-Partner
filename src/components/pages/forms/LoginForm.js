@@ -50,8 +50,8 @@ const LoginForm = ({ onSubmit }) => {
     active: theme.palette.primary.dark,
   };
   const initialValues = {
-    email: "",
-    password: "",
+    email: "shally@gmail.com",
+    password: "1234",
     authType: "normal",
   };
 

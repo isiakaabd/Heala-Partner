@@ -33,6 +33,6 @@ const NoData = ({ error }) => {
   );
 };
 NoData.propTypes = {
-  error: PropTypes.string,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 export default NoData;

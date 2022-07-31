@@ -89,7 +89,7 @@ const EnhancedTable = ({
           component="div"
           count={dataPageInfo?.totalDocs || 0}
           rowsPerPage={dataPageInfo?.limit || 5}
-          page={dataPageInfo?.page - 1}
+          page={+dataPageInfo?.page - 1}
           labelRowsPerPage={paginationLabel}
           onPageChange={(e) => e}
           onRowsPerPageChange={(e) => {
@@ -119,7 +119,7 @@ EnhancedTable.propTypes = {
   type: PropTypes.string,
   hasCheckbox: PropTypes.bool,
   changeLimit: PropTypes.func,
-  dataPageInfo: PropTypes.object,
+  dataPageInfo: PropTypes.array,
   hasPagination: PropTypes.bool,
   handlePagination: PropTypes.func,
 };

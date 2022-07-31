@@ -135,11 +135,12 @@ export const CustomSelect = (props) => {
     </Grid>
   );
 };
+
 CustomSelect.propTypes = {
   value: PropTypes.string,
-  options: PropTypes.string,
+  options: PropTypes.array,
   label: PropTypes.string,
-  name: PropTypes.func,
+  name: PropTypes.string,
   children: PropTypes.node,
   placeholder: PropTypes.string,
   onBlur: PropTypes.func,
