@@ -1,6 +1,6 @@
 import Patients from "../Patients";
 import React from "react";
-import { render, act, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "store";
 import "@testing-library/jest-dom/extend-expect";

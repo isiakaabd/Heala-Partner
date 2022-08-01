@@ -14,7 +14,7 @@ import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+// import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import {
   LineChart2,
   CircularProgressBar,
@@ -101,18 +101,10 @@ const useStyles = makeStyles((theme) => ({
 const HopsitalDashboardChart = ({ data, refetch }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const timeFrames = [
-    { id: 0, time: "Jan" },
-    { id: 1, time: "Mar" },
-    { id: 2, time: "May" },
-    { id: 3, time: "Jul" },
-    { id: 4, time: "Sept" },
-    { id: 5, time: "Nov" },
-    { id: 6, time: "Jan" },
-  ];
+
   const [patients, setPatients] = useState([]);
   const [doctorStats, setDoctorStats] = useState([]);
-  const [appointmentStats, setAppointmentStats] = useState([]);
+  // const [appointmentStats, setAppointmentStats] = useState([]);
   const [totalActiveSubscribers, setTotalActiveSubscribers] = useState(0);
   const [totalInactiveSubscribers, setTotalInactiveSubscribers] = useState(0);
   const [totalEarning, setTotalEarning] = useState(0);
@@ -129,7 +121,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
   });
   const [patientGraphState, setPatientGraphState] = useState({
     state: "active",
-    data: data?.getStats?.doctorStats.activeChartData,
+    data: data?.getStats?.patientStats.activeChartData,
   });
   useEffect(() => {
     setGraphState({
@@ -148,8 +140,8 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
       doctorStats,
       totalActiveSubscribers,
       totalInactiveSubscribers,
-      appointmentStats,
-      // subscribers,
+      // appointmentStats,
+      // // subscribers,
       totalEarnings,
       totalPayout,
     } = data?.getStats;
@@ -157,10 +149,10 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
     setDoctorStats(doctorStats);
     setActivePatientsChartData(patientStats?.activeChartData);
     setInActiveChartPatientsData(patientStats?.inactiveChartData);
-    setAppointmentStats(appointmentStats);
+    // setAppointmentStats(appointmentStats);
     setActiveDoctorChartData(doctorStats?.activeChartData);
     setInActiveChartDoctorssData(doctorStats?.inactiveChartData);
-    setAppointmentStats(appointmentStats);
+    // setAppointmentStats(appointmentStats);
     setTotalActiveSubscribers(totalActiveSubscribers);
     setTotalInactiveSubscribers(totalInactiveSubscribers);
     setTotalEarning(totalEarnings ? totalEarning : 0);
@@ -171,8 +163,6 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
   }, [data]);
 
   const financialValue = financialPercent(0, 0);
-  // financialPercent(totalEarning, totalPayouts);
-  const [selectedTimeframe, setSelectedTimeframe] = useState(0);
   const [finances, setFinances] = useState(financialValue);
   const { totalActive: activeDoctors, totalInactive: inactiveDoctors } =
     doctorStats;
@@ -203,22 +193,20 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
       });
     }
   };
-  const patientGraphFunc =
-    // useCallback(
-    (e) => {
-      const { value } = e.target;
-      if (value === "active") {
-        setPatientGraphState({
-          state: "active",
-          data: activePatientsChartData,
-        });
-      } else if (value === "inactive") {
-        setPatientGraphState({
-          state: "inactive",
-          data: inActiveChartPatientsData,
-        });
-      }
-    };
+  const patientGraphFunc = (e) => {
+    const { value } = e.target;
+    if (value === "active") {
+      setPatientGraphState({
+        state: "active",
+        data: activePatientsChartData,
+      });
+    } else if (value === "inactive") {
+      setPatientGraphState({
+        state: "inactive",
+        data: inActiveChartPatientsData,
+      });
+    }
+  };
 
   return (
     <Grid
@@ -314,15 +302,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
           marginY={{ sm: 3, md: 3, xs: 2 }}
           direction="column"
         >
-          <LineChart2
-            timeFrames={timeFrames}
-            selectedTimeframe={selectedTimeframe}
-            setSelectedTimeframe={setSelectedTimeframe}
-            doctorStats={doctorStats}
-            inactiveChartData={inActiveChartPatientsData}
-            activeChartData={activePatientsChartData}
-            graphState={graphState}
-          />
+          <LineChart2 graphState={graphState} />
 
           {/* Line */}
           <Grid
@@ -466,14 +446,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
           marginY={{ sm: 3, md: 3, xs: 2 }}
           direction="column"
         >
-          <LineChart2
-            timeFrames={timeFrames}
-            selectedTimeframe={selectedTimeframe}
-            setSelectedTimeframe={setSelectedTimeframe}
-            inactiveChartData={inActiveChartDoctorsData}
-            activeChartData={activeChartDoctorsData}
-            graphState={patientGraphState}
-          />
+          <LineChart2 graphState={patientGraphState} />
 
           {/* Line */}
           <Grid
@@ -566,8 +539,8 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               </Grid>
               <Grid item>
                 <FormSelect
-                  value={patientGraphState?.state}
-                  onChange={patientGraphFunc}
+                  value={"active"}
+                  onChange={(e) => console.log(e)}
                   options={newOptions}
                   name="graph"
                 />
@@ -583,14 +556,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
           marginY={{ sm: 3, md: 3, xs: 2 }}
           direction="column"
         >
-          <LineChart2
-            timeFrames={timeFrames}
-            selectedTimeframe={selectedTimeframe}
-            setSelectedTimeframe={setSelectedTimeframe}
-            inactiveChartData={inActiveChartDoctorsData}
-            activeChartData={activeChartDoctorsData}
-            graphState={patientGraphState}
-          />
+          <LineChart2 graphState={[]} />
 
           {/* Line */}
           <Grid
