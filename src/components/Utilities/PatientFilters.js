@@ -13,13 +13,13 @@ import { useLazyQuery } from "@apollo/client";
 
 const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
   const { displayMessage } = useAlert();
-  const [__, setPlans] = useState([]);
+  const [, setPlans] = useState([]);
   const [fetchPlans] = useLazyQuery(getPlans);
-  const [___, setProviders] = useState([]);
+  const [, setProviders] = useState([]);
   const [fetchProviders] = useLazyQuery(getProviders);
   const [providerId, setProviderId] = useState(null);
   // const [____, setFilterPlanValue] = useState("");
-  const [_, setStatusFilterValue] = useState("");
+  const [, setStatusFilterValue] = useState("");
   const { patientsParams, patientsByStatusParams, patientsByPlanParams } =
     queryParams;
   const { fetchPatient, loading, refetch, variables } = patientsParams;
@@ -31,7 +31,7 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
     byPlanLoading,
     // byPlanVaribles, byPlanRefetch, fetchPatientByPlan
   } = patientsByPlanParams;
-  console.log(_, __, ___);
+
   useEffect(() => {
     fetchProviders()
       .then(({ data }) => {

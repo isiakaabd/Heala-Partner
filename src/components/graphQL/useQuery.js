@@ -1027,11 +1027,11 @@ export const dashboard = gql`
         activeChartData
         inactiveChartData
       }
-      totalActiveSubscribers
-      totalInactiveSubscribers
     }
   }
 `;
+//totalActiveSubscribers
+//  totalInactiveSubscribers
 export const getPlans = gql`
   ${PageInfo}
   query getPlans($amount: Float, $provider: String, $page: Int, $first: Int) {

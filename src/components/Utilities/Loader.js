@@ -5,6 +5,7 @@ const Loader = ({ color, size, ...rest }) => {
   return (
     <Grid container justifyContent="center" alignItems="center">
       <CircularProgress
+        data-testid="loader"
         size={size ? size : 20}
         color={color ? color : "primary"}
         {...rest}

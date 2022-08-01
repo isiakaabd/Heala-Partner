@@ -30,6 +30,7 @@ const LineChart2 = ({ type, graphState }) => {
       "Nov",
       "Dec",
     ],
+    backgroundColor: "rgba(90,165,60,0.6)",
     datasets: [
       {
         label: state,
@@ -48,11 +49,11 @@ const LineChart2 = ({ type, graphState }) => {
           state === "active"
             ? theme.palette.common.green
             : theme.palette.common.red,
-        pointRadius: 2,
-        pointHoverRadius: 5,
+        pointRadius: 0,
+        pointHoverRadius: 3,
         pointHoverColor: "#00f",
-        pointBorderWidth: 3,
-        tension: 0.4,
+        pointBorderWidth: 2,
+        tension: 0.5,
       },
     ],
   };
@@ -87,6 +88,7 @@ const LineChart2 = ({ type, graphState }) => {
       },
       tooltip: {
         backgroundColor: "#fff",
+        cursor: "pointer",
         titleColor: colorItem,
         onHover: hover,
         bodyColor:
@@ -105,12 +107,12 @@ const LineChart2 = ({ type, graphState }) => {
         displayColors: true,
         boxHeight: 0,
         boxWidth: 0,
-        yAlign: "bottom",
-        usePointStyle: false,
+        yAlign: "top",
+        usePointStyle: true,
         callbacks: {
           labelPointStyle: (context) => {
             return {
-              pointStyle: "triangle",
+              pointStyle: "rectangle",
               rotation: 0,
               cursor: "pointer",
             };
@@ -120,9 +122,8 @@ const LineChart2 = ({ type, graphState }) => {
     },
   };
   function hover(event, chartElement) {
-    return (event.target.style.cursor = chartElement[0]
-      ? "pointer"
-      : "default");
+    const x = (event.target.style.cursor = "pointer");
+    return x;
   }
   function colorItem(tooltipItem) {
     const tooltipTitleColor =
