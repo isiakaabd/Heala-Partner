@@ -104,9 +104,6 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
 
   const [patients, setPatients] = useState([]);
   const [doctorStats, setDoctorStats] = useState([]);
-  // const [appointmentStats, setAppointmentStats] = useState([]);
-  const [totalActiveSubscribers, setTotalActiveSubscribers] = useState(0);
-  const [totalInactiveSubscribers, setTotalInactiveSubscribers] = useState(0);
   const [totalEarning, setTotalEarning] = useState(0);
   const [totalPayouts, setTotalPayouts] = useState(0);
   const [activePatientsChartData, setActivePatientsChartData] = useState([]);
@@ -114,10 +111,16 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
   const [inActiveChartPatientsData, setInActiveChartPatientsData] = useState(
     []
   );
+  const [activeSubs, setActiveSubs] = useState([]);
+  const [inActiveSubs, setInActiveSubs] = useState([]);
   const [inActiveChartDoctorsData, setInActiveChartDoctorssData] = useState([]);
   const [graphState, setGraphState] = useState({
     state: "active",
     data: data?.getStats?.doctorStats.activeChartData,
+  });
+  const [subScriptionState, setSubScriptionState] = useState({
+    state: "active",
+    data: data?.getStats?.subscriptionStats?.chartData,
   });
   const [patientGraphState, setPatientGraphState] = useState({
     state: "active",
@@ -132,37 +135,44 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
       state: "active",
       data: data?.getStats?.patientStats.activeChartData,
     });
+    setActiveSubs({
+      state: "active",
+      data: data?.getStats?.subscriptionStats.totalActive,
+    });
+  }, [data]);
+  useEffect(() => {
+    setPayoutArray(data?.getStats?.payoutStats?.chartData);
+    setEarningArray(data?.getStats?.earningStats?.chartData);
   }, [data]);
   useEffect(() => {
     const {
       // eslint-disable-next-line
       patientStats,
       doctorStats,
-      totalActiveSubscribers,
-      totalInactiveSubscribers,
-      // appointmentStats,
-      // // subscribers,
-      totalEarnings,
-      totalPayout,
+      subscriptionStats,
+      payoutStats,
+      earningStats,
     } = data?.getStats;
     setPatients(patientStats);
     setDoctorStats(doctorStats);
     setActivePatientsChartData(patientStats?.activeChartData);
     setInActiveChartPatientsData(patientStats?.inactiveChartData);
-    // setAppointmentStats(appointmentStats);
+    setActiveSubs(subscriptionStats?.totalActive);
+    setInActiveSubs(subscriptionStats?.totalInactive);
+    setPayoutArray(payoutStats?.chartData);
+    setEarningArray(earningStats?.chartData);
     setActiveDoctorChartData(doctorStats?.activeChartData);
     setInActiveChartDoctorssData(doctorStats?.inactiveChartData);
-    // setAppointmentStats(appointmentStats);
-    setTotalActiveSubscribers(totalActiveSubscribers);
-    setTotalInactiveSubscribers(totalInactiveSubscribers);
-    setTotalEarning(totalEarnings ? totalEarning : 0);
-    setTotalPayouts(totalPayout ? totalPayout : 0);
-    const value = financialPercent(totalEarnings, totalPayout);
+
+    setTotalEarning(earningStats?.total);
+    setTotalPayouts(payoutStats?.total);
+    const value = financialPercent(totalEarning, totalPayouts);
+
     setFinances(value);
     //eslint-disable-next-line
   }, [data]);
 
-  const financialValue = financialPercent(0, 0);
+  const financialValue = financialPercent(totalEarning, totalPayouts);
   const [finances, setFinances] = useState(financialValue);
   const { totalActive: activeDoctors, totalInactive: inactiveDoctors } =
     doctorStats;
@@ -174,10 +184,23 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
   const doctorPercentage = returnpercent(activeDoctors, inactiveDoctors);
   const [forms, setForms] = useState("");
   // const [activePatientsChartData, setActivePatientsChartData] = useState([]);
-
+  const [payoutArray, setPayoutArray] = useState([]);
+  const [earningArray, setEarningArray] = useState([]);
   const onChange = async (e) => {
-    setForms(e.target.value);
-    await refetch({ q: e.target.value });
+    const { value } = e.target;
+    setForms(value);
+    //eslint-disable-next-line
+    earningArray?.map((item) => {
+      if (item?.month === value) {
+        setTotalEarning(item?.sum);
+      }
+    });
+    //eslint-disable-next-line
+    payoutArray?.map((item) => {
+      if (item?.month === value) {
+        setTotalPayouts(item?.sum);
+      }
+    });
   };
   const graphFunc = (e) => {
     const { value } = e.target;
@@ -204,6 +227,20 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
       setPatientGraphState({
         state: "inactive",
         data: inActiveChartPatientsData,
+      });
+    }
+  };
+  const subGraphFunc = (e) => {
+    const { value } = e.target;
+    if (value === "active") {
+      setSubScriptionState({
+        state: "active",
+        data: activeSubs,
+      });
+    } else if (value === "inactive") {
+      setSubScriptionState({
+        state: "inactive",
+        data: inActiveSubs,
       });
     }
   };
@@ -540,9 +577,10 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               <Grid item>
                 <FormSelect
                   value={"active"}
-                  onChange={(e) => console.log(e)}
+                  onChange={subGraphFunc}
                   options={newOptions}
-                  name="graph"
+                  name="subscription-select"
+                  disabled
                 />
               </Grid>
             </Grid>
@@ -556,7 +594,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
           marginY={{ sm: 3, md: 3, xs: 2 }}
           direction="column"
         >
-          <LineChart2 graphState={[]} />
+          <LineChart2 graphState={subScriptionState} />
 
           {/* Line */}
           <Grid
@@ -569,7 +607,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               <Grid container direction="column">
                 <Grid item>
                   <Typography variant="h3" gutterBottom>
-                    {data && totalActiveSubscribers}
+                    {data && activeSubs}
                   </Typography>{" "}
                 </Grid>
                 <Grid item>
@@ -595,7 +633,7 @@ const HopsitalDashboardChart = ({ data, refetch }) => {
               <Grid container direction="column" justifyContent="center">
                 <Grid item>
                   <Typography variant="h3" gutterBottom>
-                    {data && totalInactiveSubscribers}
+                    {data && inActiveSubs}
                   </Typography>
                 </Grid>
                 <Grid item>

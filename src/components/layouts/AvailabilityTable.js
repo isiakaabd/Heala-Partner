@@ -57,18 +57,18 @@ const useStyles = makeStyles((theme) => ({
 const AvailabilityTable = ({ data }) => {
   const [avaliablity, setAvaliablity] = useState([]);
   useEffect(() => {
-    setAvaliablity(data);
+    setAvaliablity(data.availableDoctors);
   }, [data]);
 
   const classes = useStyles();
   const theme = useTheme();
-
+  console.log(avaliablity);
   return (
     <Grid item container direction="column" height="100%" rowGap={2}>
       <Grid item>
         <Typography variant="h4">Availability Table</Typography>
       </Grid>
-      {avaliablity && avaliablity.length > 0 ? (
+      {avaliablity?.length > 0 ? (
         <Grid
           item
           container
@@ -85,9 +85,9 @@ const AvailabilityTable = ({ data }) => {
             hasPagination={false}
           >
             {avaliablity.map((row, index) => {
-              const { _id, doctorData, times, day } = row;
+              const { _id, doctorData, dociId, times, day } = row;
               const labelId = `enhanced-table-checkbox-${index}`;
-              const rowdata = doctorData && (
+              return (
                 <TableRow hover tabIndex={-1} key={_id}>
                   <TableCell
                     id={labelId}
@@ -96,7 +96,8 @@ const AvailabilityTable = ({ data }) => {
                     className={classes.tableCell}
                     style={{ color: theme.palette.common.grey }}
                   >
-                    {doctorData ? doctorData?.dociId : "no doctor"}
+                    {/* {doctorData ? doctorData?.dociId : "no doctor"} */}
+                    {dociId ? dociId?.split("-")[1] : "No Value"}
                   </TableCell>
                   <TableCell align="left" className={classes.tableCell}>
                     <div
@@ -122,31 +123,31 @@ const AvailabilityTable = ({ data }) => {
                     </div>
                   </TableCell>
                   <TableCell align="left" className={classes.tableCell}>
-                    {day && day}
+                    {day ? day : "No Value"}
                   </TableCell>
                   <TableCell align="left" className={classes.tableCell}>
                     <Grid container gap={1}>
-                      {times &&
-                        times.map((time) => {
-                          return (
-                            <Chip
-                              key={index}
-                              label={`${hours(time.start)} - ${hours(
-                                time.stop
-                              )} `}
-                              className={classes.badge}
-                              style={{
-                                background: theme.palette.common.lightGreen,
-                                color: theme.palette.common.green,
-                              }}
-                            />
-                          );
-                        })}
+                      {times
+                        ? times?.map((time) => {
+                            return (
+                              <Chip
+                                key={index}
+                                label={`${hours(time.start)} - ${hours(
+                                  time.stop
+                                )} `}
+                                className={classes.badge}
+                                style={{
+                                  background: theme.palette.common.lightGreen,
+                                  color: theme.palette.common.green,
+                                }}
+                              />
+                            );
+                          })
+                        : "No Time"}
                     </Grid>
                   </TableCell>
                 </TableRow>
               );
-              return rowdata;
             })}
           </EnhancedTable>
         </Grid>

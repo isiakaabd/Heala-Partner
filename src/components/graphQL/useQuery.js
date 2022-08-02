@@ -1027,6 +1027,37 @@ export const dashboard = gql`
         activeChartData
         inactiveChartData
       }
+      partnerStats {
+        total
+        chartData
+        hospitalChartData
+        diagnosticsChartData
+        pharmacyChartData
+      }
+      subscriptionStats {
+        totalActive
+        totalInactive
+        chartData
+      }
+      earningStats {
+        total
+        chartData
+      }
+      payoutStats {
+        total
+        chartData
+      }
+      availabilityCalender {
+        today
+        availableDoctors {
+          _id
+          dociId
+          firstName
+          lastName
+          email
+          providerId
+        }
+      }
     }
   }
 `;

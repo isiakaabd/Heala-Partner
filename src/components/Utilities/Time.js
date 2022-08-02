@@ -50,12 +50,17 @@ export const financialPercent = (a, b) => {
 
 export const selectOptions = [
   { key: "Jan", value: "1" },
+  { key: "Feb", value: "2" },
   { key: "Mar", value: "3" },
+  { key: "Apr", value: "4" },
   { key: "May", value: "5" },
+  { key: "Jun", value: "6" },
   { key: "Jul", value: "7" },
+  { key: "Aug", value: "8" },
   { key: "Sept", value: "9" },
+  { key: "Oct", value: "10" },
   { key: "Nov", value: "11" },
-  { key: "Jan", value: "1" },
+  { key: "Dec", value: "12" },
 ];
 export const newOptions = [
   { key: "Active", value: "active" },
