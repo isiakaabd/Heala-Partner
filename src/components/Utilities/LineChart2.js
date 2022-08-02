@@ -49,10 +49,10 @@ const LineChart2 = ({ type, graphState }) => {
           state === "active"
             ? theme.palette.common.green
             : theme.palette.common.red,
-        pointRadius: 0,
-        pointHoverRadius: 3,
+        pointRadius: 1,
+        pointHoverRadius: 5,
         pointHoverColor: "#00f",
-        pointBorderWidth: 2,
+        pointBorderWidth: 0.9,
         tension: 0.5,
       },
     ],
