@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const HopsitalDashboardChart = ({ data, refetch }) => {
+const HopsitalDashboardChart = ({ data }) => {
   const classes = useStyles();
   const theme = useTheme();
 

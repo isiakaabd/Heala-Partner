@@ -1050,12 +1050,19 @@ export const dashboard = gql`
       availabilityCalender {
         today
         availableDoctors {
-          _id
           dociId
           firstName
           lastName
-          email
           providerId
+          availability {
+            day
+            times {
+              start
+              stop
+            }
+            createdAt
+            updatedAt
+          }
         }
       }
     }
