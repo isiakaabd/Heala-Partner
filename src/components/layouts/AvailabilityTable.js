@@ -62,7 +62,7 @@ const AvailabilityTable = ({ data }) => {
 
   const classes = useStyles();
   const theme = useTheme();
-  console.log(avaliablity);
+
   return (
     <Grid item container direction="column" height="100%" rowGap={2}>
       <Grid item>
@@ -85,7 +85,7 @@ const AvailabilityTable = ({ data }) => {
             hasPagination={false}
           >
             {avaliablity.map((row, index) => {
-              const { _id, doctorData, dociId, times, day } = row;
+              const { _id, doctorData, dociId, availability } = row;
               const labelId = `enhanced-table-checkbox-${index}`;
               return (
                 <TableRow hover tabIndex={-1} key={_id}>
@@ -123,12 +123,12 @@ const AvailabilityTable = ({ data }) => {
                     </div>
                   </TableCell>
                   <TableCell align="left" className={classes.tableCell}>
-                    {day ? day : "No Value"}
+                    {availability ? availability?.day : "No Value"}
                   </TableCell>
                   <TableCell align="left" className={classes.tableCell}>
                     <Grid container gap={1}>
-                      {times
-                        ? times?.map((time) => {
+                      {availability?.times
+                        ? availability?.times?.map((time) => {
                             return (
                               <Chip
                                 key={index}

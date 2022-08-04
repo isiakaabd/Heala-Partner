@@ -20,7 +20,7 @@ const HospitalDashboard = () => {
 
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
-  console.log(data);
+
   return (
     <Grid container direction="column" rowGap={3}>
       <Grid item container alignItems="center">
