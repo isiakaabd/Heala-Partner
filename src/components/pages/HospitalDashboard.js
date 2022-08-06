@@ -31,7 +31,7 @@ const HospitalDashboard = () => {
 
       <HospitalDashboardChart data={data} />
 
-      <AvailabilityTable data={data?.getStats?.availabilityCalendar} />
+      <AvailabilityTable data={data?.getStats?.availabilityCalender} />
     </Grid>
   );
 };
