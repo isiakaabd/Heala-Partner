@@ -1047,6 +1047,18 @@ export const dashboard = gql`
         total
         chartData
       }
+      consultationStats {
+        totalOngoing
+        totalAccepted
+        totalCompleted
+        totalDeclined
+        totalCancelled
+        ongoingChartData
+        acceptedChartData
+        completedChartData
+        declinedChartData
+        cancelledChartData
+      }
       availabilityCalender {
         today
         availableDoctors {
@@ -1055,10 +1067,10 @@ export const dashboard = gql`
           lastName
           providerId
           availability {
-            day
             times {
               start
               stop
+              available
             }
             createdAt
             updatedAt
