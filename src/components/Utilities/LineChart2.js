@@ -8,17 +8,13 @@ const LineChart2 = ({ type, graphState }) => {
   const theme = useTheme();
   const [state, setState] = useState("active");
   const [chartData, setChartData] = useState([]);
-
+  const lightGreen = "rgba(45, 211, 158, .3)";
+  const lightBlue = "rgba(62, 94, 169, .3)";
   useEffect(() => {
     const z = graphState?.data?.map((i) => i?.sum);
     setState(graphState?.state);
     setChartData(z);
-
-    // if (activeChartData) {
-    //   const z = activeChartData.map((i) => i?.sum);
-    //   setActives(z);
-    // }
-  }, [type, graphState?.data, graphState?.state]);
+  }, [type, graphState]);
   const data = {
     labels: [
       "Jan",
@@ -34,11 +30,12 @@ const LineChart2 = ({ type, graphState }) => {
       "Nov",
       "Dec",
     ],
+    backgroundColor: "rgba(90,165,60,0.6)",
     datasets: [
       {
         label: state,
         data: chartData,
-        fill: false,
+        fill: true,
         cursor: "pointer",
         borderColor:
           state === "active"
@@ -48,43 +45,39 @@ const LineChart2 = ({ type, graphState }) => {
           state === "active"
             ? theme.palette.common.green
             : theme.palette.common.red,
-        pointBorderColor: "#fff",
-        pointRadius: 5,
-        pointHoverRadius: 7,
+        pointBorderColor:
+          state === "active"
+            ? theme.palette.common.green
+            : theme.palette.common.red,
+        pointRadius: 0,
+        pointHoverRadius: 3,
+        pointHoverColor: "#00f",
         pointBorderWidth: 2,
         tension: 0.5,
       },
-      // {
-      //   label: "Inactive",
-      //   data: inActives,
-      //   fill: false,
-      //   borderColor: theme.palette.common.red,
-      //   pointBackgroundColor: theme.palette.common.red,
-      //   pointBorderColor: "#fff",
-      //   pointRadius: 5,
-      //   pointHoverRadius: 7,
-      //   pointBorderWidth: 2,
-      //   tension: 0.5,
-      // },
     ],
   };
 
   const options = {
+    responsive: true,
     locale: "fr",
     scales: {
       y: {
-        beginAtZero: true,
+        beginAtZero: false,
+        fillColor: state === "active" ? lightGreen : lightBlue,
         grid: {
-          color: "#ffff",
-          borderDash: [5, 8],
-          display: false,
+          color: state === "active" ? lightGreen : lightBlue,
+          borderColor: state === "active" ? lightGreen : lightBlue,
+          borderDash: [2, 2],
+          display: true,
         },
       },
       x: {
         grid: {
-          color: "#ffff",
-          borderDash: [5, 8],
-          display: false,
+          color: state === "active" ? lightGreen : lightBlue,
+          borderDash: [2, 2],
+          borderColor: state === "active" ? lightGreen : lightBlue,
+          display: true,
         },
         display: true,
       },
@@ -95,22 +88,31 @@ const LineChart2 = ({ type, graphState }) => {
       },
       tooltip: {
         backgroundColor: "#fff",
+        cursor: "pointer",
         titleColor: colorItem,
         onHover: hover,
-        bodyColor: theme.palette.common.lightGrey,
+        bodyColor:
+          state === "active"
+            ? theme.palette.common.green
+            : theme.palette.common.red,
+        // theme.palette.common.lightGrey,
         titleAlign: "left",
         bodyAlign: "left",
-        borderColor: "rgba(0, 0, 0, 0.05)",
-        borderWidth: 2,
+        borderColor:
+          state === "active"
+            ? theme.palette.common.green
+            : theme.palette.common.red,
+        // "rgba(0, 0, 0, 0.05)",
+        borderWidth: 1,
         displayColors: true,
         boxHeight: 0,
         boxWidth: 0,
-        yAlign: "bottom",
+        yAlign: "top",
         usePointStyle: true,
         callbacks: {
           labelPointStyle: (context) => {
             return {
-              pointStyle: "triangle",
+              pointStyle: "rectangle",
               rotation: 0,
               cursor: "pointer",
             };
@@ -120,9 +122,8 @@ const LineChart2 = ({ type, graphState }) => {
     },
   };
   function hover(event, chartElement) {
-    return (event.target.style.cursor = chartElement[0]
-      ? "pointer"
-      : "default");
+    const x = (event.target.style.cursor = "pointer");
+    return x;
   }
   function colorItem(tooltipItem) {
     const tooltipTitleColor =

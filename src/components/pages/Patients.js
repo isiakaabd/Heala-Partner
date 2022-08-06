@@ -33,7 +33,7 @@ import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import { useLazyQuery } from "@apollo/client";
-// import { getPatients } from "components/graphQL/useQuery";
+// import { getPatients } from "components/graphaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjkkkkvkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo6666666666666666666666666666666666666666666666666666666666666666666666uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuukkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkQL/useQuery";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     "&.MuiButton-root": {
       background: "#fff",
-      color: theme.palette.common.grey,
+      color: "#757886",
       textTransform: "none",
       borderRadius: "2rem",
       display: "flex",
@@ -104,8 +104,12 @@ const useStyles = makeStyles((theme) => ({
   },
   searchFilterBtn: {
     "&.MuiButton-root": {
-      ...theme.typography.btn,
-      background: theme.palette.common.black,
+      fontSize: "1.5rem",
+      textTransform: "none",
+      height: "5rem",
+      borderRadius: 10,
+      boxShadow: "0px 0px 4px -1px rgba(71,64,71,0.63)",
+      background: "#2D2F39",
       width: "100%",
     },
   },
@@ -346,6 +350,7 @@ const Patients = () => {
                           />
                         </span>
                         <span
+                          test="test-value"
                           style={{ fontSize: "1.25rem" }}
                         >{`${firstName} ${lastName}`}</span>
                       </div>
@@ -353,7 +358,11 @@ const Patients = () => {
                     <TableCell align="left" className={classes.tableCell}>
                       {plan ? plan : "No Plan"}
                     </TableCell>
-                    <TableCell align="left" className={classes.tableCell}>
+                    <TableCell
+                      align="left"
+                      className={classes.tableCell}
+                      data-testid="test-value"
+                    >
                       {provider ? provider : "No Provider"}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
