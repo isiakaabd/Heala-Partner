@@ -66,6 +66,13 @@ export const newOptions = [
   { key: "Active", value: "active" },
   { key: "Inactive", value: "inactive" },
 ];
+export const consultationsOptions = [
+  { key: "Accepted", value: "Accepted" },
+  { key: "Completed", value: "Completed" },
+  { key: "Declined", value: "Declined" },
+  { key: "Ongoing", value: "Ongoing" },
+  { key: "Cancelled", value: "Cancelled" },
+];
 export const formatNumber = (num) => {
   return new Intl.NumberFormat().format(num);
 };

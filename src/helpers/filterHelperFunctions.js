@@ -188,6 +188,7 @@ export const handleHospitalPageChange = (fetchDataFN, type, pageInfo, id) => {
     default:
       break;
   }
+  console.log(getData());
 };
 
 export const fetchMoreData = async (newPage, fetchData, value) => {

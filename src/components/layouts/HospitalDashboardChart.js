@@ -7,6 +7,7 @@ import {
   financialPercent,
   returnpercent,
   selectOptions,
+  consultationsOptions,
   newOptions,
   formatNumber,
 } from "components/Utilities/Time";
@@ -112,7 +113,20 @@ const HopsitalDashboardChart = ({ data }) => {
     []
   );
   const [activeSubs, setActiveSubs] = useState([]);
+  const [consultationState, setConsultationState] = useState({
+    state: "Completed",
+    data: data?.getStats?.consultationStats?.completedChartData,
+  });
   const [inActiveSubs, setInActiveSubs] = useState([]);
+  const [totalConsultations, setTotalConsultations] = useState("");
+  const [accepted, setAccepted] = useState([]);
+  const [cancelled, setCancelled] = useState([]);
+  const [ongoing, setOngoing] = useState([]);
+  const [completed, setCompleted] = useState([]);
+  const [totalSubs, setTotalSub] = useState(0);
+  const [activeSubsNumber, setActiveSubsNumber] = useState(0);
+  const [inActiveSubsNumber, setInActiveSubsNumber] = useState(0);
+  const [declined, setDeclined] = useState([]);
   const [inActiveChartDoctorsData, setInActiveChartDoctorssData] = useState([]);
   const [graphState, setGraphState] = useState({
     state: "active",
@@ -120,7 +134,7 @@ const HopsitalDashboardChart = ({ data }) => {
   });
   const [subScriptionState, setSubScriptionState] = useState({
     state: "active",
-    data: data?.getStats?.subscriptionStats?.chartData,
+    data: data?.getStats?.subscriptionStats?.activeChartData,
   });
   const [patientGraphState, setPatientGraphState] = useState({
     state: "active",
@@ -137,7 +151,7 @@ const HopsitalDashboardChart = ({ data }) => {
     });
     setActiveSubs({
       state: "active",
-      data: data?.getStats?.subscriptionStats.totalActive,
+      data: data?.getStats?.subscriptionStats?.activeChartData,
     });
   }, [data]);
   useEffect(() => {
@@ -151,14 +165,27 @@ const HopsitalDashboardChart = ({ data }) => {
       doctorStats,
       subscriptionStats,
       payoutStats,
+      consultationStats,
       earningStats,
     } = data?.getStats;
     setPatients(patientStats);
     setDoctorStats(doctorStats);
+    setTotalConsultations(consultationStats);
+    setOngoing(consultationStats.ongoingChartData);
+    setInActiveSubsNumber(subscriptionStats?.totalInactive);
+    setCancelled(consultationStats.cancelledChartData);
+    setDeclined(consultationStats.declinedChartData);
+    setCompleted(consultationStats.completedChartData);
+    setActiveSubsNumber(subscriptionStats?.totalActive);
+    setActiveSubs(subscriptionStats?.activeChartData);
+    setInActiveSubs(subscriptionStats?.inactiveChartData);
+    setTotalSub(
+      subscriptionStats?.totalActive + subscriptionStats?.totalInactive
+    );
+
+    setAccepted(consultationStats.acceptedChartData);
     setActivePatientsChartData(patientStats?.activeChartData);
     setInActiveChartPatientsData(patientStats?.inactiveChartData);
-    setActiveSubs(subscriptionStats?.totalActive);
-    setInActiveSubs(subscriptionStats?.totalInactive);
     setPayoutArray(payoutStats?.chartData);
     setEarningArray(earningStats?.chartData);
     setActiveDoctorChartData(doctorStats?.activeChartData);
@@ -171,6 +198,20 @@ const HopsitalDashboardChart = ({ data }) => {
     setFinances(value);
     //eslint-disable-next-line
   }, [data]);
+
+  const {
+    totalAccepted,
+    totalCancelled,
+    totalOngoing,
+    totalDeclined,
+    totalCompleted,
+  } = totalConsultations;
+  const total =
+    totalAccepted +
+    totalCancelled +
+    totalOngoing +
+    totalDeclined +
+    totalCompleted;
 
   const financialValue = financialPercent(totalEarning, totalPayouts);
   const [finances, setFinances] = useState(financialValue);
@@ -201,6 +242,43 @@ const HopsitalDashboardChart = ({ data }) => {
         setTotalPayouts(item?.sum);
       }
     });
+  };
+  const consultationFunc = (e) => {
+    const { value } = e.target;
+
+    switch (value) {
+      case "Cancelled":
+        setConsultationState({
+          state: "Cancelled",
+          data: cancelled,
+        });
+        break;
+      case "Accepted":
+        setConsultationState({
+          state: "Accepted",
+          data: accepted,
+        });
+        break;
+      case "Ongoing":
+        setConsultationState({
+          state: "Ongoing",
+          data: ongoing,
+        });
+        break;
+      case "Completed":
+        setConsultationState({
+          state: "Completed",
+          data: completed,
+        });
+        break;
+      case "Declined":
+        setConsultationState({
+          state: "Declined",
+          data: declined,
+        });
+        break;
+      default:
+    }
   };
   const graphFunc = (e) => {
     const { value } = e.target;
@@ -257,6 +335,7 @@ const HopsitalDashboardChart = ({ data }) => {
         xs: "repeat(1,1fr)",
       }}
       gap={2}
+      // sx={{ overflow: "hidden" }}
       rowSpacing={3}
     >
       {/* doctor */}
@@ -547,8 +626,15 @@ const HopsitalDashboardChart = ({ data }) => {
           </Grid>
         </Grid>
       </Grid>
+
       {/* active subscribers */}
+
       <Grid item container className={classes.chartCard}>
+        <Grid item className={classes.headerGrid}>
+          <Typography variant="h5">Subscribers Stats</Typography>
+        </Grid>
+        <Divider color={theme.palette.common.lighterGrey} />
+
         <Grid
           item
           container
@@ -560,30 +646,38 @@ const HopsitalDashboardChart = ({ data }) => {
             item
             gap={{ sm: 3, xs: 2, md: 3 }}
             alignItems="center"
-            flexWrap="nowrap"
+            flexWrap={"nowrap"}
             container
             flex={3}
           >
-            <Grid
-              container
-              justifyContent="space-between"
-              alignItems="center"
-              flex={{ sm: 1 }}
-              flexWrap={"nowrap"}
-            >
-              <Grid item flex={1}>
-                <Typography variant="h5">Subscription Stats</Typography>
-              </Grid>
-              <Grid item>
-                <FormSelect
-                  value={"active"}
-                  onChange={subGraphFunc}
-                  options={newOptions}
-                  name="subscription-select"
-                  disabled
-                />
-              </Grid>
+            <Grid item className={classes.groupIconGrid}>
+              <GroupIcon color="success" className={classes.groupIcon} />
             </Grid>
+            <Grid item alignItems="center" container flex={1}>
+              <Grid item container direction="column">
+                <Grid item container gap={1}>
+                  <Typography variant="h1"> {totalSubs}</Typography>
+                </Grid>
+              </Grid>
+              <Typography
+                variant="body2"
+                style={{
+                  color: theme.palette.common.lightGrey,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Total Subscribers
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid item>
+            <FormSelect
+              value={subScriptionState?.state}
+              onChange={subGraphFunc}
+              options={newOptions}
+              name="partner-select"
+            />
           </Grid>
         </Grid>
 
@@ -597,60 +691,61 @@ const HopsitalDashboardChart = ({ data }) => {
           <LineChart2 graphState={subScriptionState} />
 
           {/* Line */}
-          <Grid
-            item
-            container
-            justifyContent="space-between"
-            paddingTop={{ sm: 3, xs: 2 }}
-          >
-            <Grid item>
-              <Grid container direction="column">
-                <Grid item>
-                  <Typography variant="h3" gutterBottom>
-                    {data && activeSubs}
-                  </Typography>{" "}
-                </Grid>
-                <Grid item>
-                  <Grid container alignItems="center">
-                    <Grid item style={{ marginRight: "1rem" }}>
-                      <div
-                        className={`${classes.dottedCircle} ${classes.green}`}
-                      ></div>
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        variant="body2"
-                        style={{ color: theme.palette.common.lightGrey }}
-                      >
-                        Total active Subscribers
-                      </Typography>
-                    </Grid>
+        </Grid>
+        <Grid
+          item
+          container
+          flexWrap="nowrap"
+          justifyContent="space-between"
+          paddingTop={{ sm: 3, xs: 2 }}
+        >
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item>
+                <Typography variant="h3" gutterBottom>
+                  {data && activeSubsNumber}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item style={{ marginRight: "1rem" }}>
+                    <div
+                      className={`${classes.dottedCircle} ${classes.green}`}
+                    ></div>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="body2"
+                      style={{ color: theme.palette.common.lightGrey }}
+                    >
+                      Total active Subscribers
+                    </Typography>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item>
-              <Grid container direction="column" justifyContent="center">
-                <Grid item>
-                  <Typography variant="h3" gutterBottom>
-                    {data && inActiveSubs}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Grid container alignItems="center">
-                    <Grid item style={{ marginRight: "1rem" }}>
-                      <div
-                        className={`${classes.dottedCircle} ${classes.red}`}
-                      ></div>
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        variant="body2"
-                        style={{ color: theme.palette.common.lightGrey }}
-                      >
-                        Total inactive Subscribers
-                      </Typography>
-                    </Grid>
+          </Grid>
+          <Grid item>
+            <Grid container direction="column" justifyContent="center">
+              <Grid item>
+                <Typography variant="h3" gutterBottom>
+                  {data && inActiveSubsNumber}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item style={{ marginRight: "1rem" }}>
+                    <div
+                      className={`${classes.dottedCircle} ${classes.red}`}
+                    ></div>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="body2"
+                      style={{ color: theme.palette.common.lightGrey }}
+                    >
+                      Total inactive Subscribers
+                    </Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -658,6 +753,7 @@ const HopsitalDashboardChart = ({ data }) => {
           </Grid>
         </Grid>
       </Grid>
+      {/* finance Stats */}
       <Grid item container className={classes.chartCard}>
         <Grid
           item
@@ -708,14 +804,14 @@ const HopsitalDashboardChart = ({ data }) => {
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
-          rowGap={{ xs: "2rem" }}
+          rowGap={{ xs: "4rem" }}
           paddingY={{ xs: "1rem" }}
           className={classes.overviewGrid}
         >
           <Grid item marginRight={{ sm: "2rem", md: "2rem" }}>
             <CircularProgressBar
-              height="10rem"
-              width="10rem"
+              height="20rem"
+              width="20rem"
               color={theme.palette.common.green}
               trailColor={theme.palette.common.red}
               value={finances}
@@ -890,6 +986,213 @@ const HopsitalDashboardChart = ({ data }) => {
             </Grid>
           </Grid>
         </Grid> */}
+      </Grid>
+      {/* consultation stats */}
+      <Grid
+        item
+        gridRow={{ md: "3/3" }}
+        gridColumn={{ md: "1/3" }}
+        container
+        className={classes.chartCard}
+      >
+        <Grid item className={classes.headerGrid}>
+          <Typography variant="h5">Consultations Stats</Typography>
+        </Grid>
+        <Divider color={theme.palette.common.lighterGrey} />
+
+        <Grid
+          item
+          container
+          flexWrap="nowrap"
+          paddingY={{ md: 2, sm: 2, xs: 2 }}
+          justifyContent="space-between"
+        >
+          <Grid
+            item
+            gap={{ sm: 3, xs: 2, md: 3 }}
+            alignItems="center"
+            flexWrap="nowrap"
+            container
+            flex={3}
+          >
+            <Grid item className={classes.groupIconGrid}>
+              <GroupIcon color="success" className={classes.groupIcon} />
+            </Grid>
+            <Grid item alignItems="center" container flex={1}>
+              <Grid item container direction="column">
+                <Grid item container gap={1}>
+                  <Typography variant="h1">{data && total}</Typography>
+                </Grid>
+              </Grid>
+              <Typography
+                variant="body2"
+                style={{
+                  color: theme.palette.common.lightGrey,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Total Consultations
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid item>
+            <FormSelect
+              value={consultationState?.state}
+              onChange={consultationFunc}
+              options={consultationsOptions}
+              name="consulation-select"
+            />
+          </Grid>
+        </Grid>
+
+        <Divider color={theme.palette.common.lighterGrey} />
+        <Grid
+          item
+          container
+          marginY={{ sm: 3, md: 3, xs: 2 }}
+          direction="column"
+        >
+          <LineChart2 graphState={consultationState} />
+        </Grid>
+        <Grid
+          item
+          container
+          justifyContent="space-between"
+          paddingTop={{ sm: 3, xs: 2 }}
+        >
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item>
+                <Typography variant="h3" gutterBottom>
+                  {data?.getStats?.consultationStats?.totalAccepted}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item style={{ marginRight: "1rem" }}>
+                    <div
+                      className={`${classes.dottedCircle} ${classes.green}`}
+                    ></div>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="body2"
+                      style={{ color: theme.palette.common.lightGrey }}
+                    >
+                      Accepted
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Grid container direction="column" justifyContent="center">
+              <Grid item>
+                <Typography variant="h3" gutterBottom>
+                  {data?.getStats?.consultationStats?.totalCompleted}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item style={{ marginRight: "1rem" }}>
+                    <div
+                      className={`${classes.dottedCircle} ${classes.green}`}
+                    ></div>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="body2"
+                      style={{ color: theme.palette.common.lightGrey }}
+                    >
+                      Completed
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Grid container direction="column" justifyContent="center">
+              <Grid item>
+                <Typography variant="h3" gutterBottom>
+                  {data?.getStats?.consultationStats?.totalCancelled}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item style={{ marginRight: "1rem" }}>
+                    <div
+                      className={`${classes.dottedCircle} ${classes.gold}`}
+                    ></div>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="body2"
+                      style={{ color: theme.palette.common.lightGrey }}
+                    >
+                      Cancelled
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item>
+            <Grid container direction="column" justifyContent="center">
+              <Grid item>
+                <Typography variant="h3" gutterBottom>
+                  {data?.getStats?.consultationStats?.totalDeclined}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item style={{ marginRight: "1rem" }}>
+                    <div
+                      className={`${classes.dottedCircle} ${classes.gold}`}
+                    ></div>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="body2"
+                      style={{ color: theme.palette.common.lightGrey }}
+                    >
+                      Declined
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Grid container direction="column" justifyContent="center">
+              <Grid item>
+                <Typography variant="h3" gutterBottom>
+                  {data?.getStats?.consultationStats?.totalOngoing}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item style={{ marginRight: "1rem" }}>
+                    <div
+                      className={`${classes.dottedCircle} ${classes.red}`}
+                    ></div>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="body2"
+                      style={{ color: theme.palette.common.lightGrey }}
+                    >
+                      Ongoing
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );

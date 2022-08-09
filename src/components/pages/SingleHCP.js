@@ -124,7 +124,7 @@ const SingleHCP = () => {
       id: 4,
       title: "Earnings",
       background: theme.palette.common.lightGreen,
-      path: "#" /* "earnings", */,
+      path: "earnings" /* "earnings", */,
       icon: PaymentsIcon,
       fill: theme.palette.common.green,
     },

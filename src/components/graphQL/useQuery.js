@@ -1012,6 +1012,106 @@ export const getSubscriptionsIncome = gql`
 //   createdAt
 //   updatedAt
 // }
+export const getAvailabilities = gql`
+  ${PageInfo}
+  query getAvailabilities($id: String, $page: Int, $first: Int) {
+    getAvailabilities(filterBy: { doctor: $id }, page: $page, first: $first) {
+      availability {
+        _id
+        doctor
+        doctorData
+        createdAt
+        updatedAt
+        providerId
+        day
+        available
+        times {
+          start
+          stop
+          available
+        }
+      }
+      pageInfo {
+        ...pageDetails
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+export const getMyEarnings = gql`
+  ${PageInfo}
+  query getMyEarnings($doctor: String, $page: Int, $first: Int) {
+    getMyEarnings(
+      filterBy: { doctor: $doctor }
+      first: $first
+      page: $page
+      orderBy: "-createdAt"
+    ) {
+      data {
+        _id
+        doctor
+        balance
+        doctorData
+        createdAt
+        updatedAt
+      }
+      totalEarnings
+      pageInfo {
+        ...pageDetails
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+export const getPayouts = gql`
+  ${PageInfo}
+  query getPayouts($page: Int, $doctor: String, $first: Int) {
+    getPayouts(filterBy: { doctor: $doctor }, page: $page, first: $first) {
+      data {
+        _id
+        doctor
+        amount
+        status
+        createdAt
+        updatedAt
+        providerId
+        providerData
+      }
+      pageInfo {
+        ...pageDetails
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+export const getPayoutData = gql`
+  query getEarningStats(
+    $first: Int
+    $page: Int
+    $status: String
+    $doctor: String
+  ) {
+    getEarningStats(
+      filterBy: { status: $status, doctor: $doctor }
+      q: "365"
+      page: $page
+      first: $first
+      orderBy: "-createdAt"
+    ) {
+      payoutData
+    }
+  }
+`;
+
 export const dashboard = gql`
   query getStats($providerId: String, $q: String) {
     getStats(filterBy: { providerId: $providerId }, q: $q) {
@@ -1033,11 +1133,16 @@ export const dashboard = gql`
         hospitalChartData
         diagnosticsChartData
         pharmacyChartData
+        totalHospitals
+        totalPharmacies
+        totalDiagnostics
       }
       subscriptionStats {
         totalActive
         totalInactive
         chartData
+        activeChartData
+        inactiveChartData
       }
       earningStats {
         total

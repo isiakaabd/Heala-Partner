@@ -8,6 +8,8 @@ export { default as Login } from "./Login";
 export { default as PageNotFound } from "./PageNotFound";
 export { default as Error } from "./Error";
 export { default as Chat } from "./Chat";
+export { default as DoctorPayout } from "./DoctorPayout";
+export { default as DoctorEarning } from "./DoctorEarning";
 export { default as PendingOrder } from "./PendingOrder";
 export { default as ProcessingOrders } from "./ProcessingOrders";
 export { default as ViewCompleted } from "./ViewCompleted";
