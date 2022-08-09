@@ -48,7 +48,7 @@ const DisplayProfile = (props) => {
       <Grid item>
         <Grid container gap={2} alignItems="center">
           <Avatar
-            alt={`Display Photo of ${patientData.firstName} ${patientData.lastName}`}
+            alt={`Display Photo of ${patientData?.firstName} ${patientData?.lastName}`}
             src={patientData?.image}
             sx={{ width: 50, height: 50 }}
           />

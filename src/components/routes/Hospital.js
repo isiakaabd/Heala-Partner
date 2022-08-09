@@ -40,6 +40,8 @@ const ReferralTab = lazy(() => import("components/pages/ReferralTab"));
 const HospitalSettings = lazy(() =>
   import("components/pages/HospitalSettings")
 );
+const DoctorEarning = lazy(() => import("components/pages/DoctorEarning"));
+const DoctorPayout = lazy(() => import("components/pages/DoctorPayout"));
 const SubscriptionIncome = lazy(() =>
   import("components/pages/SubscriptionIncome")
 );
@@ -144,6 +146,17 @@ const Hospital = () => {
           path="/hcps/:hcpId/earnings"
           component={HcpEarnings}
         />
+        <PrivateRoute
+          exact
+          path="/hcps/:hcpId/earnings/payout"
+          component={DoctorPayout}
+        />
+        <PrivateRoute
+          exact
+          path="/hcps/:hcpId/earnings/earn"
+          component={DoctorEarning}
+        />
+
         <PrivateRoute
           path="/hcps/:hcpId/doctor-patients"
           component={HcpPatients}

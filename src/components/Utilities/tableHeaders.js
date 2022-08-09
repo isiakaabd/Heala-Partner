@@ -333,8 +333,22 @@ export const payoutHeader = [
   },
 
   {
-    id: 3,
-    label: "Medical ID",
+    id: 4,
+    label: "Amount ",
+  },
+];
+export const payoutHeaders = [
+  {
+    id: 0,
+    label: "Date",
+  },
+  {
+    id: 1,
+    label: "Time",
+  },
+  {
+    id: 2,
+    label: " Name",
   },
   {
     id: 4,
@@ -464,7 +478,7 @@ export const waitingHeadCells = [
 export const availabilityHeadCells = [
   { id: 0, label: "HCP ID" },
   { id: 1, label: "Name" },
-  { id: 2, label: "Category" },
+  { id: 2, label: "Day" },
   { id: 3, label: "Available Time" },
 ];
 

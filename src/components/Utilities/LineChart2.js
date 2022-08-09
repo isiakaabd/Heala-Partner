@@ -4,17 +4,30 @@ import { Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Line } from "react-chartjs-2";
 
-const LineChart2 = ({ type, graphState }) => {
+const LineChart2 = ({ graphState }) => {
   const theme = useTheme();
   const [state, setState] = useState("active");
   const [chartData, setChartData] = useState([]);
   const lightGreen = "rgba(45, 211, 158, .3)";
   const lightBlue = "rgba(62, 94, 169, .3)";
+  const lightGold = "rgb(243, 173, 83,.3)";
+  const gold = theme.palette.common.gold;
+  const green = theme.palette.common.green;
+  const red = theme.palette.common.red;
   useEffect(() => {
     const z = graphState?.data?.map((i) => i?.sum);
     setState(graphState?.state);
     setChartData(z);
-  }, [type, graphState]);
+  }, [graphState]);
+
+  // switch (key) {
+  //   case value:
+
+  //     break;
+
+  //   default:
+  //     break;
+  // }
   const data = {
     labels: [
       "Jan",
@@ -38,17 +51,23 @@ const LineChart2 = ({ type, graphState }) => {
         fill: true,
         cursor: "pointer",
         borderColor:
-          state === "active"
-            ? theme.palette.common.green
-            : theme.palette.common.red,
+          state === "active" || state === "Completed" || state === "Accepted"
+            ? green
+            : state === "inactive" || state === "Ongoing"
+            ? red
+            : gold,
         pointBackgroundColor:
-          state === "active"
-            ? theme.palette.common.green
-            : theme.palette.common.red,
+          state === "active" || state === "Completed" || state === "Accepted"
+            ? green
+            : state === "inactive" || state === "Ongoing"
+            ? red
+            : gold,
         pointBorderColor:
-          state === "active"
-            ? theme.palette.common.green
-            : theme.palette.common.red,
+          state === "active" || state === "Completed" || state === "Accepted"
+            ? green
+            : state === "inactive" || state === "Ongoing"
+            ? red
+            : gold,
         pointRadius: 1,
         pointHoverRadius: 5,
         pointHoverColor: "#00f",
@@ -64,19 +83,44 @@ const LineChart2 = ({ type, graphState }) => {
     scales: {
       y: {
         beginAtZero: false,
-        fillColor: state === "active" ? lightGreen : lightBlue,
+        fillColor:
+          state === "active" || state === "Completed" || state === "Accepted"
+            ? lightGreen
+            : state === "inactive" || state === "Ongoing"
+            ? lightBlue
+            : lightGold,
         grid: {
-          color: state === "active" ? lightGreen : lightBlue,
-          borderColor: state === "active" ? lightGreen : lightBlue,
+          color:
+            state === "active" || state === "Completed" || state === "Accepted"
+              ? lightGreen
+              : state === "inactive" || state === "Ongoing"
+              ? lightBlue
+              : lightGold,
+          borderColor:
+            state === "active" || state === "Completed" || state === "Accepted"
+              ? lightGreen
+              : state === "inactive" || state === "Ongoing"
+              ? lightBlue
+              : lightGold,
           borderDash: [2, 2],
           display: true,
         },
       },
       x: {
         grid: {
-          color: state === "active" ? lightGreen : lightBlue,
+          color:
+            state === "active" || state === "Completed" || state === "Accepted"
+              ? lightGreen
+              : state === "inactive" || state === "Ongoing"
+              ? lightBlue
+              : lightGold,
           borderDash: [2, 2],
-          borderColor: state === "active" ? lightGreen : lightBlue,
+          borderColor:
+            state === "active" || state === "Completed" || state === "Accepted"
+              ? lightGreen
+              : state === "inactive" || state === "Ongoing"
+              ? lightBlue
+              : lightGold,
           display: true,
         },
         display: true,
@@ -92,16 +136,20 @@ const LineChart2 = ({ type, graphState }) => {
         titleColor: colorItem,
         onHover: hover,
         bodyColor:
-          state === "active"
-            ? theme.palette.common.green
-            : theme.palette.common.red,
+          state === "active" || state === "Completed" || state === "Accepted"
+            ? green
+            : state === "inactive" || state === "Ongoing"
+            ? red
+            : gold,
         // theme.palette.common.lightGrey,
         titleAlign: "left",
         bodyAlign: "left",
         borderColor:
-          state === "active"
-            ? theme.palette.common.green
-            : theme.palette.common.red,
+          state === "active" || state === "Completed" || state === "Accepted"
+            ? green
+            : state === "inactive" || state === "Ongoing"
+            ? red
+            : gold,
         // "rgba(0, 0, 0, 0.05)",
         borderWidth: 1,
         displayColors: true,
@@ -142,8 +190,8 @@ LineChart2.propTypes = {
   timeFrames: PropTypes.array,
   selectedTimeframe: PropTypes.number,
   setSelectedTimeframe: PropTypes.func,
-  type: PropTypes.string,
   doctorStats: PropTypes.array,
+  graphState: PropTypes.object,
 };
 
 export default LineChart2;
