@@ -182,7 +182,7 @@ const LineChart2 = ({ graphState }) => {
   }
   return (
     <Grid item container>
-      <Line data={data} options={options} style={{ maxHeight: "500px" }} />
+      <Line data={data} options={options} style={{ height: "400px" }} />
     </Grid>
   );
 };
