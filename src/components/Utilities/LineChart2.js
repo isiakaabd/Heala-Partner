@@ -79,6 +79,7 @@ const LineChart2 = ({ graphState }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     locale: "fr",
     scales: {
       y: {
@@ -181,7 +182,7 @@ const LineChart2 = ({ graphState }) => {
   }
   return (
     <Grid item container>
-      <Line data={data} options={options} />
+      <Line data={data} options={options} style={{ maxHeight: "500px" }} />
     </Grid>
   );
 };

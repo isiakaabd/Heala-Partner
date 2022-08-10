@@ -994,7 +994,7 @@ const HopsitalDashboardChart = ({ data }) => {
         gridColumn={{ md: "1/3" }}
         container
         // sx={{}}
-        sx={{ maxWidth: "60%", margin: "auto" }}
+        // sx={{ maxWidth: "60%", margin: "auto" }}
         className={classes.chartCard}
       >
         <Grid item className={classes.headerGrid}>
