@@ -480,6 +480,7 @@ export const availabilityHeadCells = [
   { id: 1, label: "Name" },
   { id: 2, label: "Day" },
   { id: 3, label: "Available Time" },
+  { id: 33, label: "" },
 ];
 
 // HCPs HEADCELLS

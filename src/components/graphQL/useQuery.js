@@ -12,6 +12,19 @@ export const getPartner = gql`
     }
   }
 `;
+export const getDoctorAvailabilityForDate = gql`
+  query getDoctorAvailabilityForDate($doctor: String!, $day: String) {
+    getDoctorAvailabilityForDate(doctorId: $doctor, day: $day) {
+      day
+      available
+      times {
+        start
+        stop
+        available
+      }
+    }
+  }
+`;
 export const getDiagnosticDashboard = gql`
   query getDiagnosticDashboard($partner: String!) {
     getDiagnosticDashboard(partner: $partner) {
