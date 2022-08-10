@@ -990,11 +990,8 @@ const HopsitalDashboardChart = ({ data }) => {
       {/* consultation stats */}
       <Grid
         item
-        // gridRow={{ md: "3/3" }}
         gridColumn={{ md: "1/3" }}
         container
-        // sx={{}}
-        // sx={{ maxWidth: "60%", margin: "auto" }}
         className={classes.chartCard}
       >
         <Grid item className={classes.headerGrid}>
