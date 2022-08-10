@@ -164,7 +164,6 @@ export const handleHospitalPageChange = (
   id,
   hcpId
 ) => {
-  console.log(type, pageInfo, id, hcpId);
   const getData = (pageNumber) => {
     return fetchDataFN({
       variables: {
