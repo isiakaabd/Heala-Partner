@@ -111,7 +111,6 @@ const DoctorPayout = () => {
           doctor: hcpId,
         },
       }).then(({ data }) => {
-        console.log(data);
         if (!data) throw Error("Couldn't fetch doctors payout data");
 
         setPageInfo(data?.getPayouts?.pageInfo);
@@ -164,7 +163,6 @@ const DoctorPayout = () => {
   };
 
   const setTableData = async (response, errMsg) => {
-    console.log(response);
     const data = response?.data;
     try {
       if (data) {
@@ -227,7 +225,8 @@ const DoctorPayout = () => {
                   fetchPayout,
                   page,
                   pageInfo,
-                  {}
+                  "",
+                  hcpId
                 );
                 await setTableData(res, "Failed to change table page.");
               }}

@@ -6,9 +6,10 @@ import {
   TableCell,
   Avatar,
   Chip,
+  Button,
   Checkbox,
 } from "@mui/material";
-
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelector } from "react-redux";
 import { handleSelectedRows } from "helpers/selectedRows";
 import {
@@ -16,6 +17,7 @@ import {
   handleHospitalPageChange,
 } from "helpers/filterHelperFunctions";
 import EnhancedTable from "./EnhancedTable";
+import { Modals, Loader } from "components/Utilities";
 import { isSelected } from "helpers/isSelected";
 import { availabilityHeadCells } from "components/Utilities/tableHeaders";
 import { makeStyles } from "@mui/styles";
@@ -27,32 +29,44 @@ import { useActions } from "components/hooks/useActions";
 import PropTypes from "prop-types";
 import { useLazyQuery } from "@apollo/client";
 import { defaultPageInfo } from "helpers/mockData";
-import { getAvailabilities } from "components/graphQL/useQuery";
+import {
+  getAvailabilities,
+  getDoctorAvailabilityForDate,
+} from "components/graphQL/useQuery";
 const useStyles = makeStyles((theme) => ({
   tableCell: {
     "&.MuiTableCell-root": {
       fontSize: "1.25rem",
     },
   },
+
   button: {
     "&.MuiButton-root": {
-      ...theme.typography.rowBtn,
-      paddingTop: ".5rem",
-      paddingBottom: ".5rem",
-      background: theme.palette.common.lightGrey,
-      color: theme.palette.primary.dark,
+      background: "#fff",
+      color: theme.palette.common.grey,
+      textTransform: "none",
+      borderRadius: "2rem",
+      display: "flex",
+      alignItems: "center",
+      padding: "1rem",
+      maxWidth: "10rem",
+      whiteSpace: "nowrap",
 
       "&:hover": {
-        background: "#ccc",
+        background: "#fcfcfc",
       },
 
       "&:active": {
-        background: theme.palette.primary.light,
-        color: "#fff",
+        background: "#fafafa",
       },
 
       "& .MuiButton-endIcon>*:nth-of-type(1)": {
         fontSize: "1.2rem",
+      },
+
+      "& .MuiButton-endIcon": {
+        marginLeft: ".3rem",
+        marginTop: "-.2rem",
       },
     },
   },
@@ -76,22 +90,39 @@ const AvailabilityTable = ({ data }) => {
     limit: 10,
     totalDocs: 0,
   });
+  const [modal, setModal] = useState(false);
   // useEffect(() => {
   //   setAvaliablity(data.availableDoctors);
   // }, [data]);
+
   const [fetchAvailabilities] = useLazyQuery(getAvailabilities);
+  const [fetchDay, { loading, data: dt }] = useLazyQuery(
+    getDoctorAvailabilityForDate
+  );
+  const [avail, setAvail] = useState("");
+  useEffect(() => {
+    if (dt) {
+      const { available, day, times } = dt?.getDoctorAvailabilityForDate;
+      setAvail({
+        available,
+        day,
+        times,
+      });
+    }
+  }, [dt]);
   useEffect(() => {
     fetchAvailabilities({
       variables: {
-        first: 10,
+        first: 5,
       },
     });
   }, [fetchAvailabilities]);
 
+  console.log(dt);
   useEffect(() => {
     fetchAvailabilities({
       variables: {
-        first: pageInfo.limit,
+        first: 5,
       },
     }).then(({ data }) => {
       if (data) {
@@ -122,128 +153,208 @@ const AvailabilityTable = ({ data }) => {
   };
   const classes = useStyles();
   const theme = useTheme();
+  const handleCheckDay = (day, doctor) => {
+    setModal(true);
 
+    fetchDay({
+      variables: {
+        day,
+        doctor,
+      },
+    });
+  };
+  const { day, available, times } = avail;
   return (
-    <Grid item container direction="column" height="100%" rowGap={2}>
-      <Grid item>
-        <Typography variant="h4">Availability Table</Typography>
-      </Grid>
-      {availabilities?.length > 0 ? (
-        <Grid
-          item
-          container
-          direction="column"
-          overflow="hidden"
-          maxWidth={{ md: "100%", sm: "100%", xs: "100%" }}
-        >
-          <EnhancedTable
-            headCells={availabilityHeadCells}
-            rows={availabilities}
-            paginationLabel="Availabilities per page"
-            hasCheckbox={true}
-            changeLimit={async (e) => {
-              const res = changeHospitalTableLimit(fetchAvailabilities, {
-                first: e,
-              });
-              await setTableData(res, "Failed to change table limit.");
-            }}
-            dataPageInfo={pageInfo}
-            handlePagination={(page) => {
-              handleHospitalPageChange(fetchAvailabilities, page, pageInfo);
-            }}
-          >
-            {availabilities?.map((row, index) => {
-              const { _id, picture, firstName, lastName, dociId, day, times } =
-                row;
-              const labelId = `enhanced-table-checkbox-${index}`;
-              const isItemSelected = isSelected(_id, selectedRows);
-
-              return (
-                <TableRow hover tabIndex={-1} key={_id}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      onClick={() =>
-                        handleSelectedRows(_id, selectedRows, setSelectedRows)
-                      }
-                      color="primary"
-                      checked={isItemSelected}
-                      inputProps={{
-                        "aria-labelledby": labelId,
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell
-                    id={labelId}
-                    scope="row"
-                    align="left"
-                    className={classes.tableCell}
-                    style={{ color: theme.palette.common.grey }}
-                  >
-                    {dociId ? dociId?.split("-")[1] : "No Value"}
-                  </TableCell>
-                  <TableCell align="left" className={classes.tableCell}>
-                    <div
-                      style={{
-                        height: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "left",
-                      }}
-                    >
-                      <span style={{ marginRight: "1rem" }}>
-                        <Avatar
-                          alt="Remy Sharp"
-                          src={picture ? picture : displayPhoto}
-                          sx={{ width: 24, height: 24 }}
-                        />
-                      </span>
-                      <span style={{ fontSize: "1.25rem" }}>
-                        {firstName ? `${firstName} ${lastName}` : "no name"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell align="left" className={classes.tableCell}>
-                    {day ? day : "No Value"}
-                  </TableCell>
-                  <TableCell align="left" className={classes.tableCell}>
-                    <Grid container gap={1}>
-                      {times
-                        ? times?.map((time, ind) => {
-                            const { start, stop, available } = time;
-                            return (
-                              <Chip
-                                key={ind}
-                                label={`${hours(start)} - ${hours(stop)} `}
-                                className={classes.badge}
-                                style={{
-                                  background: !!available
-                                    ? theme.palette.common.lightGreen
-                                    : theme.palette.common.lightRed,
-                                  color: !!available
-                                    ? theme.palette.common.green
-                                    : theme.palette.common.red,
-                                  textDecoration: !!available
-                                    ? ""
-                                    : "line-through",
-                                }}
-                              />
-                            );
-                          })
-                        : "No Time"}
-                    </Grid>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </EnhancedTable>
+    <>
+      <Grid item container direction="column" height="100%" rowGap={2}>
+        <Grid item>
+          <Typography variant="h4">Availability Table</Typography>
         </Grid>
-      ) : (
-        <EmptyTable
-          headCells={availabilityHeadCells}
-          paginationLabel="Availability  per page"
-        />
-      )}
-    </Grid>
+        {availabilities?.length > 0 ? (
+          <Grid
+            item
+            container
+            direction="column"
+            overflow="hidden"
+            maxWidth={{ md: "100%", sm: "100%", xs: "100%" }}
+          >
+            <EnhancedTable
+              headCells={availabilityHeadCells}
+              rows={availabilities}
+              paginationLabel="Availabilities per page"
+              hasCheckbox={true}
+              changeLimit={async (e) => {
+                const res = changeHospitalTableLimit(fetchAvailabilities, {
+                  first: e,
+                });
+
+                await setTableData(res, "Failed to change table limit.");
+              }}
+              dataPageInfo={pageInfo}
+              handlePagination={async (page) => {
+                const res = handleHospitalPageChange(
+                  fetchAvailabilities,
+                  page,
+                  pageInfo
+                );
+                await setTableData(res, "Failed to change page.");
+              }}
+            >
+              {availabilities?.map((row, index) => {
+                const {
+                  _id,
+                  picture,
+                  firstName,
+                  lastName,
+                  dociId,
+                  day,
+                  times,
+                  doctor,
+                } = row;
+                const labelId = `enhanced-table-checkbox-${index}`;
+                const isItemSelected = isSelected(_id, selectedRows);
+
+                return (
+                  <TableRow hover tabIndex={-1} key={_id}>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        onClick={() =>
+                          handleSelectedRows(_id, selectedRows, setSelectedRows)
+                        }
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          "aria-labelledby": labelId,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      id={labelId}
+                      scope="row"
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.grey }}
+                    >
+                      {dociId ? dociId?.split("-")[1] : "No Value"}
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      <div
+                        style={{
+                          height: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          textAlign: "left",
+                        }}
+                      >
+                        <span style={{ marginRight: "1rem" }}>
+                          <Avatar
+                            alt="Remy Sharp"
+                            src={picture ? picture : displayPhoto}
+                            sx={{ width: 24, height: 24 }}
+                          />
+                        </span>
+                        <span style={{ fontSize: "1.25rem" }}>
+                          {firstName ? `${firstName} ${lastName}` : "no name"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      {day ? day : "No Value"}
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      <Grid container gap={1}>
+                        {times
+                          ? times?.map((time, ind) => {
+                              const { start, stop } = time;
+                              return (
+                                <Chip
+                                  key={ind}
+                                  label={`${hours(start)} - ${hours(stop)} `}
+                                  className={classes.badge}
+                                  style={{
+                                    // background: !!available
+                                    //   ? theme.palette.common.lightGreen
+                                    //   :
+                                    background: theme.palette.common.lightRed,
+                                    color:
+                                      // !!available
+                                      //   ? theme.palette.common.green
+                                      //   :
+                                      theme.palette.common.red,
+                                    // textDecoration: !!available
+                                    //   ? ""
+                                    //   : "line-through",
+                                  }}
+                                />
+                              );
+                            })
+                          : "No Time"}
+                      </Grid>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        className={classes.button}
+                        // component={Link}
+                        onClick={() => handleCheckDay(day, doctor)}
+                        endIcon={<ArrowForwardIosIcon />}
+                      >
+                        View Time
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </EnhancedTable>
+          </Grid>
+        ) : (
+          <EmptyTable
+            headCells={availabilityHeadCells}
+            paginationLabel="Availability  per page"
+          />
+        )}
+      </Grid>
+      <Modals
+        isOpen={modal}
+        title="Available Day"
+        rowSpacing={5}
+        width="10vw"
+        handleClose={() => setModal(false)}
+      >
+        {loading && <Loader />}
+        <Grid item container alignItems="center" gap={2}>
+          <Typography variant="h4">{day}</Typography>
+          <div
+            style={{
+              background: available
+                ? theme.palette.common.green
+                : theme.palette.common.red,
+              width: "20px",
+              height: "20px",
+              borderRadius: "50%",
+            }}
+          ></div>
+        </Grid>
+        <Grid item container gap={1}>
+          {times
+            ? times?.map((time, ind) => {
+                const { start, stop } = time;
+                return (
+                  <Chip
+                    key={ind}
+                    label={`${hours(start)} - ${hours(stop)} `}
+                    className={classes.badge}
+                    style={{
+                      background: theme.palette.common.lightRed,
+                      color: theme.palette.common.red,
+                    }}
+                  />
+                );
+              })
+            : "No Time"}
+        </Grid>
+      </Modals>
+    </>
   );
 };
 AvailabilityTable.propTypes = {

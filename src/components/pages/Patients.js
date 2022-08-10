@@ -276,6 +276,7 @@ const Patients = () => {
               paginationLabel="Patients per page"
               hasCheckbox={true}
               changeLimit={async (e) => {
+                console.log(e);
                 const res = changeHospitalTableLimit(fetchPatient, {
                   first: e,
                   providerId: id,
@@ -283,8 +284,14 @@ const Patients = () => {
                 await setTableData(res, "Failed to change table limit.");
               }}
               dataPageInfo={pageInfo}
-              handlePagination={(page) => {
-                handleHospitalPageChange(fetchPatient, page, pageInfo, id);
+              handlePagination={async (page) => {
+                const res = handleHospitalPageChange(
+                  fetchPatient,
+                  page,
+                  pageInfo,
+                  id
+                );
+                await setTableData(res, "Failed to change page.");
               }}
             >
               {profiles.map((row, index) => {
