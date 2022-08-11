@@ -206,16 +206,7 @@ const AvailabilityTable = ({ data }) => {
               }}
             >
               {availabilities?.map((row, index) => {
-                const {
-                  _id,
-                  picture,
-                  firstName,
-                  lastName,
-                  dociId,
-                  day,
-                  times,
-                  doctor,
-                } = row;
+                const { _id, picture, day, times, doctor, doctorData } = row;
                 const labelId = `enhanced-table-checkbox-${index}`;
                 const isItemSelected = isSelected(_id, selectedRows);
 
@@ -240,7 +231,9 @@ const AvailabilityTable = ({ data }) => {
                       className={classes.tableCell}
                       style={{ color: theme.palette.common.grey }}
                     >
-                      {dociId ? dociId?.split("-")[1] : "No Value"}
+                      {doctorData?.dociId
+                        ? doctorData?.dociId?.split("-")[1]
+                        : "No Value"}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       <div
@@ -259,7 +252,9 @@ const AvailabilityTable = ({ data }) => {
                           />
                         </span>
                         <span style={{ fontSize: "1.25rem" }}>
-                          {firstName ? `${firstName} ${lastName}` : "no name"}
+                          {doctorData?.firstName
+                            ? `${doctorData?.firstName} ${doctorData?.lastName}`
+                            : "no name"}
                         </span>
                       </div>
                     </TableCell>

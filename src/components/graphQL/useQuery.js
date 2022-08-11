@@ -1072,6 +1072,7 @@ export const getMyEarnings = gql`
         updatedAt
       }
       totalEarnings
+      totalPayouts
       pageInfo {
         ...pageDetails
       }
