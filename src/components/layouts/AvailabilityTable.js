@@ -108,6 +108,12 @@ const AvailabilityTable = ({ data }) => {
         day,
         times,
       });
+    } else {
+      setAvail({
+        availale: false,
+        day: "Not Available",
+        times: [],
+      });
     }
   }, [dt]);
   useEffect(() => {
