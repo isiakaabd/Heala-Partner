@@ -124,7 +124,6 @@ const AvailabilityTable = ({ data }) => {
     });
   }, [fetchAvailabilities]);
 
-  console.log(dt);
   useEffect(() => {
     fetchAvailabilities({
       variables: {
