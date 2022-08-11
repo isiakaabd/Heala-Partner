@@ -95,7 +95,8 @@ const AvailabilityTable = ({ data }) => {
   //   setAvaliablity(data.availableDoctors);
   // }, [data]);
 
-  const [fetchAvailabilities] = useLazyQuery(getAvailabilities);
+  const [fetchAvailabilities, { loading: load }] =
+    useLazyQuery(getAvailabilities);
   const [fetchDay, { loading, data: dt }] = useLazyQuery(
     getDoctorAvailabilityForDate
   );
@@ -140,10 +141,8 @@ const AvailabilityTable = ({ data }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { selectedRows } = useSelector((state) => state.tables);
-
   const { setSelectedRows } = useActions();
   const [availabilities, setAvailabilities] = useState([]);
-
   const setTableData = async (response, errMsg) => {
     response
       .then(({ data }) => {
@@ -168,6 +167,7 @@ const AvailabilityTable = ({ data }) => {
       },
     });
   };
+  if (load) return <Loader />;
   const { day, available, times } = avail;
   return (
     <>
