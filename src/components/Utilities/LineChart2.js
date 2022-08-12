@@ -152,7 +152,7 @@ const LineChart2 = ({ graphState }) => {
             ? red
             : gold,
         // "rgba(0, 0, 0, 0.05)",
-        borderWidth: 1,
+        borderWidth: 4,
         displayColors: true,
         boxHeight: 0,
         boxWidth: 0,
