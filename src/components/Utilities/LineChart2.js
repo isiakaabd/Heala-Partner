@@ -68,11 +68,16 @@ const LineChart2 = ({ graphState }) => {
             : state === "inactive" || state === "Ongoing"
             ? red
             : gold,
-        pointRadius: 1,
+        pointRadius: 2,
         pointHoverRadius: 5,
         pointHoverColor: "#00f",
         pointBorderWidth: 0.9,
         tension: 0.5,
+        // pointRadius: 5,
+        // pointHoverRadius: 7,
+        // pointRadius: 5,
+        // pointBorderWidth: 2,
+        // tension: 0.5,
       },
     ],
   };
@@ -84,19 +89,19 @@ const LineChart2 = ({ graphState }) => {
     scales: {
       y: {
         beginAtZero: false,
-        fillColor:
-          state === "active" || state === "Completed" || state === "Accepted"
-            ? lightGreen
-            : state === "inactive" || state === "Ongoing"
-            ? lightBlue
-            : lightGold,
+        fillColor: "#fff",
+        // state === "active" || state === "Completed" || state === "Accepted"
+        //   ? lightGreen
+        //   : state === "inactive" || state === "Ongoing"
+        //   ? lightBlue
+        //   : lightGold,
         grid: {
-          color:
-            state === "active" || state === "Completed" || state === "Accepted"
-              ? lightGreen
-              : state === "inactive" || state === "Ongoing"
-              ? lightBlue
-              : lightGold,
+          color: "#fff",
+          // state === "active" || state === "Completed" || state === "Accepted"
+          //   ? lightGreen
+          //   : state === "inactive" || state === "Ongoing"
+          //   ? lightBlue
+          //   : lightGold,
           borderColor:
             state === "active" || state === "Completed" || state === "Accepted"
               ? lightGreen
@@ -109,12 +114,12 @@ const LineChart2 = ({ graphState }) => {
       },
       x: {
         grid: {
-          color:
-            state === "active" || state === "Completed" || state === "Accepted"
-              ? lightGreen
-              : state === "inactive" || state === "Ongoing"
-              ? lightBlue
-              : lightGold,
+          color: "#fff",
+          // state === "active" || state === "Completed" || state === "Accepted"
+          //   ? lightGreen
+          //   : state === "inactive" || state === "Ongoing"
+          //   ? lightBlue
+          //   : lightGold,
           borderDash: [2, 2],
           borderColor:
             state === "active" || state === "Completed" || state === "Accepted"
@@ -152,7 +157,7 @@ const LineChart2 = ({ graphState }) => {
             ? red
             : gold,
         // "rgba(0, 0, 0, 0.05)",
-        borderWidth: 4,
+        borderWidth: 3,
         displayColors: true,
         boxHeight: 0,
         boxWidth: 0,
