@@ -1,85 +1,117 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 import { Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Line } from "react-chartjs-2";
-
-const LineChart2 = ({ graphState }) => {
+import { monthNames } from "components/Utilities/Time";
+const LineChart2 = ({ graphState, optionsValue, type }) => {
   const theme = useTheme();
-  const [state, setState] = useState("active");
-  const [chartData, setChartData] = useState([]);
-  const lightGreen = "rgba(45, 211, 158, .3)";
-  const lightBlue = "rgba(62, 94, 169, .3)";
-  const lightGold = "rgb(243, 173, 83,.3)";
-  const gold = theme.palette.common.gold;
-  const green = theme.palette.common.green;
-  const red = theme.palette.common.red;
+  const [state, setState] = useState("");
+  // const lightGreen = "rgba(45, 211, 158, .3)";
+  // const lightBlue = "rgba(62, 94, 169, .3)";
+  // const lightGold = "rgb(243, 173, 83,.3)";
+  // const gold = theme.palette.common.gold;
+  // const green = theme.palette.common.green;
+  // const red = theme.palette.common.red;
+  const [arr, setArr] = useState([]);
   useEffect(() => {
-    const z = graphState?.data?.map((i) => i?.sum);
     setState(graphState?.state);
-    setChartData(z);
-  }, [graphState]);
+  }, [graphState?.state]);
+  const active = useMemo(
+    () => graphState?.data?.active?.map((i) => i?.sum),
+    [graphState?.data?.active]
+  );
+  const inactive = useMemo(
+    () => graphState?.data?.inactive?.map((i) => i?.sum),
+    [graphState?.data?.inactive]
+  );
+  const complete = useMemo(
+    () => graphState?.data?.complete?.map((i) => i?.sum),
+    [graphState?.data?.complete]
+  );
+  const accept = useMemo(
+    () => graphState?.data?.accept?.map((i) => i?.sum),
+    [graphState?.data?.accept]
+  );
+  const cancel = useMemo(
+    () => graphState?.data?.cancel?.map((i) => i?.sum),
+    [graphState?.data?.cancel]
+  );
+  const decline = useMemo(
+    () => graphState?.data?.decline?.map((i) => i?.sum),
+    [graphState?.data?.decline]
+  );
+  const ongoing = useMemo(
+    () => graphState?.data?.ongoing?.map((i) => i?.sum),
+    [graphState?.data?.ongoing]
+  );
 
-  // switch (key) {
-  //   case value:
+  useEffect(() => {
+    if (type !== "consultation") {
+      setArr([active, inactive]);
 
-  //     break;
+      if (state === "active") {
+        return setArr([active, []]);
+      } else if (state === "inactive") {
+        return setArr([[], inactive]);
+      }
+    } else {
+      setArr([accept, complete, decline, ongoing, cancel]);
+      switch (state) {
+        case "Accepted":
+          return setArr([accept, [], [], [], []]);
+        case "Completed":
+          return setArr([[], complete, [], [], []]);
+        case "Declined":
+          return setArr([[], [], decline, [], []]);
+        case "Ongoing":
+          return setArr([[], [], [], ongoing, []]);
+        case "Cancelled":
+          return setArr([[], [], [], [], cancel]);
 
-  //   default:
-  //     break;
-  // }
+        default:
+          return setArr([accept, complete, decline, ongoing, cancel]);
+      }
+    }
+  }, [
+    graphState,
+    state,
+    type,
+    decline,
+    active,
+    ongoing,
+    cancel,
+    accept,
+    complete,
+    inactive,
+  ]);
+
+  const lx = optionsValue.slice(1).map((i, index) => {
+    const { value } = i;
+    return {
+      label: value,
+      data: arr[index],
+      fill: false,
+      borderColor:
+        value === "active" || value === "Completed" || value === "Ongoing"
+          ? theme.palette.common.green
+          : theme.palette.common.red,
+      pointBackgroundColor:
+        value === "active" || value === "Completed" || value === "Ongoing"
+          ? theme.palette.common.green
+          : theme.palette.common.red,
+      pointBorderColor: "#fff",
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      pointBorderWidth: 2,
+      tension: 0.5,
+    };
+  });
+
   const data = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mar",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    backgroundColor: "rgba(90,165,60,0.6)",
-    datasets: [
-      {
-        label: state,
-        data: chartData,
-        fill: true,
-        cursor: "pointer",
-        borderColor:
-          state === "active" || state === "Completed" || state === "Accepted"
-            ? green
-            : state === "inactive" || state === "Ongoing"
-            ? red
-            : gold,
-        pointBackgroundColor:
-          state === "active" || state === "Completed" || state === "Accepted"
-            ? green
-            : state === "inactive" || state === "Ongoing"
-            ? red
-            : gold,
-        pointBorderColor:
-          state === "active" || state === "Completed" || state === "Accepted"
-            ? green
-            : state === "inactive" || state === "Ongoing"
-            ? red
-            : gold,
-        pointRadius: 2,
-        pointHoverRadius: 5,
-        pointHoverColor: "#00f",
-        pointBorderWidth: 0.9,
-        tension: 0.5,
-        // pointRadius: 5,
-        // pointHoverRadius: 7,
-        // pointRadius: 5,
-        // pointBorderWidth: 2,
-        // tension: 0.5,
-      },
-    ],
+    labels: monthNames,
+    backgroundColor: "#fff",
+    datasets: [...lx],
   };
 
   const options = {
@@ -88,46 +120,27 @@ const LineChart2 = ({ graphState }) => {
     locale: "fr",
     scales: {
       y: {
-        beginAtZero: false,
-        fillColor: "#fff",
-        // state === "active" || state === "Completed" || state === "Accepted"
-        //   ? lightGreen
-        //   : state === "inactive" || state === "Ongoing"
-        //   ? lightBlue
-        //   : lightGold,
+        ticks: {
+          beginAtZero: true,
+          callback: function (value) {
+            if (value % 1 === 0) {
+              return value;
+            }
+          },
+        },
         grid: {
-          color: "#fff",
-          // state === "active" || state === "Completed" || state === "Accepted"
-          //   ? lightGreen
-          //   : state === "inactive" || state === "Ongoing"
-          //   ? lightBlue
-          //   : lightGold,
-          borderColor:
-            state === "active" || state === "Completed" || state === "Accepted"
-              ? lightGreen
-              : state === "inactive" || state === "Ongoing"
-              ? lightBlue
-              : lightGold,
-          borderDash: [2, 2],
+          color: "rgba(0,0,0,0.05)",
+          borderColor: "rgba(0,0,0,0.05)",
+          borderDash: [10, 10],
           display: true,
         },
       },
       x: {
         grid: {
           color: "#fff",
-          // state === "active" || state === "Completed" || state === "Accepted"
-          //   ? lightGreen
-          //   : state === "inactive" || state === "Ongoing"
-          //   ? lightBlue
-          //   : lightGold,
           borderDash: [2, 2],
-          borderColor:
-            state === "active" || state === "Completed" || state === "Accepted"
-              ? lightGreen
-              : state === "inactive" || state === "Ongoing"
-              ? lightBlue
-              : lightGold,
-          display: true,
+          borderColor: "rgba(0,0,0,0.05)",
+          display: false,
         },
         display: true,
       },
@@ -141,21 +154,16 @@ const LineChart2 = ({ graphState }) => {
         cursor: "pointer",
         titleColor: colorItem,
         onHover: hover,
-        bodyColor:
-          state === "active" || state === "Completed" || state === "Accepted"
-            ? green
-            : state === "inactive" || state === "Ongoing"
-            ? red
-            : gold,
-        // theme.palette.common.lightGrey,
+        bodyColor: "rgba(0, 0, 0, 0.05)",
+
         titleAlign: "left",
         bodyAlign: "left",
-        borderColor:
-          state === "active" || state === "Completed" || state === "Accepted"
-            ? green
-            : state === "inactive" || state === "Ongoing"
-            ? red
-            : gold,
+        borderColor: "rgba(0, 0, 0, 0.05)",
+        // state === "active" || state === "Completed" || state === "Accepted"
+        //   ? green
+        //   : state === "inactive" || state === "Ongoing"
+        //   ? red
+        //   : gold,
         // "rgba(0, 0, 0, 0.05)",
         borderWidth: 3,
         displayColors: true,
@@ -185,6 +193,7 @@ const LineChart2 = ({ graphState }) => {
 
     return tooltipTitleColor;
   }
+
   return (
     <Grid item container>
       <Line

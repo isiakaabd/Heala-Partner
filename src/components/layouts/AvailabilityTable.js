@@ -80,8 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AvailabilityTable = ({ data }) => {
-  // const [avaliablity, setAvaliablity] = useState([]);
+const AvailabilityTable = () => {
   const [pageInfo, setPageInfo] = useState({
     page: 0,
     totalPages: 1,
@@ -91,10 +90,8 @@ const AvailabilityTable = ({ data }) => {
     totalDocs: 0,
   });
   const [modal, setModal] = useState(false);
-  // useEffect(() => {
-  //   setAvaliablity(data.availableDoctors);
-  // }, [data]);
 
+  const id = localStorage.getItem("partnerProviderId");
   const [fetchAvailabilities, { loading: load }] =
     useLazyQuery(getAvailabilities);
   const [fetchDay, { loading, data: dt }] = useLazyQuery(
@@ -121,14 +118,16 @@ const AvailabilityTable = ({ data }) => {
     fetchAvailabilities({
       variables: {
         first: 5,
+        providerId: id,
       },
     });
-  }, [fetchAvailabilities]);
+  }, [fetchAvailabilities, id]);
 
   useEffect(() => {
     fetchAvailabilities({
       variables: {
         first: 5,
+        providerId: id,
       },
     }).then(({ data }) => {
       if (data) {
@@ -191,6 +190,7 @@ const AvailabilityTable = ({ data }) => {
               changeLimit={async (e) => {
                 const res = changeHospitalTableLimit(fetchAvailabilities, {
                   first: e,
+                  providerId: id,
                 });
 
                 await setTableData(res, "Failed to change table limit.");
@@ -200,7 +200,8 @@ const AvailabilityTable = ({ data }) => {
                 const res = handleHospitalPageChange(
                   fetchAvailabilities,
                   page,
-                  pageInfo
+                  pageInfo,
+                  id
                 );
                 await setTableData(res, "Failed to change page.");
               }}
