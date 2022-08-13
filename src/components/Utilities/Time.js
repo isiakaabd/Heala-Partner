@@ -63,10 +63,12 @@ export const selectOptions = [
   { key: "Dec", value: "12" },
 ];
 export const newOptions = [
+  { key: "All Stats", value: "all" },
   { key: "Active", value: "active" },
   { key: "Inactive", value: "inactive" },
 ];
 export const consultationsOptions = [
+  { key: "All Stats", value: "all" },
   { key: "Accepted", value: "Accepted" },
   { key: "Completed", value: "Completed" },
   { key: "Declined", value: "Declined" },

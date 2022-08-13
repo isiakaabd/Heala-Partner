@@ -107,53 +107,45 @@ const HopsitalDashboardChart = ({ data }) => {
   const [doctorStats, setDoctorStats] = useState([]);
   const [totalEarning, setTotalEarning] = useState(0);
   const [totalPayouts, setTotalPayouts] = useState(0);
-  const [activePatientsChartData, setActivePatientsChartData] = useState([]);
-  const [activeChartDoctorsData, setActiveDoctorChartData] = useState([]);
-  const [inActiveChartPatientsData, setInActiveChartPatientsData] = useState(
-    []
-  );
-  const [activeSubs, setActiveSubs] = useState([]);
+
   const [consultationState, setConsultationState] = useState({
-    state: "Completed",
-    data: data?.getStats?.consultationStats?.completedChartData,
+    state: "all",
+    data: {
+      complete: data?.getStats?.consultationStats.completedChartData,
+      ongoing: data?.getStats?.consultationStats.ongoingChartData,
+      accept: data?.getStats?.consultationStats.acceptedChartData,
+      decline: data?.getStats?.consultationStats.declinedChartData,
+      cancel: data?.getStats?.consultationStats.cancelledChartData,
+    },
   });
-  const [inActiveSubs, setInActiveSubs] = useState([]);
+
   const [totalConsultations, setTotalConsultations] = useState("");
-  const [accepted, setAccepted] = useState([]);
-  const [cancelled, setCancelled] = useState([]);
-  const [ongoing, setOngoing] = useState([]);
-  const [completed, setCompleted] = useState([]);
+
   const [totalSubs, setTotalSub] = useState(0);
   const [activeSubsNumber, setActiveSubsNumber] = useState(0);
   const [inActiveSubsNumber, setInActiveSubsNumber] = useState(0);
-  const [declined, setDeclined] = useState([]);
-  const [inActiveChartDoctorsData, setInActiveChartDoctorssData] = useState([]);
   const [graphState, setGraphState] = useState({
-    state: "active",
-    data: data?.getStats?.doctorStats.activeChartData,
+    state: "all",
+    data: {
+      active: data?.getStats?.doctorStats.activeChartData,
+      inactive: data?.getStats?.doctorStats.inactiveChartData,
+    },
   });
   const [subScriptionState, setSubScriptionState] = useState({
-    state: "active",
-    data: data?.getStats?.subscriptionStats?.activeChartData,
+    state: "all",
+    data: {
+      active: data?.getStats?.subscriptionStats.activeChartData,
+      inactive: data?.getStats?.subscriptionStats.inactiveChartData,
+    },
   });
   const [patientGraphState, setPatientGraphState] = useState({
-    state: "active",
-    data: data?.getStats?.patientStats.activeChartData,
+    state: "all",
+    data: {
+      active: data?.getStats?.patientStats.activeChartData,
+      inactive: data?.getStats?.patientStats.inactiveChartData,
+    },
   });
-  useEffect(() => {
-    setGraphState({
-      state: "active",
-      data: data?.getStats?.doctorStats.activeChartData,
-    });
-    setPatientGraphState({
-      state: "active",
-      data: data?.getStats?.patientStats.activeChartData,
-    });
-    setActiveSubs({
-      state: "active",
-      data: data?.getStats?.subscriptionStats?.activeChartData,
-    });
-  }, [data]);
+
   useEffect(() => {
     setPayoutArray(data?.getStats?.payoutStats?.chartData);
     setEarningArray(data?.getStats?.earningStats?.chartData);
@@ -171,25 +163,14 @@ const HopsitalDashboardChart = ({ data }) => {
     setPatients(patientStats);
     setDoctorStats(doctorStats);
     setTotalConsultations(consultationStats);
-    setOngoing(consultationStats.ongoingChartData);
     setInActiveSubsNumber(subscriptionStats?.totalInactive);
-    setCancelled(consultationStats.cancelledChartData);
-    setDeclined(consultationStats.declinedChartData);
-    setCompleted(consultationStats.completedChartData);
     setActiveSubsNumber(subscriptionStats?.totalActive);
-    setActiveSubs(subscriptionStats?.activeChartData);
-    setInActiveSubs(subscriptionStats?.inactiveChartData);
     setTotalSub(
       subscriptionStats?.totalActive + subscriptionStats?.totalInactive
     );
 
-    setAccepted(consultationStats.acceptedChartData);
-    setActivePatientsChartData(patientStats?.activeChartData);
-    setInActiveChartPatientsData(patientStats?.inactiveChartData);
     setPayoutArray(payoutStats?.chartData);
     setEarningArray(earningStats?.chartData);
-    setActiveDoctorChartData(doctorStats?.activeChartData);
-    setInActiveChartDoctorssData(doctorStats?.inactiveChartData);
 
     setTotalEarning(earningStats?.total);
     setTotalPayouts(payoutStats?.total);
@@ -249,32 +230,32 @@ const HopsitalDashboardChart = ({ data }) => {
     switch (value) {
       case "Cancelled":
         setConsultationState({
+          ...consultationState,
           state: "Cancelled",
-          data: cancelled,
         });
         break;
       case "Accepted":
         setConsultationState({
+          ...consultationState,
           state: "Accepted",
-          data: accepted,
         });
         break;
       case "Ongoing":
         setConsultationState({
+          ...consultationState,
           state: "Ongoing",
-          data: ongoing,
         });
         break;
       case "Completed":
         setConsultationState({
+          ...consultationState,
           state: "Completed",
-          data: completed,
         });
         break;
       case "Declined":
         setConsultationState({
+          ...consultationState,
           state: "Declined",
-          data: declined,
         });
         break;
       default:
@@ -284,13 +265,13 @@ const HopsitalDashboardChart = ({ data }) => {
     const { value } = e.target;
     if (value === "active") {
       setGraphState({
+        ...graphState,
         state: "active",
-        data: activeChartDoctorsData,
       });
     } else if (value === "inactive") {
       setGraphState({
+        ...graphState,
         state: "inactive",
-        data: inActiveChartDoctorsData,
       });
     }
   };
@@ -298,13 +279,13 @@ const HopsitalDashboardChart = ({ data }) => {
     const { value } = e.target;
     if (value === "active") {
       setPatientGraphState({
+        ...patientGraphState,
         state: "active",
-        data: activePatientsChartData,
       });
     } else if (value === "inactive") {
       setPatientGraphState({
+        ...patientGraphState,
         state: "inactive",
-        data: inActiveChartPatientsData,
       });
     }
   };
@@ -312,13 +293,13 @@ const HopsitalDashboardChart = ({ data }) => {
     const { value } = e.target;
     if (value === "active") {
       setSubScriptionState({
+        ...subScriptionState,
         state: "active",
-        data: activeSubs,
       });
     } else if (value === "inactive") {
       setSubScriptionState({
+        ...subScriptionState,
         state: "inactive",
-        data: inActiveSubs,
       });
     }
   };
@@ -335,7 +316,6 @@ const HopsitalDashboardChart = ({ data }) => {
         xs: "repeat(1,1fr)",
       }}
       gap={2}
-      // sx={{ overflow: "hidden" }}
       rowSpacing={3}
     >
       {/* doctor */}
@@ -418,7 +398,7 @@ const HopsitalDashboardChart = ({ data }) => {
           marginY={{ sm: 3, md: 3, xs: 2 }}
           direction="column"
         >
-          <LineChart2 graphState={graphState} />
+          <LineChart2 graphState={graphState} optionsValue={newOptions} />
 
           {/* Line */}
           <Grid
@@ -562,7 +542,10 @@ const HopsitalDashboardChart = ({ data }) => {
           marginY={{ sm: 3, md: 3, xs: 2 }}
           direction="column"
         >
-          <LineChart2 graphState={patientGraphState} />
+          <LineChart2
+            graphState={patientGraphState}
+            optionsValue={newOptions}
+          />
 
           {/* Line */}
           <Grid
@@ -688,7 +671,10 @@ const HopsitalDashboardChart = ({ data }) => {
           marginY={{ sm: 3, md: 3, xs: 2 }}
           direction="column"
         >
-          <LineChart2 graphState={subScriptionState} />
+          <LineChart2
+            graphState={subScriptionState}
+            optionsValue={newOptions}
+          />
 
           {/* Line */}
         </Grid>
@@ -1052,7 +1038,11 @@ const HopsitalDashboardChart = ({ data }) => {
           marginY={{ sm: 3, md: 3, xs: 2 }}
           direction="column"
         >
-          <LineChart2 graphState={consultationState} />
+          <LineChart2
+            graphState={consultationState}
+            optionsValue={consultationsOptions}
+            type="consultation"
+          />
         </Grid>
         <Grid
           item
