@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import {
   Modals,
-  /* FilterList, */
   Loader,
   CustomButton,
   PatientFilters,
@@ -178,8 +177,6 @@ const Patients = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const [fetchpatient, { loading, error, data }] = useLazyQuery(getPatients);
-
   useEffect(() => {
     fetchPatient({
       variables: {
@@ -192,7 +189,6 @@ const Patients = () => {
   const [profiles, setProfiles] = useState([]);
   const onSubmit = async (values) => {
     const { gender } = values;
-
     await fetchPatient({
       variables: {
         gender,
@@ -276,7 +272,6 @@ const Patients = () => {
               paginationLabel="Patients per page"
               hasCheckbox={true}
               changeLimit={async (e) => {
-                console.log(e);
                 const res = changeHospitalTableLimit(fetchPatient, {
                   first: e,
                   providerId: id,

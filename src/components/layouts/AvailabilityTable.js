@@ -17,13 +17,13 @@ import {
   handleHospitalPageChange,
 } from "helpers/filterHelperFunctions";
 import EnhancedTable from "./EnhancedTable";
-import { Modals, Loader } from "components/Utilities";
+import { Modals, Loader, FormSelect } from "components/Utilities";
 import { isSelected } from "helpers/isSelected";
 import { availabilityHeadCells } from "components/Utilities/tableHeaders";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import displayPhoto from "assets/images/avatar.svg";
-import { hours } from "components/Utilities/Time";
+import { hours, days } from "components/Utilities/Time";
 import { EmptyTable } from "components/layouts";
 import { useActions } from "components/hooks/useActions";
 import PropTypes from "prop-types";
@@ -142,6 +142,18 @@ const AvailabilityTable = () => {
   const { selectedRows } = useSelector((state) => state.tables);
   const { setSelectedRows } = useActions();
   const [availabilities, setAvailabilities] = useState([]);
+  const [select, setSelect] = useState("");
+  const handleSelectChange = async (e) => {
+    const { value } = e.target;
+    setSelect(value);
+    await fetchAvailabilities({
+      variables: {
+        first: 5,
+        providerId: id,
+        day: value.toLowerCase(),
+      },
+    });
+  };
   const setTableData = async (response, errMsg) => {
     response
       .then(({ data }) => {
@@ -171,8 +183,20 @@ const AvailabilityTable = () => {
   return (
     <>
       <Grid item container direction="column" height="100%" rowGap={2}>
-        <Grid item>
-          <Typography variant="h4">Availability Table</Typography>
+        <Grid item container alignItems="center">
+          <Grid item flex={1}>
+            <Typography variant="h4">Availability Table</Typography>
+          </Grid>
+          <Grid item>
+            <FormSelect
+              value={select}
+              onChange={handleSelectChange}
+              options={days}
+              placeholder="Days"
+              name="select"
+              disabled={availabilities?.length === 0}
+            />
+          </Grid>
         </Grid>
         {availabilities?.length > 0 ? (
           <Grid
