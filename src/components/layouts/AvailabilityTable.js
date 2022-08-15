@@ -17,13 +17,13 @@ import {
   handleHospitalPageChange,
 } from "helpers/filterHelperFunctions";
 import EnhancedTable from "./EnhancedTable";
-import { Modals, Loader } from "components/Utilities";
+import { Modals, Loader, FormSelect } from "components/Utilities";
 import { isSelected } from "helpers/isSelected";
 import { availabilityHeadCells } from "components/Utilities/tableHeaders";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import displayPhoto from "assets/images/avatar.svg";
-import { hours } from "components/Utilities/Time";
+import { hours, days, today } from "components/Utilities/Time";
 import { EmptyTable } from "components/layouts";
 import { useActions } from "components/hooks/useActions";
 import PropTypes from "prop-types";
@@ -90,7 +90,10 @@ const AvailabilityTable = () => {
     totalDocs: 0,
   });
   const [modal, setModal] = useState(false);
-
+  const { selectedRows } = useSelector((state) => state.tables);
+  const { setSelectedRows } = useActions();
+  const [availabilities, setAvailabilities] = useState([]);
+  const [select, setSelect] = useState(today());
   const id = localStorage.getItem("partnerProviderId");
   const [fetchAvailabilities, { loading: load }] =
     useLazyQuery(getAvailabilities);
@@ -119,15 +122,17 @@ const AvailabilityTable = () => {
       variables: {
         first: 5,
         providerId: id,
+        day: select,
       },
     });
-  }, [fetchAvailabilities, id]);
+  }, [fetchAvailabilities, select, id]);
 
   useEffect(() => {
     fetchAvailabilities({
       variables: {
         first: 5,
         providerId: id,
+        day: select,
       },
     }).then(({ data }) => {
       if (data) {
@@ -139,9 +144,18 @@ const AvailabilityTable = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
-  const [availabilities, setAvailabilities] = useState([]);
+
+  const handleSelectChange = async (e) => {
+    const { value } = e.target;
+    setSelect(value);
+    await fetchAvailabilities({
+      variables: {
+        first: 5,
+        providerId: id,
+        day: value,
+      },
+    });
+  };
   const setTableData = async (response, errMsg) => {
     response
       .then(({ data }) => {
@@ -171,8 +185,18 @@ const AvailabilityTable = () => {
   return (
     <>
       <Grid item container direction="column" height="100%" rowGap={2}>
-        <Grid item>
-          <Typography variant="h4">Availability Table</Typography>
+        <Grid item container alignItems="center">
+          <Grid item flex={1}>
+            <Typography variant="h4">Availability Table</Typography>
+          </Grid>
+          <Grid item>
+            <FormSelect
+              value={select}
+              onChange={handleSelectChange}
+              options={days}
+              name="select"
+            />
+          </Grid>
         </Grid>
         {availabilities?.length > 0 ? (
           <Grid
@@ -191,6 +215,7 @@ const AvailabilityTable = () => {
                 const res = changeHospitalTableLimit(fetchAvailabilities, {
                   first: e,
                   providerId: id,
+                  day: select,
                 });
 
                 await setTableData(res, "Failed to change table limit.");
@@ -201,7 +226,10 @@ const AvailabilityTable = () => {
                   fetchAvailabilities,
                   page,
                   pageInfo,
-                  id
+                  id,
+                  {
+                    day: select,
+                  }
                 );
                 await setTableData(res, "Failed to change page.");
               }}

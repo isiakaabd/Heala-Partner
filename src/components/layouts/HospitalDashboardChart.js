@@ -97,6 +97,9 @@ const useStyles = makeStyles((theme) => ({
       color: "#fff",
     },
   },
+  gold: {
+    borderColor: theme.palette.common.gold,
+  },
 }));
 
 const HopsitalDashboardChart = ({ data }) => {
@@ -107,7 +110,10 @@ const HopsitalDashboardChart = ({ data }) => {
   const [doctorStats, setDoctorStats] = useState([]);
   const [totalEarning, setTotalEarning] = useState(0);
   const [totalPayouts, setTotalPayouts] = useState(0);
-
+  const [totalConsultations, setTotalConsultations] = useState("");
+  const [totalSubs, setTotalSub] = useState(0);
+  const [activeSubsNumber, setActiveSubsNumber] = useState(0);
+  const [inActiveSubsNumber, setInActiveSubsNumber] = useState(0);
   const [consultationState, setConsultationState] = useState({
     state: "all",
     data: {
@@ -119,11 +125,6 @@ const HopsitalDashboardChart = ({ data }) => {
     },
   });
 
-  const [totalConsultations, setTotalConsultations] = useState("");
-
-  const [totalSubs, setTotalSub] = useState(0);
-  const [activeSubsNumber, setActiveSubsNumber] = useState(0);
-  const [inActiveSubsNumber, setInActiveSubsNumber] = useState(0);
   const [graphState, setGraphState] = useState({
     state: "all",
     data: {
@@ -168,14 +169,11 @@ const HopsitalDashboardChart = ({ data }) => {
     setTotalSub(
       subscriptionStats?.totalActive + subscriptionStats?.totalInactive
     );
-
     setPayoutArray(payoutStats?.chartData);
     setEarningArray(earningStats?.chartData);
-
     setTotalEarning(earningStats?.total);
     setTotalPayouts(payoutStats?.total);
     const value = financialPercent(totalEarning, totalPayouts);
-
     setFinances(value);
     //eslint-disable-next-line
   }, [data]);
@@ -205,7 +203,6 @@ const HopsitalDashboardChart = ({ data }) => {
   const patientPercentage = returnpercent(activePatients, inactivePatients);
   const doctorPercentage = returnpercent(activeDoctors, inactiveDoctors);
   const [forms, setForms] = useState("");
-  // const [activePatientsChartData, setActivePatientsChartData] = useState([]);
   const [payoutArray, setPayoutArray] = useState([]);
   const [earningArray, setEarningArray] = useState([]);
   const onChange = async (e) => {
@@ -259,48 +256,88 @@ const HopsitalDashboardChart = ({ data }) => {
         });
         break;
       default:
+        return setConsultationState({
+          ...consultationState,
+          state: "all",
+        });
     }
   };
   const graphFunc = (e) => {
     const { value } = e.target;
-    if (value === "active") {
-      setGraphState({
-        ...graphState,
-        state: "active",
-      });
-    } else if (value === "inactive") {
-      setGraphState({
-        ...graphState,
-        state: "inactive",
-      });
+    switch (value) {
+      case "active":
+        return setGraphState({
+          ...graphState,
+          state: "active",
+        });
+
+      case "inactive":
+        return setGraphState({
+          ...graphState,
+          state: "inactive",
+        });
+
+      case "all":
+        return setGraphState({
+          ...graphState,
+          state: "all",
+        });
+      default:
+        return setGraphState({
+          ...graphState,
+          state: "all",
+        });
     }
   };
   const patientGraphFunc = (e) => {
     const { value } = e.target;
-    if (value === "active") {
-      setPatientGraphState({
-        ...patientGraphState,
-        state: "active",
-      });
-    } else if (value === "inactive") {
-      setPatientGraphState({
-        ...patientGraphState,
-        state: "inactive",
-      });
+
+    switch (value) {
+      case "active":
+        return setPatientGraphState({
+          ...patientGraphState,
+          state: "active",
+        });
+      case "inactive":
+        return setPatientGraphState({
+          ...patientGraphState,
+          state: "inactive",
+        });
+      case "all":
+        return setPatientGraphState({
+          ...patientGraphState,
+          state: "all",
+        });
+      default:
+        return setPatientGraphState({
+          ...patientGraphState,
+          state: "all",
+        });
     }
   };
   const subGraphFunc = (e) => {
     const { value } = e.target;
-    if (value === "active") {
-      setSubScriptionState({
-        ...subScriptionState,
-        state: "active",
-      });
-    } else if (value === "inactive") {
-      setSubScriptionState({
-        ...subScriptionState,
-        state: "inactive",
-      });
+    switch (value) {
+      case "active":
+        return setSubScriptionState({
+          ...subScriptionState,
+          state: "active",
+        });
+      case "inactive":
+        return setSubScriptionState({
+          ...subScriptionState,
+          state: "inactive",
+        });
+      case "all":
+        return setSubScriptionState({
+          ...subScriptionState,
+          state: "all",
+        });
+      default:
+        setSubScriptionState({
+          ...subScriptionState,
+          state: "all",
+        });
     }
   };
 

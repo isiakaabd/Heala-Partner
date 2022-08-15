@@ -67,6 +67,29 @@ export const newOptions = [
   { key: "Active", value: "active" },
   { key: "Inactive", value: "inactive" },
 ];
+export const days = [
+  { key: "Sunday", value: "Sunday" },
+  { key: "Monday", value: "Monday" },
+  { key: "Tuesday", value: "Tuesday" },
+  { key: "Wednesday", value: "Wednesday" },
+  { key: "Thursday", value: "Thursday" },
+  { key: "Friday", value: "Friday" },
+  { key: "Saturday", value: "Saturday" },
+];
+export const today = () => {
+  const weekday = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  const d = new Date();
+  return weekday[d.getDay()];
+};
 export const consultationsOptions = [
   { key: "All Stats", value: "all" },
   { key: "Accepted", value: "Accepted" },

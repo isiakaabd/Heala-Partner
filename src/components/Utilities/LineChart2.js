@@ -7,12 +7,7 @@ import { monthNames } from "components/Utilities/Time";
 const LineChart2 = ({ graphState, optionsValue, type }) => {
   const theme = useTheme();
   const [state, setState] = useState("");
-  // const lightGreen = "rgba(45, 211, 158, .3)";
-  // const lightBlue = "rgba(62, 94, 169, .3)";
-  // const lightGold = "rgb(243, 173, 83,.3)";
-  // const gold = theme.palette.common.gold;
-  // const green = theme.palette.common.green;
-  // const red = theme.palette.common.red;
+  const gold = theme.palette.common.gold;
   const [arr, setArr] = useState([]);
   useEffect(() => {
     setState(graphState?.state);
@@ -93,13 +88,23 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
       data: arr[index],
       fill: false,
       borderColor:
-        value === "active" || value === "Completed" || value === "Ongoing"
+        value === "active" ||
+        value === "Completed" ||
+        value === "hospital" ||
+        value === "Accepted"
           ? theme.palette.common.green
-          : theme.palette.common.red,
+          : value === "inactive" || value === "pharmacy" || value === "Ongoing"
+          ? theme.palette.common.red
+          : gold,
       pointBackgroundColor:
-        value === "active" || value === "Completed" || value === "Ongoing"
+        value === "active" ||
+        value === "Completed" ||
+        value === "hospital" ||
+        value === "Accepted"
           ? theme.palette.common.green
-          : theme.palette.common.red,
+          : value === "inactive" || value === "pharmacy" || value === "Ongoing"
+          ? theme.palette.common.red
+          : gold,
       pointBorderColor: "#fff",
       pointRadius: 5,
       pointHoverRadius: 7,

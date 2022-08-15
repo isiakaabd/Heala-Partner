@@ -1006,35 +1006,18 @@ export const getSubscriptionsIncome = gql`
     }
   }
 `;
-// patientStats
-// doctorStats
-// totalEarnings
-// totalPayout
-// appointmentStats
-// subscribers
-// availabilityCalendar {
-//   _id
-//   doctor
-//   doctorData
-//   day
-//   available
-//   times {
-//     start
-//     stop
-//   }
-//   createdAt
-//   updatedAt
-// }
+
 export const getAvailabilities = gql`
   ${PageInfo}
   query getAvailabilities(
     $id: String
     $providerId: String
     $page: Int
+    $day: String
     $first: Int
   ) {
     getAvailabilities(
-      filterBy: { doctor: $id, providerId: $providerId }
+      filterBy: { doctor: $id, providerId: $providerId, day: $day }
       page: $page
       first: $first
     ) {
@@ -1208,8 +1191,7 @@ export const dashboard = gql`
     }
   }
 `;
-//totalActiveSubscribers
-//  totalInactiveSubscribers
+
 export const getPlans = gql`
   ${PageInfo}
   query getPlans($amount: Float, $provider: String, $page: Int, $first: Int) {
