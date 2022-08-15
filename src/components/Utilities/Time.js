@@ -76,6 +76,20 @@ export const days = [
   { key: "Friday", value: "Friday" },
   { key: "Saturday", value: "Saturday" },
 ];
+export const today = () => {
+  const weekday = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  const d = new Date();
+  return weekday[d.getDay()];
+};
 export const consultationsOptions = [
   { key: "All Stats", value: "all" },
   { key: "Accepted", value: "Accepted" },

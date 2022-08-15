@@ -23,7 +23,7 @@ import { availabilityHeadCells } from "components/Utilities/tableHeaders";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import displayPhoto from "assets/images/avatar.svg";
-import { hours, days } from "components/Utilities/Time";
+import { hours, days, today } from "components/Utilities/Time";
 import { EmptyTable } from "components/layouts";
 import { useActions } from "components/hooks/useActions";
 import PropTypes from "prop-types";
@@ -90,7 +90,10 @@ const AvailabilityTable = () => {
     totalDocs: 0,
   });
   const [modal, setModal] = useState(false);
-
+  const { selectedRows } = useSelector((state) => state.tables);
+  const { setSelectedRows } = useActions();
+  const [availabilities, setAvailabilities] = useState([]);
+  const [select, setSelect] = useState(today());
   const id = localStorage.getItem("partnerProviderId");
   const [fetchAvailabilities, { loading: load }] =
     useLazyQuery(getAvailabilities);
@@ -119,15 +122,17 @@ const AvailabilityTable = () => {
       variables: {
         first: 5,
         providerId: id,
+        day: select,
       },
     });
-  }, [fetchAvailabilities, id]);
+  }, [fetchAvailabilities, select, id]);
 
   useEffect(() => {
     fetchAvailabilities({
       variables: {
         first: 5,
         providerId: id,
+        day: select,
       },
     }).then(({ data }) => {
       if (data) {
@@ -139,10 +144,7 @@ const AvailabilityTable = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
-  const [availabilities, setAvailabilities] = useState([]);
-  const [select, setSelect] = useState("");
+
   const handleSelectChange = async (e) => {
     const { value } = e.target;
     setSelect(value);
@@ -150,7 +152,7 @@ const AvailabilityTable = () => {
       variables: {
         first: 5,
         providerId: id,
-        day: value.toLowerCase(),
+        day: value,
       },
     });
   };
@@ -192,9 +194,7 @@ const AvailabilityTable = () => {
               value={select}
               onChange={handleSelectChange}
               options={days}
-              placeholder="Days"
               name="select"
-              disabled={availabilities?.length === 0}
             />
           </Grid>
         </Grid>
@@ -215,6 +215,7 @@ const AvailabilityTable = () => {
                 const res = changeHospitalTableLimit(fetchAvailabilities, {
                   first: e,
                   providerId: id,
+                  day: select,
                 });
 
                 await setTableData(res, "Failed to change table limit.");
@@ -225,7 +226,10 @@ const AvailabilityTable = () => {
                   fetchAvailabilities,
                   page,
                   pageInfo,
-                  id
+                  id,
+                  {
+                    day: select,
+                  }
                 );
                 await setTableData(res, "Failed to change page.");
               }}

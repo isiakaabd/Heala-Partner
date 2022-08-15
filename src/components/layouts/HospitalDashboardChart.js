@@ -97,6 +97,9 @@ const useStyles = makeStyles((theme) => ({
       color: "#fff",
     },
   },
+  gold: {
+    borderColor: theme.palette.common.gold,
+  },
 }));
 
 const HopsitalDashboardChart = ({ data }) => {
