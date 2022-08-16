@@ -90,6 +90,11 @@ export const today = () => {
   const d = new Date();
   return weekday[d.getDay()];
 };
+export const financeOptions = [
+  { key: "All Stats", value: "all" },
+  { key: "Earnings", value: "Earnings" },
+  { key: "Payouts", value: "Payouts" },
+];
 export const consultationsOptions = [
   { key: "All Stats", value: "all" },
   { key: "Accepted", value: "Accepted" },

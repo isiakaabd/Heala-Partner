@@ -4,23 +4,15 @@ import PropTypes from "prop-types";
 import GroupIcon from "@mui/icons-material/Group";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import {
-  financialPercent,
   returnpercent,
-  selectOptions,
+  financeOptions,
   consultationsOptions,
   newOptions,
   formatNumber,
 } from "components/Utilities/Time";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import TrendingDownIcon from "@mui/icons-material/TrendingDown";
-// import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import {
-  LineChart2,
-  CircularProgressBar,
-  FormSelect,
-} from "components/Utilities";
+import { LineChart2, FormSelect } from "components/Utilities";
 import "chartjs-plugin-style";
 import { ArrowDownwardOutlined } from "@mui/icons-material";
 
@@ -124,7 +116,13 @@ const HopsitalDashboardChart = ({ data }) => {
       cancel: data?.getStats?.consultationStats.cancelledChartData,
     },
   });
-
+  const [financialState, setFinancialState] = useState({
+    state: "all",
+    data: {
+      earning: data?.getStats?.earningStats?.chartData,
+      payout: data?.getStats?.payoutStats?.chartData,
+    },
+  });
   const [graphState, setGraphState] = useState({
     state: "all",
     data: {
@@ -148,10 +146,6 @@ const HopsitalDashboardChart = ({ data }) => {
   });
 
   useEffect(() => {
-    setPayoutArray(data?.getStats?.payoutStats?.chartData);
-    setEarningArray(data?.getStats?.earningStats?.chartData);
-  }, [data]);
-  useEffect(() => {
     const {
       // eslint-disable-next-line
       patientStats,
@@ -169,12 +163,9 @@ const HopsitalDashboardChart = ({ data }) => {
     setTotalSub(
       subscriptionStats?.totalActive + subscriptionStats?.totalInactive
     );
-    setPayoutArray(payoutStats?.chartData);
-    setEarningArray(earningStats?.chartData);
     setTotalEarning(earningStats?.total);
     setTotalPayouts(payoutStats?.total);
-    const value = financialPercent(totalEarning, totalPayouts);
-    setFinances(value);
+
     //eslint-disable-next-line
   }, [data]);
 
@@ -192,8 +183,6 @@ const HopsitalDashboardChart = ({ data }) => {
     totalDeclined +
     totalCompleted;
 
-  const financialValue = financialPercent(totalEarning, totalPayouts);
-  const [finances, setFinances] = useState(financialValue);
   const { totalActive: activeDoctors, totalInactive: inactiveDoctors } =
     doctorStats;
   const { totalActive: activePatients, totalInactive: inactivePatients } =
@@ -202,24 +191,31 @@ const HopsitalDashboardChart = ({ data }) => {
   const totalPatient = activePatients + inactivePatients;
   const patientPercentage = returnpercent(activePatients, inactivePatients);
   const doctorPercentage = returnpercent(activeDoctors, inactiveDoctors);
-  const [forms, setForms] = useState("");
-  const [payoutArray, setPayoutArray] = useState([]);
-  const [earningArray, setEarningArray] = useState([]);
-  const onChange = async (e) => {
+
+  const financeFunc = async (e) => {
     const { value } = e.target;
-    setForms(value);
-    //eslint-disable-next-line
-    earningArray?.map((item) => {
-      if (item?.month === value) {
-        setTotalEarning(item?.sum);
-      }
-    });
-    //eslint-disable-next-line
-    payoutArray?.map((item) => {
-      if (item?.month === value) {
-        setTotalPayouts(item?.sum);
-      }
-    });
+    switch (value) {
+      case "Earnings":
+        return setFinancialState({
+          ...financialState,
+          state: "Earnings",
+        });
+      case "Payouts":
+        return setFinancialState({
+          ...financialState,
+          state: "Payouts",
+        });
+      case "all":
+        return setFinancialState({
+          ...financialState,
+          state: "all",
+        });
+      default:
+        return setFinancialState({
+          ...financialState,
+          state: "all",
+        });
+    }
   };
   const consultationFunc = (e) => {
     const { value } = e.target;
@@ -778,6 +774,11 @@ const HopsitalDashboardChart = ({ data }) => {
       </Grid>
       {/* finance Stats */}
       <Grid item container className={classes.chartCard}>
+        <Grid item className={classes.headerGrid}>
+          <Typography variant="h5">Financial Stats</Typography>
+        </Grid>
+        <Divider color={theme.palette.common.lighterGrey} />
+
         <Grid
           item
           container
@@ -788,32 +789,42 @@ const HopsitalDashboardChart = ({ data }) => {
           <Grid
             item
             gap={{ sm: 3, xs: 2, md: 3 }}
-            // alignItems="center"
-            flexWrap="nowrap"
+            alignItems="center"
+            flexWrap={"nowrap"}
             container
             flex={3}
           >
-            <Grid
-              container
-              justifyContent="space-between"
-              alignItems="center"
-              flex={{ sm: 1 }}
-              alignSelf="flex-start"
-              flexWrap={"nowrap"}
-            >
-              <Grid item flex={1}>
-                <Typography variant="h5">Financial Stats</Typography>
-              </Grid>
-              <Grid item>
-                <FormSelect
-                  placeholder="Select Months"
-                  value={forms}
-                  onChange={onChange}
-                  options={selectOptions}
-                  name="finance"
-                />
-              </Grid>
+            <Grid item className={classes.groupIconGrid}>
+              <GroupIcon color="success" className={classes.groupIcon} />
             </Grid>
+            <Grid item alignItems="center" container flex={1}>
+              <Grid item container direction="column">
+                <Grid item container gap={1}>
+                  <Typography variant="h1">
+                    {" "}
+                    {formatNumber(totalEarning + totalPayouts)}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Typography
+                variant="body2"
+                style={{
+                  color: theme.palette.common.lightGrey,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Total Finances
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid item>
+            <FormSelect
+              value={financialState?.state}
+              onChange={financeFunc}
+              options={financeOptions}
+              name="partner-select"
+            />
           </Grid>
         </Grid>
 
@@ -821,113 +832,70 @@ const HopsitalDashboardChart = ({ data }) => {
         <Grid
           item
           container
-          justifySelf={{ xs: "center", md: "space-between" }}
-          // justifyContent="space-between"
-          flexWrap={{ sm: "nowrap" }}
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          rowGap={{ xs: "4rem" }}
-          paddingY={{ xs: "1rem" }}
-          className={classes.overviewGrid}
+          marginY={{ sm: 3, md: 3, xs: 2 }}
+          direction="column"
         >
-          <Grid item marginRight={{ sm: "2rem", md: "2rem" }}>
-            <CircularProgressBar
-              height="20rem"
-              width="20rem"
-              color={theme.palette.common.green}
-              trailColor={theme.palette.common.red}
-              value={finances}
-              strokeWidth={8}
-            />
-          </Grid>
-          <Grid
-            item
-            container
-            padding={0}
-            flexWrap="nowrap"
-            justifySelf={"center"}
-            flexDirection={{ xs: "row" }}
-            justifyContent="center"
-          >
-            <Grid
-              item
-              container
-              gap={{ sm: 2, xs: 1 }}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Grid
-                item
-                className={`${classes.iconWrapper} ${classes.greenIconBg}`}
-              >
-                <TrendingDownIcon color="success" />
+          <LineChart2
+            graphState={financialState}
+            optionsValue={financeOptions}
+            type="finance"
+          />
+
+          {/* Line */}
+        </Grid>
+        <Grid
+          item
+          container
+          flexWrap="nowrap"
+          justifyContent="space-between"
+          paddingTop={{ sm: 3, xs: 2 }}
+        >
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item>
+                <Typography variant="h3" gutterBottom>
+                  {formatNumber(totalEarning)}
+                </Typography>
               </Grid>
               <Grid item>
-                <Grid container direction="column">
-                  <Grid item>
-                    <Typography variat="h3">
-                      <span
-                        style={{
-                          textDecoration: "line-through",
-                          textDecorationStyle: "double",
-                        }}
-                      >
-                        N
-                      </span>
-                      {formatNumber(totalEarning)}
-                    </Typography>
+                <Grid container alignItems="center">
+                  <Grid item style={{ marginRight: "1rem" }}>
+                    <div
+                      className={`${classes.dottedCircle} ${classes.green}`}
+                    ></div>
                   </Grid>
                   <Grid item>
                     <Typography
                       variant="body2"
-                      style={{
-                        color: theme.palette.common.lightGrey,
-                      }}
+                      style={{ color: theme.palette.common.lightGrey }}
                     >
-                      Total earnings
+                      Total Earnings
                     </Typography>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-
-            <Grid
-              item
-              container
-              justifyContent="center"
-              gap={{ sm: 2, xs: 1 }}
-              alignItems="center"
-            >
-              <Grid
-                item
-                className={`${classes.iconWrapper} ${classes.redIconBg}`}
-              >
-                <TrendingUpIcon color="error" />
+          </Grid>
+          <Grid item>
+            <Grid container direction="column" justifyContent="center">
+              <Grid item>
+                <Typography variant="h3" gutterBottom>
+                  {formatNumber(totalPayouts)}
+                </Typography>
               </Grid>
               <Grid item>
-                <Grid container direction="column">
-                  <Grid item>
-                    <Typography variat="h3">
-                      <span
-                        style={{
-                          textDecoration: "line-through",
-                          textDecorationStyle: "double",
-                        }}
-                      >
-                        N
-                      </span>
-                      {formatNumber(totalPayouts)}
-                    </Typography>
+                <Grid container alignItems="center">
+                  <Grid item style={{ marginRight: "1rem" }}>
+                    <div
+                      className={`${classes.dottedCircle} ${classes.red}`}
+                    ></div>
                   </Grid>
                   <Grid item>
                     <Typography
                       variant="body2"
-                      style={{
-                        color: theme.palette.common.lightGrey,
-                      }}
+                      style={{ color: theme.palette.common.lightGrey }}
                     >
-                      Total payouts
+                      Total Payouts
                     </Typography>
                   </Grid>
                 </Grid>
@@ -935,80 +903,6 @@ const HopsitalDashboardChart = ({ data }) => {
             </Grid>
           </Grid>
         </Grid>
-        {/* <Grid
-          container
-          flex={{ sm: 1 }}
-          direction="column"
-          className={classes.chartCard}
-          alignSelf="flex-end"
-        >
-          <Grid item>
-            <Typography variant="h5">Appointment Stats</Typography>
-          </Grid>
-
-          <Grid item container paddingY={{ sm: 3, md: 3, xs: 2 }}>
-            <Grid item container justifyContent="space-between">
-              <Grid item>
-                <Grid container gap={2}>
-                  <Grid
-                    item
-                    className={`${classes.iconWrapper} ${classes.greenNotificationBg}`}
-                  >
-                    <NotificationsActiveIcon
-                      className={classes.notificationIcon}
-                    />
-                  </Grid>
-
-                  <Grid item direction="column">
-                    <Typography variant="h5">
-                      {appointmentStats?.totalUpcoming
-                        ? appointmentStats?.totalUpcoming
-                        : 0}
-                    </Typography>
-
-                    <Typography
-                      variant="body2"
-                      style={{ color: theme.palette.common.lightGrey }}
-                    >
-                      Total Upcoming
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Grid container>
-                  <Grid
-                    item
-                    className={`${classes.iconWrapper} ${classes.greenNotificationBg}`}
-                  >
-                    <NotificationsActiveIcon
-                      className={classes.notificationIcon}
-                    />
-                  </Grid>
-                  <Grid item style={{ marginLeft: "1em" }}>
-                    <Grid container direction="column">
-                      <Grid item>
-                        <Typography variant="h4">
-                          {appointmentStats?.totalPast
-                            ? appointmentStats?.totalPast
-                            : 0}
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography
-                          variant="body2"
-                          style={{ color: theme.palette.common.lightGrey }}
-                        >
-                          Total Past
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid> */}
       </Grid>
       {/* consultation stats */}
       <Grid
