@@ -40,19 +40,20 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
     () => graphState?.data?.ongoing?.map((i) => i?.sum),
     [graphState?.data?.ongoing]
   );
-
+  const earning = useMemo(
+    () => graphState?.data?.earning?.map((i) => i?.sum),
+    [graphState?.data?.earning]
+  );
+  const payout = useMemo(
+    () => graphState?.data?.payout?.map((i) => i?.sum),
+    [graphState?.data?.payout]
+  );
   useEffect(() => {
-    if (type !== "consultation") {
-      setArr([active, inactive]);
-
-      if (state === "active") {
-        return setArr([active, []]);
-      } else if (state === "inactive") {
-        return setArr([[], inactive]);
-      }
-    } else {
+    if (type === "consultation") {
       setArr([accept, complete, decline, ongoing, cancel]);
       switch (state) {
+        case "all":
+          return setArr([accept, complete, decline, ongoing, cancel]);
         case "Accepted":
           return setArr([accept, [], [], [], []]);
         case "Completed":
@@ -63,9 +64,28 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
           return setArr([[], [], [], ongoing, []]);
         case "Cancelled":
           return setArr([[], [], [], [], cancel]);
-
         default:
-          return setArr([accept, complete, decline, ongoing, cancel]);
+          return setArr([active, inactive]);
+      }
+    } else if (type === "finance") {
+      setArr([earning, payout]);
+      switch (state) {
+        case "all":
+          return setArr([earning, payout]);
+        case "Earnings":
+          return setArr([earning, []]);
+        case "Payouts":
+          return setArr([[], payout]);
+        default:
+          return setArr([earning, payout]);
+      }
+    } else {
+      setArr([active, inactive]);
+
+      if (state === "active") {
+        return setArr([active, []]);
+      } else if (state === "inactive") {
+        return setArr([[], inactive]);
       }
     }
   }, [
@@ -77,6 +97,8 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
     ongoing,
     cancel,
     accept,
+    earning,
+    payout,
     complete,
     inactive,
   ]);
@@ -91,18 +113,26 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
         value === "active" ||
         value === "Completed" ||
         value === "hospital" ||
-        value === "Accepted"
+        value === "Accepted" ||
+        value === "Earnings"
           ? theme.palette.common.green
-          : value === "inactive" || value === "pharmacy" || value === "Ongoing"
+          : value === "inactive" ||
+            value === "pharmacy" ||
+            value === "Ongoing" ||
+            value === "Payouts"
           ? theme.palette.common.red
           : gold,
       pointBackgroundColor:
         value === "active" ||
         value === "Completed" ||
         value === "hospital" ||
-        value === "Accepted"
+        value === "Accepted" ||
+        value === "Earnings"
           ? theme.palette.common.green
-          : value === "inactive" || value === "pharmacy" || value === "Ongoing"
+          : value === "inactive" ||
+            value === "pharmacy" ||
+            value === "Ongoing" ||
+            value === "Payouts"
           ? theme.palette.common.red
           : gold,
       pointBorderColor: "#fff",
