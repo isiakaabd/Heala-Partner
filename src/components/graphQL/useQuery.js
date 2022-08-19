@@ -1046,6 +1046,7 @@ export const getAvailabilities = gql`
     }
   }
 `;
+
 export const getMyEarnings = gql`
   ${PageInfo}
   query getMyEarnings($doctor: String, $page: Int, $first: Int) {
@@ -1121,6 +1122,79 @@ export const getPayoutData = gql`
 export const dashboard = gql`
   query getStats($providerId: String, $q: String) {
     getStats(filterBy: { providerId: $providerId }, q: $q) {
+      patientStats {
+        totalActive
+        totalInactive
+        activeChartData
+        inactiveChartData
+      }
+      doctorStats {
+        totalActive
+        totalInactive
+        activeChartData
+        inactiveChartData
+      }
+      partnerStats {
+        total
+        chartData
+        hospitalChartData
+        diagnosticsChartData
+        pharmacyChartData
+        totalHospitals
+        totalPharmacies
+        totalDiagnostics
+      }
+      subscriptionStats {
+        totalActive
+        totalInactive
+        chartData
+        activeChartData
+        inactiveChartData
+      }
+      earningStats {
+        total
+        chartData
+      }
+      payoutStats {
+        total
+        chartData
+      }
+      consultationStats {
+        totalOngoing
+        totalAccepted
+        totalCompleted
+        totalDeclined
+        totalCancelled
+        ongoingChartData
+        acceptedChartData
+        completedChartData
+        declinedChartData
+        cancelledChartData
+      }
+      availabilityCalender {
+        today
+        availableDoctors {
+          dociId
+          firstName
+          lastName
+          providerId
+          availability {
+            times {
+              start
+              stop
+              available
+            }
+            createdAt
+            updatedAt
+          }
+        }
+      }
+    }
+  }
+`;
+export const dashboard1 = gql`
+  query getStats {
+    getStats(filterBy: {}, q: $q) {
       patientStats {
         totalActive
         totalInactive
