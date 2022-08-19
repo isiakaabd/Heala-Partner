@@ -16,7 +16,7 @@ import {
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
-import { financeHeader } from "components/Utilities/tableHeaders";
+import { financeHeader2 } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
@@ -159,7 +159,7 @@ const SubscriptionIncome = () => {
         {profiles.length > 0 ? (
           <Grid item container>
             <EnhancedTable
-              headCells={financeHeader}
+              headCells={financeHeader2}
               rows={profiles}
               paginationLabel="finance per page"
               hasCheckbox={true}
@@ -183,9 +183,10 @@ const SubscriptionIncome = () => {
               }}
             >
               {profiles.map((row, index) => {
-                const { createdAt, amount, _id, patientData } = row;
+                const { createdAt, amount, patientData, providerId, planId } =
+                  row;
                 const { firstName, image, lastName } = patientData || {};
-                const isItemSelected = isSelected(_id, selectedRows);
+                const isItemSelected = isSelected(row._id, selectedRows);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -194,13 +195,17 @@ const SubscriptionIncome = () => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={_id}
+                    key={row._id}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
                         onClick={() =>
-                          handleSelectedRows(_id, selectedRows, setSelectedRows)
+                          handleSelectedRows(
+                            row.id,
+                            selectedRows,
+                            setSelectedRows
+                          )
                         }
                         color="primary"
                         checked={isItemSelected}
@@ -210,22 +215,11 @@ const SubscriptionIncome = () => {
                       />
                     </TableCell>
                     <TableCell
-                      id={labelId}
-                      scope="row"
                       align="left"
                       className={classes.tableCell}
-                      style={{ color: theme.palette.common.black }}
+                      style={{ color: theme.palette.common.red }}
                     >
-                      {dateMoment(createdAt)}
-                    </TableCell>
-                    <TableCell
-                      id={labelId}
-                      scope="row"
-                      align="left"
-                      className={classes.tableCell}
-                      style={{ color: theme.palette.common.black }}
-                    >
-                      {timeMoment(createdAt)}
+                      {formatNumber(amount.toFixed(2))}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       {patientData && patientData !== {} ? (
@@ -259,7 +253,24 @@ const SubscriptionIncome = () => {
                       className={classes.tableCell}
                       style={{ color: theme.palette.common.red }}
                     >
-                      {formatNumber(amount.toFixed(2))}
+                      {planId}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.red }}
+                    >
+                      {providerId}
+                    </TableCell>
+
+                    <TableCell
+                      id={labelId}
+                      scope="row"
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.black }}
+                    >
+                      {`${dateMoment(createdAt)} - ${timeMoment(createdAt)}`}
                     </TableCell>
                   </TableRow>
                 );
@@ -268,7 +279,7 @@ const SubscriptionIncome = () => {
           </Grid>
         ) : (
           <EmptyTable
-            headCells={financeHeader}
+            headCells={financeHeader2}
             paginationLabel="Finance  per page"
           />
         )}

@@ -163,6 +163,7 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
             }
           },
         },
+        min: 0,
         grid: {
           color: "rgba(0,0,0,0.05)",
           borderColor: "rgba(0,0,0,0.05)",
@@ -189,17 +190,12 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
         cursor: "pointer",
         titleColor: colorItem,
         onHover: hover,
-        bodyColor: "rgba(0, 0, 0, 0.05)",
+        bodyColor: "rgba(0, 0, 0, 1)",
 
         titleAlign: "left",
         bodyAlign: "left",
         borderColor: "rgba(0, 0, 0, 0.05)",
-        // state === "active" || state === "Completed" || state === "Accepted"
-        //   ? green
-        //   : state === "inactive" || state === "Ongoing"
-        //   ? red
-        //   : gold,
-        // "rgba(0, 0, 0, 0.05)",
+
         borderWidth: 3,
         displayColors: true,
         boxHeight: 0,

@@ -12,7 +12,6 @@ import { Loader } from "components/Utilities";
 
 const HospitalDashboard = () => {
   const { data, error, loading } = useQuery(dashboard, {
-    notifyOnNetworkStatusChange: true,
     variables: {
       providerId: localStorage.getItem("partnerProviderId"),
     },
@@ -30,7 +29,6 @@ const HospitalDashboard = () => {
       </Grid>
 
       <HospitalDashboardChart data={data} />
-      {/* data={data?.getStats?.availabilityCalender}  */}
       <AvailabilityTable />
     </Grid>
   );

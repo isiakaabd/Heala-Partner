@@ -194,6 +194,29 @@ export const financeHeader = [
     label: "Subscription Plan",
   },
 ];
+export const financeHeader2 = [
+  {
+    id: 0,
+    label: " Amount",
+  },
+  {
+    id: 1,
+    label: "Customer",
+  },
+  {
+    id: 2,
+    label: "Plan Type",
+  },
+
+  {
+    id: 30,
+    label: "Provider",
+  },
+  {
+    id: 34,
+    label: "Paid On",
+  },
+];
 export const earningHead = [
   {
     id: 0,
@@ -214,6 +237,46 @@ export const earningHead = [
   },
   {
     id: 31,
+    label: "Amount",
+  },
+];
+export const payoutHeaderss1 = [
+  {
+    id: 234,
+    label: "Amount",
+  },
+  {
+    id: 235,
+    label: "Customer",
+  },
+  {
+    id: 2350,
+    label: "Provider",
+  },
+  {
+    id: 2,
+    label: "Received On",
+  },
+  {
+    id: 4,
+    label: "Consultation",
+  },
+];
+export const payoutHeaders = [
+  {
+    id: 0,
+    label: "Date",
+  },
+  {
+    id: 1,
+    label: "Time",
+  },
+  {
+    id: 2,
+    label: "Name",
+  },
+  {
+    id: 4,
     label: "Amount",
   },
 ];
@@ -334,10 +397,14 @@ export const payoutHeader = [
 
   {
     id: 4,
-    label: "Amount ",
+    label: "Amount Paid Out ",
+  },
+  {
+    id: 5,
+    label: "Payout status",
   },
 ];
-export const payoutHeaders = [
+export const payoutHeaderss = [
   {
     id: 0,
     label: "Date",

@@ -188,20 +188,9 @@ const DoctorEarning = () => {
           <Grid item container spacing={3} alignItems="center">
             <Grid item flex={1}>
               <Typography noWrap variant="h1" color="#2D2F39">
-                Doctors Earnings Table
+                Doctors Earnings Tables
               </Typography>
             </Grid>
-            {/* <Grid item>
-              <Filter
-                onHandleChange={(e) => onFilterStatusChange(e?.target?.value)}
-                onClickClearBtn={() => onFilterStatusChange("")}
-                options={payoutFilterBy}
-                name="status"
-                placeholder="None"
-                value={statusFilterValue}
-                hasClearBtn={true}
-              />
-            </Grid> */}
           </Grid>
         </Grid>
         {payout.length > 0 ? (
