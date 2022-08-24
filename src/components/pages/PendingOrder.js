@@ -5,7 +5,6 @@ import {
   Button,
   FormControl,
   Chip,
-  Avatar,
   TableRow,
   FormLabel,
   Checkbox,
@@ -28,7 +27,6 @@ import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { patientsHeadCells } from "components/Utilities/tableHeaders";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import displayPhoto from "assets/images/avatar.svg";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
@@ -296,13 +294,6 @@ const PendingOrder = () => {
                               alignItems: "center",
                             }}
                           >
-                            <span style={{ marginRight: "1rem" }}>
-                              <Avatar
-                                alt={`Display Photo of ${doctorData?.firstName}`}
-                                src={doctorData?.picture || displayPhoto}
-                                sx={{ width: 24, height: 24 }}
-                              />
-                            </span>
                             <span style={{ fontSize: "1.25rem" }}>
                               {doctorData
                                 ? `${doctorData?.firstName} ${doctorData?.lastName}`
@@ -318,13 +309,6 @@ const PendingOrder = () => {
                               alignItems: "center",
                             }}
                           >
-                            <span style={{ marginRight: "1rem" }}>
-                              <Avatar
-                                alt={`Display Photo of ${patientData?.firstName}`}
-                                src={patientData?.image || displayPhoto}
-                                sx={{ width: 24, height: 24 }}
-                              />
-                            </span>
                             <span style={{ fontSize: "1.25rem" }}>
                               {patientData
                                 ? `${patientData?.firstName} ${patientData?.lastName}`

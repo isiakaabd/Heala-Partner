@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Grid,
-  Avatar,
   TableRow,
   FormLabel,
   FormControl,
@@ -21,7 +20,6 @@ import {
 } from "components/Utilities";
 import useFormInput from "components/hooks/useFormInput";
 import { messagesHeadCell } from "components/Utilities/tableHeaders";
-import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -298,15 +296,6 @@ const CancelledOrder = () => {
                           alignItems: "center",
                         }}
                       >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={`Display Photo of ${
-                              patientData ? patientData.firstName : "user"
-                            }`}
-                            src={patientData ? patientData.image : displayPhoto}
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
                         <span style={{ fontSize: "1.25rem" }}>
                           {patientData
                             ? `${patientData.firstName} ${patientData.lastName}`

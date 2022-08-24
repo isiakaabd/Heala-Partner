@@ -3,7 +3,6 @@ import { dateMoment } from "components/Utilities/Time";
 import { useTheme } from "@mui/material/styles";
 import {
   Grid,
-  Avatar,
   Button,
   Chip,
   TableRow,
@@ -24,7 +23,6 @@ import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { patientsHeadCells } from "components/Utilities/tableHeaders";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import displayPhoto from "assets/images/avatar.svg";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
@@ -298,13 +296,6 @@ const Pending = () => {
                           alignItems: "center",
                         }}
                       >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={`Display Photo of ${doctorData?.lastName}`}
-                            src={doctorData ? doctorData.picture : displayPhoto}
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
                         <span style={{ fontSize: "1.25rem" }}>
                           {doctorData
                             ? `${doctorData.firstName} ${doctorData.lastName}`
@@ -320,19 +311,6 @@ const Pending = () => {
                           alignItems: "center",
                         }}
                       >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={`Display Photo of ${
-                              patientData ? patientData.firstName : "user"
-                            }`}
-                            src={
-                              patientData?.image
-                                ? patientData.image
-                                : displayPhoto
-                            }
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
                         <span style={{ fontSize: "1.25rem" }}>
                           {/* {row.firstName} */}
                           {patientData

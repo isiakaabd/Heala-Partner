@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Loader, Filter } from "components/Utilities";
 
-import {
-  TableRow,
-  Grid,
-  Checkbox,
-  TableCell,
-  Avatar,
-  Button,
-} from "@mui/material";
+import { TableRow, Grid, Checkbox, TableCell, Button } from "@mui/material";
 import { dateMoment } from "components/Utilities/Time";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { referralHeaderss } from "components/Utilities/tableHeaders";
-// import { FilterList } from "components/Utilities";
-import displayPhoto from "assets/images/avatar.svg";
+
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -234,21 +226,7 @@ const ReferralTab = () => {
                           alignItems: "center",
                         }}
                       >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={`image of ${
-                              doctorData?.firstName
-                                ? doctorData.firstName
-                                : "placeholder Display Image"
-                            }`}
-                            src={
-                              doctorData?.picture
-                                ? doctorData?.picture
-                                : displayPhoto
-                            }
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
+                        <span style={{ marginRight: "1rem" }}></span>
                         <span style={{ fontSize: "1.25rem" }}>
                           {doctorData?.firstName
                             ? `${doctorData?.firstName} ${doctorData?.lastName}`
@@ -264,21 +242,6 @@ const ReferralTab = () => {
                           alignItems: "center",
                         }}
                       >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={`image of ${
-                              patientData?.firstName
-                                ? patientData?.firstName
-                                : "placeholder Display Image"
-                            }`}
-                            src={
-                              patientData?.picture
-                                ? patientData?.picture
-                                : displayPhoto
-                            }
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
                         <span style={{ fontSize: "1.25rem" }}>
                           {patientData?.firstName
                             ? `${patientData?.firstName} ${patientData?.lastName}`

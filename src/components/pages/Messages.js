@@ -13,8 +13,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useTheme } from "@mui/material/styles";
 import { EnhancedTable, EmptyTable } from "components/layouts";
 import { messagesHeadCells3 } from "components/Utilities/tableHeaders";
-import { Avatar, Button, Checkbox, Grid } from "@mui/material";
-import displayPhoto from "assets/images/avatar.svg";
+import { Button, Checkbox, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -233,13 +232,6 @@ const Messages = () => {
                             justifyContent: "flex-start",
                           }}
                         >
-                          <span style={{ marginRight: "1rem" }}>
-                            <Avatar
-                              alt={`Display Photo of ${recipient}`}
-                              src={displayPhoto}
-                              sx={{ width: 24, height: 24 }}
-                            />
-                          </span>
                           <span style={{ fontSize: "1.25rem" }}>
                             {recipient}
                           </span>

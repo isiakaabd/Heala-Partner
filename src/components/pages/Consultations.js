@@ -8,7 +8,6 @@ import {
   TableCell,
   Checkbox,
   Button,
-  Avatar,
 } from "@mui/material";
 import { FilterList, Loader } from "components/Utilities";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
@@ -198,17 +197,6 @@ const Consultations = () => {
                         alignItems: "center",
                       }}
                     >
-                      <span style={{ marginRight: "1rem" }}>
-                        <Avatar
-                          alt={`Display Photo of ${doctorData.firstName}`}
-                          src={
-                            doctorData.picture
-                              ? doctorData.picture
-                              : displayPhoto
-                          }
-                          sx={{ width: 24, height: 24 }}
-                        />
-                      </span>
                       <span style={{ fontSize: "1.25rem" }}>
                         {doctorData.firstName
                           ? `${doctorData.firstName} ${doctorData.lastName}`

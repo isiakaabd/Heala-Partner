@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Typography, Chip, Avatar, Grid } from "@mui/material";
+import { Typography, Chip, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 
@@ -43,11 +43,6 @@ const DisplayProfileHospital = ({
     >
       <Grid item>
         <Grid container gap={2} alignItems="center">
-          <Avatar
-            alt={`Display Photo`}
-            src={displayPhoto}
-            sx={{ width: 50, height: 50 }}
-          />
           <Typography variant="h3">{fullName}</Typography>
         </Grid>
       </Grid>

@@ -6,7 +6,6 @@ import { NoData, EmptyTable } from "components/layouts";
 import { defaultPageInfo, patientSearchOptions } from "helpers/mockData";
 import {
   Button,
-  Avatar,
   Chip,
   Checkbox,
   TableCell,
@@ -296,7 +295,7 @@ const Patients = () => {
                   lastName,
                   plan,
                   provider,
-                  image,
+                  //image,
                   consultations,
                   _id,
                   status,
@@ -344,13 +343,6 @@ const Patients = () => {
                           alignItems: "center",
                         }}
                       >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={`Display Photo of ${firstName}`}
-                            src={image ? image : displayPhoto}
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
                         <span
                           test="test-value"
                           style={{ fontSize: "1.25rem" }}
