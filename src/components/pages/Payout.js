@@ -4,7 +4,6 @@ import { defaultPageInfo } from "helpers/mockData";
 import {
   Grid,
   Typography,
-  Avatar,
   Chip,
   Checkbox,
   TableRow,
@@ -14,7 +13,6 @@ import { timeMoment, dateMoment } from "components/Utilities/Time";
 import { useAlert } from "components/hooks";
 import { Loader } from "components/Utilities";
 import { useLazyQuery } from "@apollo/client";
-import displayPhoto from "assets/images/avatar.svg";
 import { getEarningStats } from "components/graphQL/useQuery";
 import EnhancedTable from "components/layouts/EnhancedTable";
 import {
@@ -248,13 +246,6 @@ const Payout = () => {
                             alignItems: "left",
                           }}
                         >
-                          <span style={{ marginRight: "1rem" }}>
-                            <Avatar
-                              alt={`Display Photo of ${firstName}`}
-                              src={picture ? picture : displayPhoto}
-                              sx={{ width: 24, height: 24 }}
-                            />
-                          </span>
                           <span style={{ fontSize: "1.25rem" }}>{`${
                             firstName && firstName
                           } ${lastName && lastName}`}</span>

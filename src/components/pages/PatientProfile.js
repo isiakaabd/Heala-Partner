@@ -8,7 +8,6 @@ import {
   DisplayProfileHospital,
   ProfileCard,
 } from "components/Utilities";
-import displayPhoto from "assets/images/avatar.svg";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { getProfile, verifiedEmail } from "components/graphQL/useQuery";
@@ -96,7 +95,6 @@ const PatientProfile = () => {
     dociId,
     status,
     gender,
-    image,
     createdAt,
     provider,
     phoneNumber,
@@ -108,7 +106,6 @@ const PatientProfile = () => {
       <Grid item>
         <DisplayProfileHospital
           fullName={`${firstName} ${lastName}`}
-          displayPhoto={image ? image : displayPhoto}
           medicalTitle="User ID"
           statusId={dociId?.split("-")[1]}
           status={status ? status : "No Value"}

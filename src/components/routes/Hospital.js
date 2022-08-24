@@ -25,7 +25,6 @@ const HcpEarnings = lazy(() => import("components/pages/HcpEarnings"));
 const HcpPatients = lazy(() => import("components/pages/HcpPatients"));
 const HcpCaseNote = lazy(() => import("components/pages/HcpCaseNote"));
 const Appointments = lazy(() => import("components/pages/Appointments"));
-const WaitingList = lazy(() => import("components/pages/WaitingList"));
 const Messages = lazy(() => import("components/pages/Messages"));
 const CreateMessage = lazy(() => import("components/pages/CreateMessage"));
 const ViewMessage = lazy(() => import("components/pages/ViewMessage"));
@@ -45,9 +44,7 @@ const DoctorPayout = lazy(() => import("components/pages/DoctorPayout"));
 const SubscriptionIncome = lazy(() =>
   import("components/pages/SubscriptionIncome")
 );
-const WaitingListDetails = lazy(() =>
-  import("components/pages/WaitingListDetails")
-);
+
 const HcpConsultations = lazy(() =>
   import("components/pages/HcpConsultations")
 );
@@ -174,17 +171,6 @@ const Hospital = () => {
         />
 
         <PrivateRoute exact path="/appointments" component={Appointments} />
-
-        <PrivateRoute
-          exact
-          path="/appointments/waiting-list"
-          component={WaitingList}
-        />
-
-        <PrivateRoute
-          path="/appointments/waiting-list/:listId"
-          component={WaitingListDetails}
-        />
 
         <PrivateRoute exact path="/messages" component={Messages} />
         <PrivateRoute

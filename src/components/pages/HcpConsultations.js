@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useLazyQuery } from "@apollo/client";
 import { getDocConsult } from "components/graphQL/useQuery";
 import {
-  Avatar,
   Typography,
   TableRow,
   Button,
@@ -19,7 +18,6 @@ import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { isSelected } from "helpers/isSelected";
 import { handleSelectedRows } from "helpers/selectedRows";
-import displayPhoto from "assets/images/avatar.svg";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Loader } from "components/Utilities";
 import { useParams } from "react-router-dom";
@@ -195,17 +193,6 @@ const HcpConsultations = () => {
                         alignItems: "left",
                       }}
                     >
-                      <span style={{ marginRight: "1rem" }}>
-                        <Avatar
-                          alt={`Display Photo of ${patientData.firstName}`}
-                          src={
-                            patientData.picture
-                              ? patientData.picture
-                              : displayPhoto
-                          }
-                          sx={{ width: 24, height: 24 }}
-                        />
-                      </span>
                       <span
                         style={{ fontSize: "1.25rem" }}
                       >{`${patientData.firstName} ${patientData.lastName}`}</span>

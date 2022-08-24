@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Grid,
-  Typography,
-  TableCell,
-  TableRow,
-  Checkbox,
-  Avatar,
-} from "@mui/material";
+import { Grid, Typography, TableCell, TableRow, Checkbox } from "@mui/material";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import {
   timeMoment,
@@ -17,7 +10,6 @@ import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { financeHeader2 } from "components/Utilities/tableHeaders";
-import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -230,13 +222,6 @@ const SubscriptionIncome = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span style={{ marginRight: "1rem" }}>
-                            <Avatar
-                              alt={firstName ? firstName : "image"}
-                              src={patientData ? image : displayPhoto}
-                              sx={{ width: 24, height: 24 }}
-                            />
-                          </span>
                           <span style={{ fontSize: "1.25rem" }}>
                             {patientData &&
                               `${firstName && firstName} ${

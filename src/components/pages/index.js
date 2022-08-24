@@ -60,5 +60,3 @@ export { default as SinglePatient } from "./SinglePatient";
 export { default as Subscription } from "./Subscription";
 
 export { default as ViewReferral } from "./ViewReferral";
-export { default as WaitingList } from "./WaitingList";
-export { default as WaitingListDetails } from "./WaitingListDetails";

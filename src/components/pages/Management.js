@@ -23,7 +23,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Modals from "components/Utilities/Modal";
 import { RoleModal } from "components/modals/RoleModal";
-import PreviousButton from "components/Utilities/PreviousButton";
 import DeleteOrDisable from "components/modals/DeleteOrDisable";
 import { useQuery, useMutation } from "@apollo/client";
 import { getRoles } from "components/graphQL/useQuery";
@@ -214,16 +213,6 @@ const Management = ({
   return (
     <>
       <Grid container direction="column" gap={2}>
-        <Grid item>
-          <PreviousButton
-            path="/settings"
-            onClick={() => {
-              setSelectedSubMenu(12);
-              setSelectedManagementMenu(0);
-            }}
-          />
-        </Grid>
-
         <>
           <Grid item container>
             <Grid item className={classes.searchGrid}>

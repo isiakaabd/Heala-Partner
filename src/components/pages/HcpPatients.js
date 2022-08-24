@@ -7,7 +7,6 @@ import {
   TableCell,
   Button,
   Checkbox,
-  Avatar,
 } from "@mui/material";
 import {
   changeHospitalTableLimit,
@@ -168,13 +167,6 @@ const HcpPatients = () => {
                         textAlign: "left",
                       }}
                     >
-                      <span style={{ marginRight: "1rem" }}>
-                        <Avatar
-                          alt="Remy Sharp"
-                          src={row.image}
-                          sx={{ width: 24, height: 24 }}
-                        />
-                      </span>
                       <span style={{ fontSize: "1.25rem" }}>
                         {patientData?.firstName
                           ? `${patientData?.firstName} ${patientData?.lastName}`

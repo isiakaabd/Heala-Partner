@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import displayPhoto from "assets/images/avatar.svg";
 import { NoData, EmptyTable } from "components/layouts";
 import FormikControl from "components/validation/FormikControl";
 import { useMutation, useLazyQuery } from "@apollo/client";
@@ -32,7 +31,6 @@ import {
   Button,
   Checkbox,
   Chip,
-  Avatar,
 } from "@mui/material";
 import { createDOctorProfile } from "components/graphQL/Mutation";
 import { timeConverter } from "components/Utilities/Time";
@@ -403,7 +401,6 @@ const Hcps = () => {
                 status,
                 specialization,
                 consultations,
-                picture,
                 lastName,
               } = row;
               const isItemSelected = isSelected(_id, selectedRows);
@@ -449,13 +446,6 @@ const Hcps = () => {
                         alignItems: "left",
                       }}
                     >
-                      <span style={{ marginRight: "1rem" }}>
-                        <Avatar
-                          alt={`Display Photo of ${firstName}`}
-                          src={picture ? picture : displayPhoto}
-                          sx={{ width: 24, height: 24 }}
-                        />
-                      </span>
                       <span style={{ fontSize: "1.25rem" }}>
                         {firstName} {lastName}
                       </span>

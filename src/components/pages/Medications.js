@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Checkbox from "@mui/material/Checkbox";
-import Avatar from "@mui/material/Avatar";
 import EnhancedTable from "components/layouts/EnhancedTable";
 import { medicationsHeadCells } from "components/Utilities/tableHeaders";
 import { useSelector } from "react-redux";
@@ -13,7 +12,6 @@ import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { isSelected } from "helpers/isSelected";
 import { handleSelectedRows } from "helpers/selectedRows";
-import displayPhoto from "assets/images/avatar.svg";
 import { useParams } from "react-router-dom";
 import { useLazyQuery } from "@apollo/client";
 import { myMedic } from "components/graphQL/useQuery";
@@ -151,13 +149,6 @@ const Medications = () => {
                             justifyContent: "left",
                           }}
                         >
-                          <span style={{ marginRight: "1rem" }}>
-                            <Avatar
-                              alt={`Display Photo of ${row.caregiver}`}
-                              src={displayPhoto}
-                              sx={{ width: 24, height: 24 }}
-                            />
-                          </span>
                           <span style={{ fontSize: "1.25rem" }}>
                             {row.doctor}
                           </span>
