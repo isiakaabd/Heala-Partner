@@ -237,6 +237,7 @@ const PreApp = ({ window }) => {
                   sx={{
                     flex: 1,
                     p: 3,
+                    background: "#f8f8f8",
                     width: { xs: `calc(100% - ${drawerWidth}px)` },
                   }}
                 >
@@ -263,7 +264,11 @@ const PreApp = ({ window }) => {
                 )}
                 <Box
                   component="nav"
-                  sx={{ width: { md: "300px" }, flexShrink: { md: 0 } }}
+                  sx={{
+                    width: { md: "27rem" },
+                    backgroundColor: "#f8f8f8",
+                    flexShrink: { md: 0 },
+                  }}
                   aria-label="sidebar_menu"
                 >
                   <Drawer
@@ -278,7 +283,7 @@ const PreApp = ({ window }) => {
                       display: { xs: "block", md: "none" },
                       "& .MuiDrawer-paper": {
                         boxSizing: "border-box",
-                        width: drawerWidth,
+                        width: "27rem",
                       },
                       "& .MuiBackdrop-root": {
                         backgroundColor: "rgba(0, 0, 0, 0.2)",
@@ -297,6 +302,7 @@ const PreApp = ({ window }) => {
                       "& .MuiDrawer-paper": {
                         boxSizing: "border-box",
                         width: drawerWidth,
+                        backgroundColor: "#f8f8f8",
                       },
                       "& .MuiBackdrop-root": {
                         backgroundColor: "rgba(0, 0, 0, 0.2)",
@@ -313,6 +319,8 @@ const PreApp = ({ window }) => {
                     flex: 1,
                     p: 3,
                     width: { xs: `calc(100% - ${drawerWidth}px)` },
+
+                    backgroundColor: "#f8f8f8",
                   }}
                 >
                   <Toolbar />

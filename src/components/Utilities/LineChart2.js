@@ -4,17 +4,22 @@ import { Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Line } from "react-chartjs-2";
 import { monthNames } from "components/Utilities/Time";
-const LineChart2 = ({ graphState, optionsValue, type }) => {
+
+const LineChart2 = ({ graphState, optionsValue, type, opt }) => {
   const theme = useTheme();
   const [state, setState] = useState("");
-  const gold = theme.palette.common.gold;
   const [arr, setArr] = useState([]);
   useEffect(() => {
-    setState(graphState?.state);
-  }, [graphState?.state]);
+    setState(opt);
+  }, [opt]);
+
   const active = useMemo(
     () => graphState?.data?.active?.map((i) => i?.sum),
     [graphState?.data?.active]
+  );
+  const all = useMemo(
+    () => graphState?.data?.all?.map((i) => i?.sum),
+    [graphState?.data?.all]
   );
   const inactive = useMemo(
     () => graphState?.data?.inactive?.map((i) => i?.sum),
@@ -36,9 +41,17 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
     () => graphState?.data?.decline?.map((i) => i?.sum),
     [graphState?.data?.decline]
   );
-  const ongoing = useMemo(
-    () => graphState?.data?.ongoing?.map((i) => i?.sum),
-    [graphState?.data?.ongoing]
+  const pharmacy = useMemo(
+    () => graphState?.data?.pharmacy?.map((i) => i?.sum),
+    [graphState?.data?.pharmacy]
+  );
+  const hospital = useMemo(
+    () => graphState?.data?.hospital?.map((i) => i?.sum),
+    [graphState?.data?.hospital]
+  );
+  const diagnostic = useMemo(
+    () => graphState?.data?.diagnostic?.map((i) => i?.sum),
+    [graphState?.data?.diagnostic]
   );
   const earning = useMemo(
     () => graphState?.data?.earning?.map((i) => i?.sum),
@@ -48,110 +61,122 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
     () => graphState?.data?.payout?.map((i) => i?.sum),
     [graphState?.data?.payout]
   );
+  const ongoing = useMemo(
+    () => graphState?.data?.ongoing?.map((i) => i?.sum),
+    [graphState?.data?.ongoing]
+  );
+
   useEffect(() => {
     if (type === "consultation") {
       setArr([accept, complete, decline, ongoing, cancel]);
       switch (state) {
         case "all":
-          return setArr([accept, complete, decline, ongoing, cancel]);
+          return setArr(accept);
         case "Accepted":
-          return setArr([accept, [], [], [], []]);
+          return setArr(accept);
         case "Completed":
-          return setArr([[], complete, [], [], []]);
+          return setArr(complete);
         case "Declined":
-          return setArr([[], [], decline, [], []]);
+          return setArr(decline);
         case "Ongoing":
-          return setArr([[], [], [], ongoing, []]);
+          return setArr(ongoing);
         case "Cancelled":
-          return setArr([[], [], [], [], cancel]);
+          return setArr(cancel);
         default:
-          return setArr([active, inactive]);
+          return setArr(accept);
+        // setArr([active, inactive]);
       }
     } else if (type === "finance") {
       setArr([earning, payout]);
       switch (state) {
         case "all":
-          return setArr([earning, payout]);
+          return setArr(earning);
         case "Earnings":
-          return setArr([earning, []]);
+          return setArr(earning);
         case "Payouts":
-          return setArr([[], payout]);
+          return setArr(payout);
         default:
-          return setArr([earning, payout]);
+          return setArr(earning);
       }
     } else {
-      setArr([active, inactive]);
-
-      if (state === "active") {
-        return setArr([active, []]);
-      } else if (state === "inactive") {
-        return setArr([[], inactive]);
+      switch (state) {
+        case "all":
+          return setArr(active);
+        case "active":
+          return setArr(active);
+        case "inactive":
+          return setArr(inactive);
+        default:
+          return setArr(active);
       }
     }
   }, [
     graphState,
     state,
+    all,
+    diagnostic,
+    pharmacy,
+    hospital,
     type,
     decline,
     active,
     ongoing,
     cancel,
-    accept,
     earning,
     payout,
+    accept,
     complete,
     inactive,
   ]);
 
-  const lx = optionsValue.slice(1).map((i, index) => {
+  const lx = optionsValue.map((i) => {
+    let x;
     const { value } = i;
-    return {
-      label: value,
-      data: arr[index],
-      fill: false,
-      borderColor:
-        value === "active" ||
-        value === "Completed" ||
-        value === "hospital" ||
-        value === "Accepted" ||
-        value === "Earnings"
-          ? theme.palette.common.green
-          : value === "inactive" ||
-            value === "pharmacy" ||
-            value === "Ongoing" ||
-            value === "Payouts"
-          ? theme.palette.common.red
-          : gold,
-      pointBackgroundColor:
-        value === "active" ||
-        value === "Completed" ||
-        value === "hospital" ||
-        value === "Accepted" ||
-        value === "Earnings"
-          ? theme.palette.common.green
-          : value === "inactive" ||
-            value === "pharmacy" ||
-            value === "Ongoing" ||
-            value === "Payouts"
-          ? theme.palette.common.red
-          : gold,
-      pointBorderColor: "#fff",
-      pointRadius: 5,
-      pointHoverRadius: 7,
-      pointBorderWidth: 2,
-      tension: 0.5,
-    };
+
+    if (value === opt) {
+      x = {
+        label: value,
+        data: arr,
+        fill: true,
+        color: "#f00",
+        borderColor: theme.palette.common.red,
+
+        pointBackgroundColor: theme.palette.common.red,
+        pointBorderColor: "#fff",
+        pointRadius: 2,
+        // backgroundColor:
+
+        //   lightRed,
+        // background: "rgb(255,255,255)";
+        // background:
+        //   "linear-gradient(356deg, rgba(255,255,255,1) 38%, rgba(252,242,219,1) 38%)",
+        pointHoverRadius: 2,
+        pointBorderWidth: 2,
+        tension: 0.5,
+        backgroundColor: (context) => {
+          const ctx = context.chart.ctx;
+
+          const gradient = ctx.createLinearGradient(0, 0, 0, 330);
+          gradient.addColorStop(0, "rgba(62, 94, 209, .05)");
+          gradient.addColorStop(1, "rgba(255,255,255,0.3)");
+          return gradient;
+        },
+      };
+    } else return null;
+    return x;
   });
+  const j = lx.filter((n) => n);
 
   const data = {
     labels: monthNames,
     backgroundColor: "#fff",
-    datasets: [...lx],
+    datasets: [...j],
   };
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
+    backgroundColor: "#f3f3f3",
     locale: "fr",
     scales: {
       y: {
@@ -168,6 +193,7 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
           color: "rgba(0,0,0,0.05)",
           borderColor: "rgba(0,0,0,0.05)",
           borderDash: [10, 10],
+          speechSynthesis: true,
           display: true,
         },
       },
@@ -185,17 +211,16 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
       legend: {
         display: false,
       },
+
       tooltip: {
         backgroundColor: "#fff",
         cursor: "pointer",
         titleColor: colorItem,
         onHover: hover,
         bodyColor: "rgba(0, 0, 0, 1)",
-
         titleAlign: "left",
         bodyAlign: "left",
         borderColor: "rgba(0, 0, 0, 0.05)",
-
         borderWidth: 3,
         displayColors: true,
         boxHeight: 0,
@@ -214,7 +239,7 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
       },
     },
   };
-  function hover(event, chartElement) {
+  function hover(event) {
     const x = (event.target.style.cursor = "pointer");
     return x;
   }
@@ -227,21 +252,20 @@ const LineChart2 = ({ graphState, optionsValue, type }) => {
 
   return (
     <Grid item container>
-      <Line
-        data={data}
-        options={options}
-        style={{ height: "300px", width: "300px" }}
-      />
+      <Line data={data} options={options} />
     </Grid>
   );
 };
 
 LineChart2.propTypes = {
   timeFrames: PropTypes.array,
+  optionsValue: PropTypes.array,
+  type: PropTypes.string,
   selectedTimeframe: PropTypes.number,
   setSelectedTimeframe: PropTypes.func,
   doctorStats: PropTypes.array,
   graphState: PropTypes.object,
+  opt: PropTypes.object,
 };
 
 export default LineChart2;

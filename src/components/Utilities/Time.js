@@ -16,6 +16,10 @@ export const timeConverter = (str) => {
   return [date.getFullYear(), mnth, day].join("-");
 };
 
+export const roundUp = (num) => {
+  return Math.round(num * 10) / 10;
+};
+
 export const hours = (z) => {
   let time = z.split(":")[0];
   if (time < 12) return `${z} AM`;
@@ -47,8 +51,16 @@ export const returnpercent = (a, b) => {
 export const financialPercent = (a, b) => {
   return Math.round((a / (b + a)) * 100);
 };
+export const partnersOptions = [
+  { key: "Patients", value: "Patients" },
+  { key: "Doctors", value: "Doctors" },
+  { key: "Consultations", value: "Consultations" },
+  { key: "Subscribers", value: "Subscribers" },
+  { key: "Finance", value: "Finance" },
+];
 
 export const selectOptions = [
+  { key: "Months", value: "0" },
   { key: "Jan", value: "1" },
   { key: "Feb", value: "2" },
   { key: "Mar", value: "3" },

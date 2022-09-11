@@ -30,7 +30,14 @@ function EnhancedTableHead(props) {
     <TableHead className={classes.tableHeader}>
       <TableRow>
         {hasCheckbox && (
-          <TableCell padding="checkbox">
+          <TableCell
+            padding="checkbox"
+            sx={{
+              borderBottom: "0px",
+              backgroundColor: "#F8F8F8",
+              borderRadius: "8px 0px 0px 8px",
+            }}
+          >
             <Checkbox
               color="primary"
               indeterminate={numSelected > 0 && numSelected < rowCount}

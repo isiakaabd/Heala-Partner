@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Copy from "components/Copy";
-import { Avatar, IconButton, Grid, Typography, Badge } from "@mui/material";
+// import { ReactComponent as SearchIcon } from "assets/images/search.svg";
+import {
+  Avatar,
+  IconButton,
+  Grid,
+  // InputBase,
+  Typography,
+  Badge,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import displayPhoto from "assets/images/avatar.png";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+// import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import Notifications from "components/layouts/Notifications";
 import { useLazyQuery } from "@apollo/client";
 import { getPartner, getNotifications } from "components/graphQL/useQuery";
 import { useActions } from "components/hooks/useActions";
-
+import BellIcon from "components/Icons/BellIcon";
 const useStyles = makeStyles((theme) => ({
   role: {
     fontSize: "clamp(1rem, 1vw, 1.5rem)",
@@ -95,6 +103,76 @@ const HeaderProfile = () => {
     if (string) return string[string?.length - 1];
     return null;
   };
+  // return (
+  //   <header className={classes.HeaderProfile}>
+  //     <Grid
+  //       container
+  //       alignItems="center"
+  //       gap="1rem"
+  //       justifyContent="space-between"
+  //       flexWrap="nowrap"
+  //       className={classes.head}
+  //       spacing={1}
+  //       sx={{ height: "4.8rem" }}
+  //     >
+  //       <Grid
+  //         item
+  //         className={classes.grid}
+  //         sx={{
+  //           height: "inherit",
+  //           width: "40rem",
+  //           background: "#F8F8F8",
+  //           borderRadius: "4rem",
+  //           display: "flex",
+  //           alignItems: "center",
+  //           padding: "1.4rem 1.6rem",
+  //           paddingTop: 0,
+  //         }}
+  //       >
+  //         <IconButton
+  //           type="button"
+  //           sx={{ color: "#F8F8F8" }}
+  //           aria-label="search"
+  //         >
+  //           <SearchIcon />
+  //         </IconButton>
+  //         <InputBase
+  //           sx={{ flex: 1, p: 0 }}
+  //           size="large"
+  //           placeholder="Search partners, patients, enrollees… "
+  //         />
+  //       </Grid>
+  //       <Grid className={classes.iconContainer} item>
+  //         <IconButton
+  //           aria-label={notificationsLabel(num)}
+  //           onClick={(event) => handleNotification(event)}
+  //           sx={{
+  //             borderRadius: "100%",
+  //             backgroundColor: "#F8F8F8",
+  //             padding: "1rem",
+  //           }}
+  //         >
+  //           <Badge>
+  //             <BellIcon sx={{ color: "transparent" }} />
+  //           </Badge>
+  //         </IconButton>
+  //         <Notifications
+  //           anchorEl={anchorEl}
+  //           Notifications={notifications}
+  //           setNotifications={setNotifications}
+  //           setAnchorEl={setAnchorEl}
+  //         />
+  //       </Grid>
+  //       <Grid item className={classes.iconContainer}>
+  //         <Avatar
+  //           alt="Display avatar"
+  //           src={displayPhoto}
+  //           sx={{ height: "100%", width: "100%" }}
+  //         />
+  //       </Grid>
+  //     </Grid>
+  //   </header>
+  // );
   return (
     <header className={classes.HeaderProfile}>
       <Grid
@@ -144,16 +222,18 @@ const HeaderProfile = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid className={classes.head} item>
+        <Grid className={classes.iconContainer} item>
           <IconButton
             aria-label={notificationsLabel(num)}
             onClick={(event) => handleNotification(event)}
+            sx={{
+              borderRadius: "100%",
+              backgroundColor: "#F8F8F8",
+              padding: "1rem",
+            }}
           >
-            <Badge badgeContent={num} color="error">
-              <NotificationsActiveIcon
-                color="primary"
-                sx={{ fontSize: "clamp(2.5rem, 5vw, 3.5rem)" }}
-              />
+            <Badge>
+              <BellIcon sx={{ color: "transparent" }} />
             </Badge>
           </IconButton>
           <Notifications
