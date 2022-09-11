@@ -69,13 +69,7 @@ body {
   font-size: 62.5%;
   font-family: "Euclid Circular", sans-serif;
   scroll-behavior: smooth;
-}
-
-html,
-body {
-  font-size: 62.5%;
-  font-family: "Euclid Circular", sans-serif;
-  scroll-behavior: smooth;
+  background-color: #f8f8f8;
 }
 
 .container {

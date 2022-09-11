@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import {
   HospitalDashboardChart,
   NoData,
@@ -22,13 +22,7 @@ const HospitalDashboard = () => {
 
   return (
     <Grid container direction="column" rowGap={3}>
-      <Grid item container alignItems="center">
-        <Grid item sx={{ flexGrow: 1 }}>
-          <Typography variant="h1">Dashboard</Typography>
-        </Grid>
-      </Grid>
-
-      <HospitalDashboardChart data={data} />
+      <HospitalDashboardChart data={data?.getStats} />
       <AvailabilityTable />
     </Grid>
   );

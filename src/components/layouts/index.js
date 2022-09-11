@@ -17,3 +17,4 @@ export { default as HeaderProfile } from "./HeaderProfile";
 export { default as NoData } from "./NoData";
 export { default as Notifications } from "./Notifications";
 export { default as EmptyTable } from "./EmptyTable";
+export { default as CardItem } from "./CardItem";

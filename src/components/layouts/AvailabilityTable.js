@@ -5,10 +5,9 @@ import {
   Typography,
   TableCell,
   Chip,
-  Button,
   Checkbox,
 } from "@mui/material";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+// import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelector } from "react-redux";
 import { handleSelectedRows } from "helpers/selectedRows";
 import {
@@ -16,7 +15,8 @@ import {
   handleHospitalPageChange,
 } from "helpers/filterHelperFunctions";
 import EnhancedTable from "./EnhancedTable";
-import { Modals, Loader, FormSelect } from "components/Utilities";
+import { CustomSelect } from "components/validation/Select";
+import { Modals, Loader } from "components/Utilities";
 import { isSelected } from "helpers/isSelected";
 import { availabilityHeadCells } from "components/Utilities/tableHeaders";
 import { makeStyles } from "@mui/styles";
@@ -185,13 +185,14 @@ const AvailabilityTable = () => {
       <Grid item container direction="column" height="100%" rowGap={2}>
         <Grid item container alignItems="center">
           <Grid item flex={1}>
-            <Typography variant="h4">Availability Table</Typography>
+            <Typography variant="h4">Doctor Availability </Typography>
           </Grid>
           <Grid item>
-            <FormSelect
+            <CustomSelect
               value={select}
               onChange={handleSelectChange}
               options={days}
+              variant="small"
               name="select"
             />
           </Grid>
@@ -233,12 +234,20 @@ const AvailabilityTable = () => {
               }}
             >
               {availabilities?.map((row, index) => {
-                const { _id, day, times, doctor, doctorData } = row;
+                const { _id, doctorData, day, times, doctor } = row;
+                const startTime = hours(times[0].start);
+                const endTime = hours(times[times.length - 1].stop);
                 const labelId = `enhanced-table-checkbox-${index}`;
                 const isItemSelected = isSelected(_id, selectedRows);
 
                 return (
-                  <TableRow hover tabIndex={-1} key={_id}>
+                  <TableRow
+                    hover
+                    tabIndex={-1}
+                    key={_id}
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => handleCheckDay(day, doctor)}
+                  >
                     <TableCell padding="checkbox">
                       <Checkbox
                         onClick={() =>
@@ -281,46 +290,37 @@ const AvailabilityTable = () => {
                     <TableCell align="left" className={classes.tableCell}>
                       {day ? day : "No Value"}
                     </TableCell>
-                    <TableCell align="left" className={classes.tableCell}>
-                      <Grid container gap={1}>
-                        {times
-                          ? times?.map((time, ind) => {
-                              const { start, stop } = time;
-                              return (
-                                <Chip
-                                  key={ind}
-                                  label={`${hours(start)} - ${hours(stop)} `}
-                                  className={classes.badge}
-                                  style={{
-                                    // background: !!available
-                                    //   ? theme.palette.common.lightGreen
-                                    //   :
-                                    background: theme.palette.common.lightRed,
-                                    color:
-                                      // !!available
-                                      //   ? theme.palette.common.green
-                                      //   :
-                                      theme.palette.common.red,
-                                    // textDecoration: !!available
-                                    //   ? ""
-                                    //   : "line-through",
-                                  }}
-                                />
-                              );
-                            })
-                          : "No Time"}
-                      </Grid>
+                    <TableCell
+                      align="left"
+                      className={classes.tableCell}
+                      style={{
+                        color: theme.palette.common.red,
+                      }}
+                    >
+                      <Chip
+                        label={startTime}
+                        className={classes.badge}
+                        style={{
+                          background: theme.palette.common.lightRed,
+                          color: theme.palette.common.red,
+                        }}
+                      />
                     </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        className={classes.button}
-                        // component={Link}
-                        onClick={() => handleCheckDay(day, doctor)}
-                        endIcon={<ArrowForwardIosIcon />}
-                      >
-                        View Time
-                      </Button>
+                    <TableCell
+                      align="left"
+                      className={classes.tableCell}
+                      style={{
+                        color: theme.palette.common.red,
+                      }}
+                    >
+                      <Chip
+                        label={endTime}
+                        className={classes.badge}
+                        style={{
+                          background: theme.palette.common.lightRed,
+                          color: theme.palette.common.red,
+                        }}
+                      />
                     </TableCell>
                   </TableRow>
                 );
