@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Typography, TableCell, TableRow, Checkbox } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Card,
+  TableCell,
+  TableRow,
+  Checkbox,
+} from "@mui/material";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import {
   timeMoment,
@@ -137,7 +144,16 @@ const SubscriptionIncome = () => {
   if (error) return <NoData error={error} />;
   return (
     <Grid container direction="column" gap={2} height="100%">
-      <>
+      <Card
+        variant="outlined"
+        sx={{
+          width: "100%",
+          borderRadius: "1.5rem",
+          borderColor: "transparent",
+          p: 2,
+          mt: 2,
+        }}
+      >
         <Grid item container gap={1} alignItems="center">
           <Grid item flex={1}>
             <Typography noWrap variant="h1" component="div" color="#2D2F39">
@@ -268,7 +284,7 @@ const SubscriptionIncome = () => {
             paginationLabel="Finance  per page"
           />
         )}
-      </>
+      </Card>
     </Grid>
   );
 };

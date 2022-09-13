@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Checkbox, Button, TableRow, TableCell } from "@mui/material";
+import {
+  Grid,
+  Card,
+  Checkbox,
+  Button,
+  TableRow,
+  TableCell,
+} from "@mui/material";
 import { Loader, CustomButton, Modals } from "components/Utilities";
 import { formatNumber } from "components/Utilities/Time";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
@@ -257,151 +264,167 @@ const Subscription = () => {
         gap={2}
         height="100%"
       >
-        <Grid
-          item
-          flexDirection={{ sm: "row", md: "row", xs: "column" }}
-          container
-          spacing={{ md: 4, sm: 4, xs: 2 }}
+        <Card
+          variant="outlined"
+          sx={{
+            width: "100%",
+            borderRadius: "1.5rem",
+            borderColor: "transparent",
+            p: 2,
+            mt: 2,
+          }}
         >
-          <Grid item>
-            <CustomButton
-              endIcon={<AddIcon />}
-              title="Create"
-              type={buttonType}
-              onClick={handleDialogOpen}
-            />
+          <Grid
+            item
+            flexDirection={{ sm: "row", md: "row", xs: "column" }}
+            container
+            sx={{ mb: 2 }}
+            spacing={{ md: 4, sm: 4, xs: 2 }}
+          >
+            <Grid item sx={{ ml: "auto" }}>
+              <CustomButton
+                endIcon={<AddIcon />}
+                title="Create"
+                type={buttonType}
+                onClick={handleDialogOpen}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        {/* The Search and Filter ends here */}
+          {/* The Search and Filter ends here */}
 
-        {plan.length > 0 ? (
-          <Grid item container height="100%" direction="column">
-            <EnhancedTable
-              headCells={subscriptionHeadersss}
-              rows={plan}
-              paginationLabel="subscription per page"
-              hasCheckbox={true}
-              changeLimit={(e) =>
-                changeHospitalTableLimit(fetchSubscriptions, {
-                  first: e,
-                  provider: providerId,
-                })
-              }
-              dataPageInfo={pageInfo}
-              handlePagination={(page) =>
-                handleHospitalPageChange(fetchSubscriptions, page, pageInfo, {
-                  provider: providerId,
-                })
-              }
-            >
-              {plan.map((row, index) => {
-                const { _id, amount, description, duration, name } = row;
+          {plan.length > 0 ? (
+            <Grid item container height="100%" direction="column">
+              <EnhancedTable
+                headCells={subscriptionHeadersss}
+                rows={plan}
+                paginationLabel="subscription per page"
+                hasCheckbox={true}
+                changeLimit={(e) =>
+                  changeHospitalTableLimit(fetchSubscriptions, {
+                    first: e,
+                    provider: providerId,
+                  })
+                }
+                dataPageInfo={pageInfo}
+                handlePagination={(page) =>
+                  handleHospitalPageChange(fetchSubscriptions, page, pageInfo, {
+                    provider: providerId,
+                  })
+                }
+              >
+                {plan.map((row, index) => {
+                  const { _id, amount, description, duration, name } = row;
 
-                const isItemSelected = isSelected(_id, selectedRows);
-                const labelId = `enhanced-table-checkbox-${index}`;
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={_id}
-                    selected={isItemSelected}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onClick={() =>
-                          handleSelectedRows(_id, selectedRows, setSelectedRows)
-                        }
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      id={labelId}
-                      scope="row"
-                      align="left"
-                      className={classes.tableCell}
-                      style={{ color: theme.palette.common.black }}
+                  const isItemSelected = isSelected(_id, selectedRows);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={_id}
+                      selected={isItemSelected}
                     >
-                      {name}
-                    </TableCell>
-                    <TableCell
-                      id={labelId}
-                      scope="row"
-                      align="left"
-                      className={classes.tableCell}
-                      style={{ color: theme.palette.common.red }}
-                    >
-                      {formatNumber(amount)}
-                    </TableCell>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          onClick={() =>
+                            handleSelectedRows(
+                              _id,
+                              selectedRows,
+                              setSelectedRows
+                            )
+                          }
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": labelId,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        id={labelId}
+                        scope="row"
+                        align="left"
+                        className={classes.tableCell}
+                        style={{ color: theme.palette.common.black }}
+                      >
+                        {name}
+                      </TableCell>
+                      <TableCell
+                        id={labelId}
+                        scope="row"
+                        align="left"
+                        className={classes.tableCell}
+                        style={{ color: theme.palette.common.red }}
+                      >
+                        {formatNumber(amount)}
+                      </TableCell>
 
-                    <TableCell
-                      align="left"
-                      className={classes.tableCell}
-                      style={{
-                        color: theme.palette.common.black,
-                        maxWidth: "20rem",
-                      }}
-                    >
-                      {description}
-                    </TableCell>
-
-                    <TableCell
-                      align="left"
-                      className={classes.tableCell}
-                      style={{
-                        color: theme.palette.common.black,
-                        maxWidth: "20rem",
-                      }}
-                    >
-                      {duration}
-                    </TableCell>
-
-                    <TableCell align="left" className={classes.tableCell}>
-                      <div
+                      <TableCell
+                        align="left"
+                        className={classes.tableCell}
                         style={{
-                          height: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-around",
+                          color: theme.palette.common.black,
+                          maxWidth: "20rem",
                         }}
                       >
-                        <Button
-                          variant="contained"
-                          disableRipple
-                          onClick={() => handleEditOpenDialog(_id)}
-                          className={`${classes.tableBtn} ${classes.greenBtn}`}
-                          endIcon={<EditIcon color="success" />}
+                        {description}
+                      </TableCell>
+
+                      <TableCell
+                        align="left"
+                        className={classes.tableCell}
+                        style={{
+                          color: theme.palette.common.black,
+                          maxWidth: "20rem",
+                        }}
+                      >
+                        {duration}
+                      </TableCell>
+
+                      <TableCell align="left" className={classes.tableCell}>
+                        <div
+                          style={{
+                            height: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-around",
+                          }}
                         >
-                          Edit plan
-                        </Button>
-                        <Button
-                          variant="contained"
-                          disableRipple
-                          onClick={() => handleDeleteOpenDialog(_id)}
-                          className={`${classes.tableBtn} ${classes.redBtn}`}
-                          to="/view"
-                          endIcon={<DeleteIcon color="error" />}
-                        >
-                          Delete plan
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </EnhancedTable>
-          </Grid>
-        ) : (
-          <EmptyTable
-            headCells={subscriptionHeadersss}
-            paginationLabel="Subscriptions  per page"
-          />
-        )}
+                          <Button
+                            variant="contained"
+                            disableRipple
+                            onClick={() => handleEditOpenDialog(_id)}
+                            className={`${classes.tableBtn} ${classes.greenBtn}`}
+                            endIcon={<EditIcon color="success" />}
+                          >
+                            Edit plan
+                          </Button>
+                          <Button
+                            variant="contained"
+                            disableRipple
+                            onClick={() => handleDeleteOpenDialog(_id)}
+                            className={`${classes.tableBtn} ${classes.redBtn}`}
+                            to="/view"
+                            endIcon={<DeleteIcon color="error" />}
+                          >
+                            Delete plan
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </EnhancedTable>
+            </Grid>
+          ) : (
+            <EmptyTable
+              headCells={subscriptionHeadersss}
+              paginationLabel="Subscriptions  per page"
+            />
+          )}
+        </Card>
       </Grid>
 
       {/* // modal */}

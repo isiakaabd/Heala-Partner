@@ -201,15 +201,11 @@ const Hospital = () => {
         <PrivateRoute exact path="/referrals" component={ReferralTab} />
         <PrivateRoute exact path="/plans" component={Subscription} />
 
-        <PrivateRoute
-          exact
-          path="/hospital-settings"
-          component={HospitalSettings}
-        />
+        <PrivateRoute exact path="/settings" component={HospitalSettings} />
 
         <PrivateRoute
           exact
-          path="/hospital-settings/profile"
+          path="/settings/profile"
           component={HospitalProfile}
         />
         <PrivateRoute component={PageNotFound} />

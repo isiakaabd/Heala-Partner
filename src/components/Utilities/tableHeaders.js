@@ -29,6 +29,12 @@ export const patientsHeadCells = [
     label: "",
   },
 ];
+export const availabilityHeadCells10 = [
+  { id: 2, label: "Day" },
+  { id: 3, label: "Start Time" },
+  { id: 300, label: "End Time" },
+];
+
 export const patientsHeadCells1 = [
   {
     id: 0,
@@ -61,7 +67,6 @@ export const hcpsHeadCells5 = [
   { id: 2, label: "Category" },
   { id: 3, label: "Consultations" },
   { id: 5, label: "Status" },
-  { id: 6, label: "" },
 ];
 export const messagesHeadCell = [
   { id: 0, label: "Date" },
@@ -253,10 +258,6 @@ export const payoutHeaderss1 = [
     id: 2,
     label: "Received On",
   },
-  {
-    id: 4,
-    label: "Consultation",
-  },
 ];
 export const payoutHeaders = [
   {
@@ -274,6 +275,10 @@ export const payoutHeaders = [
   {
     id: 4,
     label: "Amount",
+  },
+  {
+    id: 40,
+    label: "Status",
   },
 ];
 export const referralHeader = [

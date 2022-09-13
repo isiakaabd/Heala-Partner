@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -172,7 +172,7 @@ const Financetable = () => {
       displayMessage("error", error);
     }
   };
-
+  const history = useHistory();
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
 
@@ -228,7 +228,11 @@ const Financetable = () => {
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row._id}
+                    style={{ cursor: "pointer" }}
                     selected={isItemSelected}
+                    onClick={() =>
+                      history.push(`hcps/${doctorData[0]._id}/consultations`)
+                    }
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
@@ -291,22 +295,6 @@ const Financetable = () => {
                       style={{ color: theme.palette.common.black }}
                     >
                       {`${dateMoment(createdAt)} - ${timeMoment(createdAt)}`}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        className={classes.buttons}
-                        style={{
-                          whiteSpace: "nowrap",
-                          padding: "5% 50%",
-                          marginLeft: "-10%",
-                        }}
-                        component={Link}
-                        endIcon={<ArrowForwardIosIcon />}
-                        to={`/hcps/${doctorData[0]._id}/consultations`}
-                      >
-                        View Consultation
-                      </Button>
                     </TableCell>
                   </TableRow>
                 );
