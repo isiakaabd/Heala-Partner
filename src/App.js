@@ -265,7 +265,7 @@ const PreApp = ({ window }) => {
                 <Box
                   component="nav"
                   sx={{
-                    width: { md: "27rem" },
+                    width: { md: "30rem" },
                     backgroundColor: "#f8f8f8",
                     flexShrink: { md: 0 },
                   }}
@@ -283,7 +283,7 @@ const PreApp = ({ window }) => {
                       display: { xs: "block", md: "none" },
                       "& .MuiDrawer-paper": {
                         boxSizing: "border-box",
-                        width: "27rem",
+                        width: "30rem",
                       },
                       "& .MuiBackdrop-root": {
                         backgroundColor: "rgba(0, 0, 0, 0.2)",

@@ -1,6 +1,6 @@
-import React, { useEffect, createElement, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { makeStyles } from "@mui/styles";
-import { HiLogout } from "react-icons/hi";
+import LogoutIcon from "components/Icons/LogoutIcon";
 import { useMutation } from "@apollo/client";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -27,10 +27,11 @@ import { useAlert } from "components/hooks";
 const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
   const useStyles = makeStyles((theme) => ({
     aside: {
-      width: `${drawerWidth}`,
+      /* width: `${drawerWidth}`, */
+      width: "300px",
       background: "#fff",
-      paddingLeft: "2.5em",
-      paddingRight: "2.5em",
+      paddingLeft: "2em",
+      paddingRight: "2em",
       paddingTop: "1em",
       minHeight: "100vh",
       height: "100%",
@@ -43,45 +44,65 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
       },
 
       "& .MuiListItemButton-root": {
-        marginBottom: "2em",
+        display: "flex",
+        borderRadius: "10px",
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: "0.5em",
+        padding: "10px 14px",
 
         "&:hover": {
-          background: theme.palette.common.lightRed,
+          background: theme.palette.common.lightBlue,
 
           "& .MuiSvgIcon-root": {
-            color: theme.palette.common.red,
+            stroke: "#3E5EA9",
+            fill: "transparent",
           },
 
           "& .MuiTypography-root": {
-            color: theme.palette.common.red,
+            color: theme.palette.common.blue,
           },
 
           "& .message-icon": {
-            color: theme.palette.common.red,
+            color: theme.palette.common.blue,
           },
         },
       },
 
       "& .MuiListItemIcon-root": {
-        minWidth: 50,
+        display: "flex",
+        alignItems: "center",
+        minWidth: 22,
       },
 
       "& .MuiSvgIcon-root": {
         fontSize: "2rem",
+        stroke: "#8D9091",
+        fill: "transparent",
 
         "&:hover": {
-          color: theme.palette.common.red,
+          /* color: "#3E5EA9", */
+          stroke: "#3E5EA9",
+          fill: "transparent",
         },
       },
 
       "& .MuiTypography-root": {
-        fontSize: "1.45rem",
+        fontStyle: "normal",
+        fontWeight: 400,
+        fontSize: "14px",
+        lineHeight: "20px",
+        color: "#474951",
       },
 
       "& .MuiListItemButton-root.Mui-selected": {
-        backgroundColor: theme.palette.common.lightRed,
-        color: theme.palette.common.red,
-        borderRadius: ".5rem",
+        backgroundColor: theme.palette.common.lightBlue,
+        color: theme.palette.common.blue,
+
+        "& .MuiSvgIcon-root": {
+          stroke: "#3E5EA9",
+          fill: "transparent",
+        },
 
         "&:hover": {
           backgroundColor: theme.palette.common.lightRed,
@@ -93,6 +114,7 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
 
         "& .MuiTypography-root": {
           color: theme.palette.common.red,
+          fontWeight: 500,
         },
       },
 
@@ -110,20 +132,16 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
       },
     },
     logoWrapper: {
-      paddingTop: "3em",
-      paddingBottom: "2em",
+      paddingTop: "0.2rem",
+      paddingBottom: "0.5em",
       paddingLeft: "1em",
     },
     logout: {
       "&.MuiListItemButton-root": {
-        marginTop: "2.5rem",
-
-        "& .MuiListItemIcon-root": {
-          color: theme.palette.common.red,
-        },
+        marginTop: "5rem",
 
         "& .MuiTypography-root": {
-          color: theme.palette.common.red,
+          color: "#ED3237 !important",
         },
       },
     },
@@ -191,11 +209,8 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
               component={Link}
               to={menu.path}
             >
-              <ListItemIcon>
-                {createElement(
-                  menu?.icon,
-                  menu?.id === 5 ? { size: 20, className: "message-icon" } : {}
-                )}
+              <ListItemIcon sx={{ marginRight: "15px" }}>
+                {menu.icon}
               </ListItemIcon>
 
               <ListItemText>{menu?.title}</ListItemText>
@@ -206,8 +221,8 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
             classes={{ root: classes.logout }}
             onClick={() => setLogout(true)}
           >
-            <ListItemIcon>
-              <HiLogout size={20} />
+            <ListItemIcon sx={{ marginRight: "15px" }}>
+              <LogoutIcon />
             </ListItemIcon>
 
             <ListItemText>Logout</ListItemText>

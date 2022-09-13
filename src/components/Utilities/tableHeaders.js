@@ -54,10 +54,6 @@ export const patientsHeadCells1 = [
     id: 4,
     label: "Status",
   },
-  {
-    id: 5,
-    label: "",
-  },
 ];
 export const hcpsHeadCells5 = [
   { id: 0, label: "Medical ID" },

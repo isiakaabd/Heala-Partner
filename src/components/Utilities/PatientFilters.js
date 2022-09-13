@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
 import t from "prop-types";
 import { Grid } from "@mui/material";
-import { Filter } from "components/Utilities";
+
+import Filter from "./Filter";
 import { useAlert } from "components/hooks";
+import { useLazyQuery } from "@apollo/client";
+import { getPlans, getProviders } from "components/graphQL/useQuery";
+import { deleteVar, filterData } from "helpers/filterHelperFunctions";
 import {
   genderType,
   patientsProfileDefaultFilterByValues,
+  /* statusFilterBy, */
 } from "helpers/mockData";
-import { deleteVar, filterData } from "helpers/filterHelperFunctions";
-import { getPlans, getProviders } from "components/graphQL/useQuery";
-import { useLazyQuery } from "@apollo/client";
 
 const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
-  const { displayMessage } = useAlert();
-  const [, setPlans] = useState([]);
+  const { displayAlert } = useAlert();
+  const [plans, setPlans] = useState([]);
   const [fetchPlans] = useLazyQuery(getPlans);
-  const [, setProviders] = useState([]);
+  const [providers, setProviders] = useState([]);
   const [fetchProviders] = useLazyQuery(getProviders);
   const [providerId, setProviderId] = useState(null);
-  // const [____, setFilterPlanValue] = useState("");
+  const [filterPlanValue, setFilterPlanValue] = useState("");
   const [, setStatusFilterValue] = useState("");
   const { patientsParams, patientsByStatusParams, patientsByPlanParams } =
     queryParams;
@@ -26,11 +28,14 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
   const [profileFilterValues, setProfileFilterValues] = useState(
     patientsProfileDefaultFilterByValues
   );
-  const { byStatusLoading } = patientsByStatusParams;
   const {
-    byPlanLoading,
-    // byPlanVaribles, byPlanRefetch, fetchPatientByPlan
-  } = patientsByPlanParams;
+    byStatusLoading,
+    /* byStatusVaribles,
+    byStatusRefetch,
+    fetchPatientByStatus, */
+  } = patientsByStatusParams;
+  const { byPlanLoading, byPlanVaribles, byPlanRefetch, fetchPatientByPlan } =
+    patientsByPlanParams;
 
   useEffect(() => {
     fetchProviders()
@@ -115,42 +120,42 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
     }
   }; */
 
-  // const onFilterPlanChange = async (value) => {
-  //   try {
-  //     if (value === "") {
-  //       setProfileFilterValues({
-  //         ...patientsProfileDefaultFilterByValues,
-  //       });
-  //     } else {
-  //       setProfileFilterValues({
-  //         ...patientsProfileDefaultFilterByValues,
-  //         provider: profileFilterValues.provider,
-  //       });
-  //     }
-  //     deleteVar(byPlanVaribles);
-  //     setFilterPlanValue(value);
-  //     const filterVariables = { planId: value };
+  const onFilterPlanChange = async (value) => {
+    try {
+      if (value === "") {
+        setProfileFilterValues({
+          ...patientsProfileDefaultFilterByValues,
+        });
+      } else {
+        setProfileFilterValues({
+          ...patientsProfileDefaultFilterByValues,
+          provider: profileFilterValues.provider,
+        });
+      }
+      deleteVar(byPlanVaribles);
+      setFilterPlanValue(value);
+      const filterVariables = { planId: value };
 
-  //     filterData(filterVariables, {
-  //       fetchData: fetchPatientByPlan,
-  //       refetch: byPlanRefetch,
-  //       variables: byPlanVaribles,
-  //     })
-  //       .then((data) => {
-  //         setProfiles(data?.profilesByPlan?.data || []);
-  //         setPageInfo(data?.profilesByPlan?.pageInfo || {});
-  //       })
-  //       .catch(() => {
-  //         refresh(setStatusFilterValue, "");
-  //       });
-  //   } catch (error) {
-  //     console.error(error);
-  //     refresh(setStatusFilterValue, "");
-  //   }
-  // };
+      filterData(filterVariables, {
+        fetchData: fetchPatientByPlan,
+        refetch: byPlanRefetch,
+        variables: byPlanVaribles,
+      })
+        .then((data) => {
+          setProfiles(data?.profilesByPlan?.data || []);
+          setPageInfo(data?.profilesByPlan?.pageInfo || {});
+        })
+        .catch(() => {
+          refresh(setStatusFilterValue, "");
+        });
+    } catch (error) {
+      console.error(error);
+      refresh(setStatusFilterValue, "");
+    }
+  };
 
   const refresh = async (setFilterValue, defaultVal) => {
-    displayMessage("error", `Something went wrong while filtering. Try again.`);
+    displayAlert("error", "Something went wrong while filtering. Try again.");
     setFilterValue(defaultVal);
 
     deleteVar(variables);
@@ -162,46 +167,42 @@ const PatientFilters = ({ setProfiles, setPageInfo, queryParams }) => {
       })
       .catch((error) => {
         console.error(error);
-
-        displayMessage("error", `Failed to get patients data, Try again`);
+        displayAlert("error", "Failed to get patients data, Try again");
       });
   };
   return (
-    <Grid item container flexWrap="wrap" spacing={4} alignItems="flex-end">
+    <Grid item container flexWrap="wrap" spacing={2} alignItems="flex-end">
       {/* FILTER BY GENDER */}
       <Grid item>
         <Filter
-          label="By Gender"
           onHandleChange={(e) =>
             onFilterProfileChange("gender", e?.target?.value)
           }
           onClickClearBtn={() => onFilterProfileChange("gender", "")}
-          options={genderType}
+          options={[{ key: "Gender", value: "" }, ...genderType]}
           name="gender"
-          placeholder="None"
           value={profileFilterValues.gender}
           hasClearBtn={true}
           disable={loading || byStatusLoading || byPlanLoading}
+          variant="small"
         />
       </Grid>
 
       {/* FILTER BY PROVIDER AND PLAN */}
       {/* <Grid item>
         <Filter
-          label="By Provider and Plan"
           onHandleChange={(e) =>
             onFilterProfileChange("provider", e?.target?.value)
           }
           onClickClearBtn={() => onFilterProfileChange("provider", "")}
-          options={providers}
+          options={[{ key: "Provider", value: "" }, ...providers]}
           name="provider"
-          placeholder="Provider"
           value={profileFilterValues.provider}
           hasClearBtn={true}
           disable={loading || byStatusLoading || byPlanLoading}
         />
-      </Grid>
-      {profileFilterValues.provider === "" ? null : (
+      </Grid> */}
+      {/* {profileFilterValues.provider === "" ? null : (
         <Grid item>
           <Filter
             label=""
