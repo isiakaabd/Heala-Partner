@@ -5,6 +5,7 @@ import {
   List,
   ListItemIcon,
   ListItemText,
+  Grid,
 } from "@mui/material";
 import { menus } from "helpers/asideMenus";
 import { makeStyles } from "@mui/styles";
@@ -14,14 +15,15 @@ import { HiLogout } from "react-icons/hi";
 import { useActions } from "components/hooks/useActions";
 import { LOGOUT_USER } from "components/graphQL/Mutation";
 import { useMutation } from "@apollo/client";
-
+import LogoutIcon from "components/Icons/LogoutIcon";
 const useStyles = makeStyles((theme) => ({
   aside: {
-    width: "max(24rem,22vw)",
+    /* width: `${drawerWidth}`, */
+    width: "300px",
     background: "#fff",
-    paddingLeft: "2.5em",
-    paddingRight: "2.5em",
-    paddingTop: "5em",
+    paddingLeft: "2em",
+    paddingRight: "2em",
+    paddingTop: "1em",
     minHeight: "100vh",
     height: "100%",
     position: "fixed",
@@ -33,56 +35,77 @@ const useStyles = makeStyles((theme) => ({
     },
 
     "& .MuiListItemButton-root": {
-      marginBottom: "2em",
+      display: "flex",
+      borderRadius: "10px",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: "0.5em",
+      padding: "10px 14px",
 
       "&:hover": {
-        background: theme.palette.common.lightGreen,
+        background: theme.palette.common.lightBlue,
 
         "& .MuiSvgIcon-root": {
-          color: theme.palette.common.green,
+          stroke: "#3E5EA9",
+          fill: "transparent",
         },
 
         "& .MuiTypography-root": {
-          color: theme.palette.common.green,
+          color: theme.palette.common.blue,
         },
 
         "& .message-icon": {
-          color: theme.palette.common.green,
+          color: theme.palette.common.blue,
         },
       },
     },
 
     "& .MuiListItemIcon-root": {
-      minWidth: 50,
+      display: "flex",
+      alignItems: "center",
+      minWidth: 22,
     },
 
     "& .MuiSvgIcon-root": {
       fontSize: "2rem",
+      stroke: "#8D9091",
+      fill: "transparent",
 
       "&:hover": {
-        color: theme.palette.common.green,
+        /* color: "#3E5EA9", */
+        stroke: "#3E5EA9",
+        fill: "transparent",
       },
     },
 
     "& .MuiTypography-root": {
-      fontSize: "1.45rem",
+      fontStyle: "normal",
+      fontWeight: 400,
+      fontSize: "14px",
+      lineHeight: "20px",
+      color: "#474951",
     },
 
     "& .MuiListItemButton-root.Mui-selected": {
-      backgroundColor: theme.palette.common.lightGreen,
-      color: theme.palette.common.green,
-      borderRadius: ".5rem",
+      backgroundColor: theme.palette.common.lightBlue,
+      color: theme.palette.common.blue,
+
+      "& .MuiSvgIcon-root": {
+        stroke: "#3E5EA9",
+        fill: "transparent",
+      },
 
       "&:hover": {
-        backgroundColor: theme.palette.common.lightGreen,
+        backgroundColor: theme.palette.common.lightRed,
       },
 
       "& .MuiListItemIcon-root": {
-        color: theme.palette.common.green,
+        color: theme.palette.common.red,
       },
 
       "& .MuiTypography-root": {
-        color: theme.palette.common.green,
+        color: theme.palette.common.red,
+        fontWeight: 500,
       },
     },
 
@@ -100,20 +123,16 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   logoWrapper: {
-    paddingTop: "3em",
-    paddingBottom: "5em",
-    paddingLeft: "7em",
+    paddingTop: "0.2rem",
+    paddingBottom: "0.5em",
+    paddingLeft: "1em",
   },
   logout: {
     "&.MuiListItemButton-root": {
-      marginTop: "2.5rem",
-
-      "& .MuiListItemIcon-root": {
-        color: theme.palette.common.green,
-      },
+      marginTop: "5rem",
 
       "& .MuiTypography-root": {
-        color: theme.palette.common.green,
+        color: "#ED3237 !important",
       },
     },
   },
@@ -127,7 +146,6 @@ const SideMenu = (props) => {
     setWaitingListMenu,
   } = props;
   const { logout } = useActions();
-
   const classes = useStyles();
   const [logout_user] = useMutation(LOGOUT_USER);
   const [Logout, setLogout] = useState(false);
@@ -165,6 +183,55 @@ const SideMenu = (props) => {
 
   return (
     <>
+      <Grid
+        className={classes.aside}
+        sx={{ borderRight: "1px solid rgba(229, 229, 229, 0.5)" }}
+      >
+        <div className={classes.logoWrapper}>
+          <img src={logo} alt="logo" />
+        </div>
+        <List>
+          {menus.map((menu) => {
+            const { icon } = menu;
+
+            return (
+              <ListItemButton
+                disableRipple
+                key={menu.id}
+                onClick={() => setSelectedMenu(menu.id)}
+                selected={selectedMenu === menu.id}
+                component={Link}
+                to={menu.path}
+              >
+                <ListItemIcon sx={{ marginRight: "15px" }}>{icon}</ListItemIcon>
+
+                <ListItemText>{menu.title}</ListItemText>
+              </ListItemButton>
+            );
+          })}
+
+          <ListItemButton
+            disableRipple
+            classes={{ root: classes.logout }}
+            onClick={() => setLogout(true)}
+          >
+            <ListItemIcon sx={{ marginRight: "15px" }}>
+              <LogoutIcon />
+            </ListItemIcon>
+
+            <ListItemText>Logoutsd</ListItemText>
+          </ListItemButton>
+        </List>
+      </Grid>
+      <DeleteOrDisable
+        open={Logout}
+        setOpen={setLogout}
+        title="Logout"
+        confirmationMsg="logout"
+        btnValue="Logout"
+        type="logout"
+        onConfirm={handleLogout}
+      />{" "}
       <aside className={classes.aside}>
         <div className={classes.logoWrapper}>
           <img src={logo} alt="logo" />

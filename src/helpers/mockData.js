@@ -52,6 +52,11 @@ export const defaultPageInfo = {
   prevPage: null,
   nextPage: 2,
 };
+export const searchOptions = [
+  { key: "By ID", value: "id" },
+  { key: "By first name", value: "firstName" },
+  { key: "By last name", value: "lastName" },
+];
 export const providerFilterBy = [
   { key: "Heala", value: "Heala" },
   { key: "No provider", value: "No provider" },
