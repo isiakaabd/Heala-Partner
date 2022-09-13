@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import t from "prop-types";
 import Filter from "./Filter";
 import { useAlert } from "components/hooks";
-import { Search } from "components/Utilities";
+import { Searchs } from "components/Utilities";
 import { Grid, Typography } from "@mui/material";
 import { deleteVar } from "helpers/filterHelperFunctions";
 
@@ -73,7 +73,7 @@ const CompoundSearch = ({
         />
       </Grid>
       <Grid item flex={1} width="100%">
-        <Search
+        <Searchs
           height="48px"
           hasStartIcon={false}
           onChange={(e) => {

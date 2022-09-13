@@ -19,7 +19,7 @@ import { useTheme } from "@mui/material/styles";
 import EnhancedTable from "components/layouts/EnhancedTable";
 import { hcpsHeadCells5 } from "components/Utilities/tableHeaders";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -303,7 +303,7 @@ const Hcps = () => {
     cadre: Yup.string("select your Cadre").required("Cadre is required"),
   });
   const [createDoc] = useMutation(createDOctorProfile);
-
+  const history = useHistory();
   const { selectedRows } = useSelector((state) => state.tables);
 
   const { setSelectedRows } = useActions();
@@ -410,7 +410,9 @@ const Hcps = () => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
+                    onClick={() => history.push(`hcps/${_id}`)}
                     key={_id}
+                    style={{ cursor: "pointer" }}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
@@ -476,17 +478,17 @@ const Hcps = () => {
                         }}
                       />
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <Button
                         variant="contained"
                         className={classes.button}
                         component={Link}
-                        to={`hcps/${_id}`}
+                        to=
                         endIcon={<ArrowForwardIosIcon />}
                       >
                         View Doctor
                       </Button>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 );
               })}
