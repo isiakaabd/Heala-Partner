@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
 import FormikControl from "components/validation/FormikControl";
 import { Formik, Form } from "formik";
+
+import TableLayout from "components/layouts/TableLayout";
 import * as Yup from "yup";
 import { NoData, EmptyTable } from "components/layouts";
-import { defaultPageInfo, patientSearchOptions } from "helpers/mockData";
+import {
+  defaultPageInfo,
+  searchOptions,
+  patientSearchOptions,
+} from "helpers/mockData";
 import {
   Button,
   Chip,
@@ -25,7 +31,7 @@ import { useTheme } from "@mui/material/styles";
 import { patientsHeadCells1 } from "components/Utilities/tableHeaders";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import displayPhoto from "assets/images/avatar.svg";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -203,7 +209,7 @@ const Patients = () => {
     limit: 10,
     totalDocs: 0,
   });
-
+  const history = useHistory();
   const { selectedRows } = useSelector((state) => state.tables);
 
   const { setSelectedRows } = useActions();
@@ -219,52 +225,66 @@ const Patients = () => {
   };
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
-
   return (
-    <>
-      <Grid item flex={1} container direction="column">
-        <Grid
-          item
-          container
-          spacing={2}
-          className={classes.searchFilterContainer}
-        >
-          {/*  ======= SEARCH INPUT(S) ==========*/}
+    <Grid item flex={1} container direction="column" rowGap={2}>
+      <Grid
+        item
+        container
+        spacing={2}
+        className={classes.searchFilterContainer}
+      >
+        <Grid item container flexWrap="wrap" spacing={4}></Grid>
+      </Grid>
+      <TableLayout
+        filters={
+          <PatientFilters
+            setProfiles={setProfiles}
+            setPageInfo={setPageInfo}
+            queryParams={{
+              patientsParams: { fetchPatient, loading, refetch, variables },
+              patientsByStatusParams: {
+                byStatusLoading,
+                byStatusVaribles,
+                byStatusRefetch,
+                fetchPatientByStatus,
+              },
+              patientsByPlanParams: {
+                byPlanLoading,
+                byPlanVaribles,
+                byPlanRefetch,
+                fetchPatientByPlan,
+              },
+            }}
+          />
+        }
+        search={
           <CompoundSearch
-            queryParams={{ fetchData: fetchPatient, variables, loading }}
+            queryParams={{
+              fetchData: fetchPatient,
+              variables,
+              loading,
+              newVariables: {},
+            }}
             setPageInfo={(data) => setPageInfo(data?.profiles?.pageInfo || {})}
             setProfiles={(data) => setProfiles(data?.profiles?.data || [])}
             getSearchPlaceholder={(filterBy) => getSearchPlaceholder(filterBy)}
-            filterOptions={patientSearchOptions}
+            filterOptions={searchOptions}
           />
-          {/* ========= FILTERS =========== */}
-          <Grid item container flexWrap="wrap" spacing={4}>
-            <PatientFilters
-              setProfiles={setProfiles}
-              setPageInfo={setPageInfo}
-              queryParams={{
-                patientsParams: { fetchPatient, loading, refetch, variables },
-                patientsByStatusParams: {
-                  byStatusLoading,
-                  byStatusVaribles,
-                  byStatusRefetch,
-                  fetchPatientByStatus,
-                },
-                patientsByPlanParams: {
-                  byPlanLoading,
-                  byPlanVaribles,
-                  byPlanRefetch,
-                  fetchPatientByPlan,
-                },
-              }}
-            />
-          </Grid>
-        </Grid>
-
-        {/* The Search and Filter ends here */}
-
-        {profiles.length > 0 ? (
-          <Grid item container height="100%" direction="column">
+        }
+      >
+        {loading || byStatusLoading || byPlanLoading ? (
+          <Loader />
+        ) : // ) : networkStatus === NetworkStatus.refetch ? (
+        //   <Loader />
+        profiles.length > 0 ? (
+          /* ================= PATIENTS TABLE ================= */
+          <Grid
+            container
+            item
+            direction="column"
+            overflow="hidden"
+            maxWidth={{ md: "100%", sm: "100%", xs: "100%" }}
+          >
             <EnhancedTable
               headCells={patientsHeadCells1}
               rows={profiles}
@@ -289,6 +309,7 @@ const Patients = () => {
               }}
             >
               {profiles.map((row, index) => {
+                const labelId = `enhanced-table-checkbox-${index}`;
                 const {
                   dociId,
                   firstName,
@@ -300,16 +321,16 @@ const Patients = () => {
                   _id,
                   status,
                 } = row;
-                const isItemSelected = isSelected(_id, selectedRows);
-                const labelId = `enhanced-table-checkbox-${index}`;
                 return (
                   <TableRow
                     hover
                     role="checkbox"
-                    aria-checked={isItemSelected}
+                    // aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={_id}
-                    selected={isItemSelected}
+                    // selected={isItemSelected}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => history.push(`patients/${_id}`)}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
@@ -317,7 +338,7 @@ const Patients = () => {
                           handleSelectedRows(_id, selectedRows, setSelectedRows)
                         }
                         color="primary"
-                        checked={isItemSelected}
+                        // checked={isItemSelected}
                         inputProps={{
                           "aria-labelledby": labelId,
                         }}
@@ -378,7 +399,7 @@ const Patients = () => {
                         }}
                       />
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <Button
                         variant="contained"
                         className={classes.button}
@@ -388,7 +409,7 @@ const Patients = () => {
                       >
                         View Profile
                       </Button>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 );
               })}
@@ -397,54 +418,11 @@ const Patients = () => {
         ) : (
           <EmptyTable
             headCells={patientsHeadCells1}
-            paginationLabel="Patients  per page"
+            paginationLabel="Patients per page"
           />
         )}
-      </Grid>
-      <Modals
-        isOpen={isOpen}
-        title="Filter"
-        rowSpacing={5}
-        handleClose={handleDialogClose}
-      >
-        <Formik
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-          validateOnBlur={false}
-          validationSchema={validationSchema}
-          validateOnChange={false}
-          validateOnMount={false}
-        >
-          {({ isSubmitting, isValid, dirty }) => {
-            return (
-              <Form style={{ marginTop: "3rem" }}>
-                <Grid item container direction="column">
-                  <Grid item>
-                    <FormikControl
-                      control="select"
-                      options={genderType}
-                      name="gender"
-                      label="Filter by Gender"
-                      placeholder="Filter by Gender"
-                    />
-                  </Grid>
-
-                  <Grid item>
-                    <CustomButton
-                      title="Apply Filter"
-                      width="100%"
-                      type={buttonType}
-                      isSubmitting={isSubmitting}
-                      disabled={!(dirty || isValid)}
-                    />
-                  </Grid>
-                </Grid>
-              </Form>
-            );
-          }}
-        </Formik>
-      </Modals>
-    </>
+      </TableLayout>
+    </Grid>
   );
 };
 
