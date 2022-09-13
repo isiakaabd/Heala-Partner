@@ -18,10 +18,7 @@ const HospitalSettings = () => {
     >
       <Grid item container md={5} mt={2} sm={5} xs={12}>
         <Grid item container flexDirection="column">
-          <Link
-            to="/hospital-settings/profile"
-            style={{ textDecoration: "none" }}
-          >
+          <Link to="/settings/profile" style={{ textDecoration: "none" }}>
             <Card
               alt="A administrator icon used as a representation for the administrator "
               title="Hospital Profile"

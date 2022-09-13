@@ -399,17 +399,6 @@ const Patients = () => {
                         }}
                       />
                     </TableCell>
-                    {/* <TableCell>
-                      <Button
-                        variant="contained"
-                        className={classes.button}
-                        component={Link}
-                        to={`patients/${_id}`}
-                        endIcon={<ArrowForwardIosIcon />}
-                      >
-                        View Profile
-                      </Button>
-                    </TableCell> */}
                   </TableRow>
                 );
               })}
