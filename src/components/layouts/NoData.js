@@ -7,19 +7,19 @@ const NoData = ({ error }) => {
       container
       alignItems="center"
       flexDirection="column"
-      height="50vh"
+      height="30vh"
       justifyContent="center"
     >
       <Grid item>
         {error ? (
-          <Typography variant="h1" textAlign="center">
+          <Typography variant="h3" textAlign="center">
             Something went Wrong...
           </Typography>
         ) : null}
       </Grid>
       {!error && (
         <Grid item>
-          <Typography variant="h2">No Data Yet</Typography>
+          <Typography variant="h5">No Data Yet</Typography>
         </Grid>
       )}
       <Grid item>
