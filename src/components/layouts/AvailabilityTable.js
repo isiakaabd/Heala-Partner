@@ -123,6 +123,13 @@ const AvailabilityTable = () => {
         providerId: id,
         day: select,
       },
+    }).then(({ data }) => {
+      if (data) {
+        setPageInfo(data?.getAvailabilities?.pageInfo || []);
+        setAvailabilities(
+          data?.getAvailabilities?.availability || defaultPageInfo
+        );
+      }
     });
   }, [fetchAvailabilities, select, id]);
 

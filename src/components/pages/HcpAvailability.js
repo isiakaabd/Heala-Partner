@@ -78,6 +78,7 @@ const HcpAvailability = () => {
   }));
   const [availabiltyArray, setAvailabiltyArray] = useState([]);
   const { hcpId } = useParams();
+  const id = localStorage.getItem("partnerProviderId");
   const theme = useTheme();
   // const { loading, data, error } = useQuery(getAvailability, {
   //   variables: {
@@ -99,16 +100,34 @@ const HcpAvailability = () => {
   const [fetchDay, { data: dt, loading: load2 }] = useLazyQuery(
     getDoctorAvailabilityForDate
   );
-  const [fetchAvailabilities, { data, error, loading }] =
+  const [fetchAvailabilities, { error, loading }] =
     useLazyQuery(getAvailabilities);
+  // useEffect(() => {
+  //   if (data) {
+  //     const filteredAvailbility = (
+  //       data?.getAvailabilities?.availability || []
+  //     ).filter((availability) => availability?.times?.length > 0);
+  //     setAvailabiltyArray(filteredAvailbility);
+  //   }
+  // }, [data]);
   useEffect(() => {
-    if (data) {
-      const filteredAvailbility = (
-        data?.getAvailabilities?.availability || []
-      ).filter((availability) => availability?.times?.length > 0);
-      setAvailabiltyArray(filteredAvailbility);
-    }
-  }, [data]);
+    fetchAvailabilities({
+      variables: {
+        first: 5,
+        providerId: id,
+        day: select,
+        doctor: hcpId,
+      },
+    }).then(({ data }) => {
+      if (data) {
+        setPageInfo(data?.getAvailabilities?.pageInfo || []);
+        setAvailabilities(
+          data?.getAvailabilities?.availability || defaultPageInfo
+        );
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [select, setSelect] = useState(today());
   const [modal, setModal] = useState(false);
   const [avail, setAvail] = useState("");
@@ -161,8 +180,15 @@ const HcpAvailability = () => {
       variables: {
         first: 5,
         day: value,
-        id: hcpId,
+        doctor: hcpId,
       },
+    }).then(({ data }) => {
+      if (data) {
+        setPageInfo(data?.getAvailabilities?.pageInfo || []);
+        setAvailabilities(
+          data?.getAvailabilities?.availability || defaultPageInfo
+        );
+      }
     });
     setLoading(false);
     setSelect(value);
