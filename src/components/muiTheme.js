@@ -11,6 +11,8 @@ const lightGreen = "#f7f7f7";
 const gold = "rgb(243, 173, 83)";
 const black = "#2D2F39";
 const disable = "#cccccc";
+const blue = "#3E5EA9";
+const lightBlue = "#F3F5FA";
 
 export const muiTheme = createTheme({
   palette: {
@@ -18,8 +20,10 @@ export const muiTheme = createTheme({
       dark,
       grey,
       red,
+      blue,
       disable,
       green,
+      lightBlue,
       lightRed,
       lightGrey,
       lighterGrey,
@@ -158,6 +162,13 @@ export const muiTheme = createTheme({
         root: {
           background: "#fff",
           boxShadow: "-1px 0px 10px -2px rgba(0,0,0,0.15)",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
         },
       },
     },
