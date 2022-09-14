@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "space-around",
       padding: "0px",
       alignItems: "center",
+      height: "8rem",
       paddingInline: "min(2.5rem,4vw)",
     },
   },

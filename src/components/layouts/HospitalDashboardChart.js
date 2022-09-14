@@ -359,7 +359,7 @@ const HopsitalDashboardChart = ({ data }) => {
   ]);
   const percentageValue = 0.5;
   return (
-    <Grid container gap={2} justifyContent="center">
+    <Grid container gap={2} justifyContent="center" sx={{ mt: 4 }}>
       <Grid item container gap={1.5} flexWrap="nowrap">
         {cardState?.map((item, index) => {
           return (
