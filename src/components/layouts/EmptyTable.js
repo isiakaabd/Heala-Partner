@@ -33,7 +33,7 @@ const EmptyCell = (props) => {
             <TableBody>
               <TableRow
                 style={{
-                  height: 53 * 5,
+                  height: 10 * 5,
                   width: "100%",
                 }}
               >

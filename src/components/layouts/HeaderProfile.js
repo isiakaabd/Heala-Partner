@@ -221,7 +221,7 @@ const HeaderProfile = () => {
           <InputBase
             sx={{ flex: 1, p: 0 }}
             size="large"
-            placeholder="Search partners, patients, enrollees… "
+            placeholder="Search , Patients, Doctors... "
           />
         </Grid>
         <Grid className={classes.iconContainer} item>

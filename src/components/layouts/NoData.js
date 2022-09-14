@@ -19,7 +19,7 @@ const NoData = ({ error }) => {
       </Grid>
       {!error && (
         <Grid item>
-          <Typography variant="h1">No Data Yet</Typography>
+          <Typography variant="h2">No Data Yet</Typography>
         </Grid>
       )}
       <Grid item>
