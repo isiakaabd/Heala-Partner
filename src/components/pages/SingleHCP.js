@@ -136,14 +136,14 @@ const SingleHCP = () => {
       icon: UserIcon,
       fill: theme.palette.common.red,
     },
-    {
-      id: 2,
-      title: "Appointments",
-      background: theme.palette.common.lightGreen,
-      path: "appointments",
-      icon: CalendarIcon,
-      fill: theme.palette.common.green,
-    },
+    // {
+    //   id: 2,
+    //   title: "Appointments",
+    //   background: theme.palette.common.lightGreen,
+    //   path: "appointments",
+    //   icon: CalendarIcon,
+    //   fill: theme.palette.common.green,
+    // },
   ];
 
   const trasparentButton = {
