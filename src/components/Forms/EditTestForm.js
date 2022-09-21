@@ -8,7 +8,7 @@ import { useMutation } from "@apollo/client";
 import { CustomButton } from "components/Utilities";
 import { FormikControl } from "components/validation";
 import { UPDATE_TEST } from "components/graphQL/Mutation";
-import { editTestValidation } from "helpers/validationSchemas";
+import * as Yup from "yup";
 import { CustomSelect } from "components/validation/Select";
 
 export const EditTestForm = ({ onSuccess, data }) => {
@@ -47,6 +47,15 @@ export const EditTestForm = ({ onSuccess, data }) => {
       console.error(err);
     }
   };
+  const validationSchema = Yup.object({
+    name: Yup.string("Enter your Test name")
+      .trim()
+      .required("Test Name is required"),
+    price: Yup.number("Enter your Test price")
+      .trim()
+      .required("Test Price is required"),
+    tat: Yup.string("Enter your Test price").trim().required("TAT is required"),
+  });
 
   const buttonType = {
     background: theme.palette.common.black,
@@ -58,7 +67,7 @@ export const EditTestForm = ({ onSuccess, data }) => {
     <Formik
       initialValues={initialValues}
       onSubmit={onSubmit}
-      validationSchema={editTestValidation}
+      validationSchema={validationSchema}
       validateOnChange={false}
       validateOnMount={false}
       validateOnBlur={false}
