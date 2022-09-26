@@ -40,6 +40,7 @@ const HospitalSettings = lazy(() =>
   import("components/pages/HospitalSettings")
 );
 const DoctorEarning = lazy(() => import("components/pages/DoctorEarning"));
+const Validations = lazy(() => import("components/pages/Validations"));
 const DoctorPayout = lazy(() => import("components/pages/DoctorPayout"));
 const SubscriptionIncome = lazy(() =>
   import("components/pages/SubscriptionIncome")
@@ -62,6 +63,7 @@ const Hospital = () => {
         />
 
         <PrivateRoute exact path="/patients" component={Patients} />
+        <PrivateRoute exact path="/validations" component={Validations} />
 
         <PrivateRoute
           exact

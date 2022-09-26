@@ -58,5 +58,6 @@ export { default as Settings } from "./Settings";
 export { default as SingleHCP } from "./SingleHCP";
 export { default as SinglePatient } from "./SinglePatient";
 export { default as Subscription } from "./Subscription";
+export { default as Validations } from "./Validations";
 
 export { default as ViewReferral } from "./ViewReferral";

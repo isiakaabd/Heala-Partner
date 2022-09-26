@@ -10,6 +10,7 @@ import PatientsIcon from "components/Icons/PatientsIcon";
 import SettingsIcon from "components/Icons/SettingsIcon";
 import RefferalsIcon from "components/Icons/RefferalsIcon";
 import SubscriptionIcon from "components/Icons/SubscriptionIcon";
+import PeopleIcon from "components/Icons/PeopleIcon";
 
 export const pharmacyMenu = [
   { id: 0, title: "Dashboard", icon: DashboardIcon, path: "/dashboard" },
@@ -99,6 +100,12 @@ export const hospitalMenu = [
     title: "Doctors",
     icon: <DoctorsIcon />,
     path: "/hcps",
+  },
+  {
+    id: 20,
+    title: "Validations",
+    icon: <PeopleIcon />,
+    path: "/validations",
   },
 
   {
