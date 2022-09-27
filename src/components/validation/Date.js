@@ -26,8 +26,19 @@ const Dates = ({ name, value, setFieldValue, onBlur, type }) => {
         onChange={(value) => setFieldValue(name, value)}
         value={value}
         onBlur={onBlur}
+        style={{ height: "5rem !important" }}
         onError={(err) => console.log(err)}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "1.2rem !important",
+                height: "5rem !important",
+              },
+            }}
+          />
+        )}
       />
     </LocalizationProvider>
   );
@@ -55,7 +66,8 @@ const DateComponent = (props) => {
         label={label}
         {...rest}
         type={type}
-        style={{ maxHeight: "2rem" }}
+        className={classes.input}
+        style={{ maxHeight: "2rem", borderRadius: "1.4rem !important" }}
       />
       <ErrorMessage name={name} component={TextError} />
     </Grid>

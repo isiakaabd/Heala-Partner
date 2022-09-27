@@ -30,7 +30,8 @@ const hospitalPatterns = {
   // REFERRALS PATTERNS
   Referrals: "referrals",
   Referral: "referrals/{id}",
-
+  // Validations
+  Validations: "validations",
   //SETTINGS PATTERNS
   Settings: "hospital-settings",
   "Hospital profile": "hospital-settings/profile",

@@ -82,6 +82,11 @@ body {
   font-size: 1.2rem !important;
 }
 
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  border-color: #e6e6e6 !important;
+  border: 1px solid;
+}
+
 .MuiSelect-select {
   padding: 0 26px 0 10px !important;
 }
