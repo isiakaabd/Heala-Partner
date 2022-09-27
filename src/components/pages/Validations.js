@@ -11,8 +11,7 @@ import {
   Typography,
   Card,
   Divider,
-  List,
-  ListItem,
+  MenuItem,
 } from "@mui/material";
 import { CustomButton, Loader } from "components/Utilities";
 import { FormikControl } from "components/validation";
@@ -35,7 +34,6 @@ const Validations = () => {
   };
   const [state, setState] = useState([]);
   const [formState, setFormState] = useState();
-  console.log(formState);
   const [inputState, setInputState] = useState();
   const validationSchema = Yup.object({
     hmo: Yup.string("Enter your HMO name")
@@ -52,17 +50,14 @@ const Validations = () => {
     lastName: Yup.string("Enter your First name")
       .trim()
       .required("HMO Name is required"),
-    plan: Yup.string("Enter your  HMO plan")
+    hmoId: Yup.string("Enter your  HMO plan")
       .trim()
       .required("HMO plan is required"),
     date: Yup.string("Select a date")
       .trim()
       .required("Expiry Date is required"),
   });
-  const [
-    validate,
-    { data: validateData, loading: validateLoading, error: err },
-  ] = useMutation(validateEnrollee);
+  const [validate, { data: validateData }] = useMutation(validateEnrollee);
   const { displayMessage } = useAlert();
   const { data, loading: load } = useQuery(getUserTypes);
   const [fetchProvider, { data: dat, loading }] =
@@ -95,12 +90,11 @@ const Validations = () => {
     }
   }, [dat]);
   useEffect(() => {
-    setDetails(validateData?.validateEnrollee?.data);
+    setDetails(validateData?.validateEnrollee?.enrollee);
   }, [validateData]);
 
   useEffect(() => {
     const filteredData = providers.filter((el) => {
-      //if no input the return the original
       if (input === "") {
         return el;
       }
@@ -113,11 +107,11 @@ const Validations = () => {
     //eslint-disable-next-line
   }, [input]);
   const handleSelect = (item) => {
-    const { name, userTypeId, userTypeData } = item;
+    const { name, _id } = item;
 
     setFormState({
       hmo: name,
-      userTypeId,
+      userTypeId: _id,
     });
     setState([]);
     setInputState(name);
@@ -136,6 +130,7 @@ const Validations = () => {
       displayMessage("error", error);
     }
   };
+
   if (loading || load) return <Loader />;
   return (
     <Grid container sx={{ pt: 3, px: 6 }} gap={4}>
@@ -186,7 +181,7 @@ const Validations = () => {
               padding: "1.6rem !important",
               paddingTop: 0,
               fontWeight: 300,
-              fontSize: "2.4rem",
+              fontSize: "2rem",
               position: "relative",
               letterSpacing: "-0.01em",
             }}
@@ -199,7 +194,7 @@ const Validations = () => {
               <SearchIcon />
             </IconButton>
             <InputBase
-              sx={{ flex: 1, p: 0, lineHeight: "3rem", font: "inherit" }}
+              sx={{ flex: 1, p: 0, lineHeight: "2rem", font: "inherit" }}
               size="large"
               placeholder="Search by HMO by Name,"
               onChange={handleChange}
@@ -207,29 +202,54 @@ const Validations = () => {
             />
           </Grid>
         </Grid>
-        {state.length > 0 && (
-          <Grid item container sx={{ mt: 2 }}>
-            <List
-              sx={{
-                width: "100%",
-              }}
-            >
-              {state?.map((item) => (
-                <ListItem
-                  key={item.name}
-                  sx={{
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    fontSize: "1.2rem",
-                    borderBottom: "1px solid #E6E6E6",
-                  }}
-                  onClick={() => handleSelect(item)}
+        {state.length > 0 && input !== "" && (
+          <Card
+            item
+            xs={4}
+            sx={{
+              mt: 2,
+              position: "absolute",
+              zIndex: 300,
+              maxHeight: "20rem",
+              background: "white",
+              padding: "2rem 0",
+              width: "80rem",
+              overflowY: "scroll",
+              boxShadow: "1px 0px 8px -2px rgba(0,0,0,0.75)",
+            }}
+          >
+            {state?.map((item) => (
+              <MenuItem
+                key={item.name}
+                sx={{
+                  cursor: "pointer",
+                  display: "block",
+                  fontSize: "1.8rem",
+                }}
+                onClick={() => handleSelect(item)}
+              >
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "1rem" }}
                 >
+                  {item?.icon && (
+                    <img
+                      src={item?.icon}
+                      style={{
+                        width: "3rem",
+                        height: "3rem",
+                        borderRadius: "50%",
+                      }}
+                      alt={item?.name}
+                      loading="lazy"
+                    />
+                  )}
                   {item.name}
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
+                </div>
+              </MenuItem>
+            ))}
+            {/* </select> */}
+            {/* </List> */}
+          </Card>
         )}
       </Grid>
       <Grid item xs={9} sx={{ margin: "auto" }}>
@@ -319,8 +339,8 @@ const Validations = () => {
                 >
                   {details?.icon ? (
                     <img
-                      src={details?.icon}
-                      alt={details?.name}
+                      src={details?.photo}
+                      alt={details?.firstName}
                       style={{
                         width: "12.8rem",
                         height: "12.8rem",
@@ -336,14 +356,14 @@ const Validations = () => {
                 <Grid container>
                   <Formik
                     initialValues={
-                      details?.name
-                        ? {
+                      details?.firstName
+                        ? details
+                        : {
                             firstName: "",
                             lastName: "",
-                            plan: "",
+                            hmoId: "",
                             expiryDate: "",
                           }
-                        : details
                     }
                     onSubmit={onSubmit}
                     validationSchema={validationSchema2}
@@ -363,6 +383,8 @@ const Validations = () => {
                                   id="firstName"
                                   name="firstName"
                                   placeholder="Enter Your First Name"
+                                  value={details?.firstName}
+                                  disabled
                                 />
                               </Grid>
                               <Grid item xs={6}>
@@ -372,6 +394,8 @@ const Validations = () => {
                                   id="lastName"
                                   name="lastName"
                                   placeholder="Enter Your Last Name"
+                                  value={details?.lastName}
+                                  disabled
                                 />
                               </Grid>
                             </Grid>
@@ -380,9 +404,11 @@ const Validations = () => {
                                 <FormikControl
                                   control="input"
                                   label="HMO Plan"
-                                  id="hmo plan"
-                                  name="plan"
+                                  id="hmoId"
+                                  name="hmoId"
                                   placeholder="HMO PLAN"
+                                  value={details?.hmoId}
+                                  disabled
                                 />
                               </Grid>
                               <Grid item xs={6}>
@@ -391,7 +417,9 @@ const Validations = () => {
                                   label="Expiry Date"
                                   id="date"
                                   name="expiryDate"
-                                  placeholder="Date"
+                                  placeholder="Expiry Date"
+                                  value={details?.expiryDate}
+                                  disabled
                                 />
                               </Grid>
                             </Grid>
