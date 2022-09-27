@@ -149,6 +149,7 @@ const Validations = () => {
             fontSize: "2rem",
             lineHeight: "2.5rem",
             textAlign: "center",
+            height: "9.8rem",
           }}
         >
           <Grid item>
@@ -273,7 +274,7 @@ const Validations = () => {
                   justifyContent="space-between"
                   flexWrap="nowrap"
                 >
-                  <Grid item xs={4}>
+                  <Grid item xs={4.5}>
                     <FormikControl
                       control="input"
                       label="HMO Name"
@@ -283,7 +284,7 @@ const Validations = () => {
                       disabled
                     />
                   </Grid>
-                  <Grid item xs={4}>
+                  <Grid item xs={4.5}>
                     <FormikControl
                       control="input"
                       label="HMO ID"
@@ -374,9 +375,14 @@ const Validations = () => {
                   >
                     {({ isSubmitting, dirty, isValid }) => {
                       return (
-                        <Form style={{ marginTop: "1rem" }}>
+                        <Form
+                          style={{
+                            marginTop: "1rem",
+                            width: "100%",
+                          }}
+                        >
                           <Grid container direction="column" gap={2}>
-                            <Grid item container gap={2} flexWrap="nowrap">
+                            <Grid item container gap={3} flexWrap="nowrap">
                               <Grid item xs={6}>
                                 <FormikControl
                                   control="input"
@@ -400,7 +406,7 @@ const Validations = () => {
                                 />
                               </Grid>
                             </Grid>
-                            <Grid item container gap={2} flexWrap="nowrap">
+                            <Grid item container gap={3} flexWrap="nowrap">
                               <Grid item xs={6}>
                                 <FormikControl
                                   control="input"
