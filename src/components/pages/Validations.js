@@ -134,7 +134,7 @@ const Validations = () => {
   if (loading || load) return <Loader />;
   return (
     <Grid container sx={{ pt: 3, px: 6 }} gap={4}>
-      <Grid item xs={9} sx={{ margin: "auto", py: 5 }}>
+      <Grid item xs={9} sx={{ margin: "auto", py: 2.5 }}>
         <Grid
           container
           flexWrap="nowrap"
@@ -181,7 +181,7 @@ const Validations = () => {
               padding: "1.6rem !important",
               paddingTop: 0,
               fontWeight: 300,
-              fontSize: "2rem",
+              fontSize: "1.6rem",
               position: "relative",
               letterSpacing: "-0.01em",
             }}
@@ -194,7 +194,7 @@ const Validations = () => {
               <SearchIcon />
             </IconButton>
             <InputBase
-              sx={{ flex: 1, p: 0, lineHeight: "2rem", font: "inherit" }}
+              sx={{ flex: 1, p: 0, font: "inherit" }}
               size="large"
               placeholder="Search by HMO by Name,"
               onChange={handleChange}
@@ -212,10 +212,11 @@ const Validations = () => {
               zIndex: 300,
               maxHeight: "20rem",
               background: "white",
-              padding: "2rem 0",
+              padding: " 0",
               width: "80rem",
               overflowY: "scroll",
-              boxShadow: "1px 0px 8px -2px rgba(0,0,0,0.75)",
+              boxShadow: "-1px 0px 10px -2px rgba(0,0,0,0.15)",
+              // boxShadow: "1px 0px 8px -2px rgba(0,0,0,0.75)",
             }}
           >
             {state?.map((item) => (
@@ -228,7 +229,7 @@ const Validations = () => {
                 }}
                 onClick={() => handleSelect(item)}
               >
-                <div
+                {/* <div
                   style={{ display: "flex", alignItems: "center", gap: "1rem" }}
                 >
                   {item?.icon && (
@@ -242,9 +243,9 @@ const Validations = () => {
                       alt={item?.name}
                       loading="lazy"
                     />
-                  )}
-                  {item.name}
-                </div>
+                  )} */}
+                {item.name}
+                {/* </div> */}
               </MenuItem>
             ))}
             {/* </select> */}
