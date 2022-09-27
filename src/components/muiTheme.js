@@ -149,7 +149,7 @@ export const muiTheme = createTheme({
       width: "100%",
       height: "5rem",
       padding: "clamp(0.3rem, 2vw, 1rem)",
-      fontSize: "clamp(1.4rem,2vw,1.6rem)",
+      fontSize: "clamp(1.4rem,2vw,2rem)",
       color: dark,
       borderRadius: "1.4rem",
       border: "1px solid #E6E6E6",

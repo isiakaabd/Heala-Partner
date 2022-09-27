@@ -20,7 +20,10 @@ export const validateEnrollee = gql`
         firstName
         lastName
         hmoId
+        expiryDate
+        plan
         phone
+        photo
       }
       errors {
         field
