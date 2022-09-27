@@ -19,10 +19,7 @@ const useStyles = makeStyles((theme) => ({
 const Dates = ({ name, value, setFieldValue, onBlur, type }) => {
   const today = new Date();
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDateFns}
-      style={{ borderRadius: "1.2rem !important" }}
-    >
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DesktopDatePicker
         name={name}
         minDate={type !== "hospital" ? today : null}
@@ -39,7 +36,6 @@ const Dates = ({ name, value, setFieldValue, onBlur, type }) => {
                 borderRadius: "1.2rem !important",
                 height: "5rem !important",
               },
-              borderRadius: "1.2rem !important",
             }}
           />
         )}

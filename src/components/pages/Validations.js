@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ReactComponent as DangerIcon } from "assets/images/Vector.svg";
 // import { makeStyles } from "@mui/styles";
 import { ReactComponent as SearchIcon } from "assets/images/searchs.svg";
 import { ReactComponent as Users } from "assets/images/users.svg";
+import { useAlert } from "components/hooks";
 import {
   IconButton,
   Grid,
@@ -10,10 +11,18 @@ import {
   Typography,
   Card,
   Divider,
+  List,
+  ListItem,
 } from "@mui/material";
-import { CustomButton } from "components/Utilities";
+import { CustomButton, Loader } from "components/Utilities";
 import { FormikControl } from "components/validation";
 import { Formik, Form } from "formik";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import {
+  getUserTypes,
+  getUserTypeProviders,
+} from "components/graphQL/useQuery";
+import { validateEnrollee } from "components/graphQL/Mutation";
 import { useTheme } from "@mui/material/styles";
 import * as Yup from "yup";
 //
@@ -24,6 +33,10 @@ const Validations = () => {
     hover: theme.palette.primary.main,
     active: theme.palette.primary.dark,
   };
+  const [state, setState] = useState([]);
+  const [formState, setFormState] = useState();
+  console.log(formState);
+  const [inputState, setInputState] = useState();
   const validationSchema = Yup.object({
     hmo: Yup.string("Enter your HMO name")
       .trim()
@@ -46,7 +59,84 @@ const Validations = () => {
       .trim()
       .required("Expiry Date is required"),
   });
-  const onSubmit = () => {};
+  const [
+    validate,
+    { data: validateData, loading: validateLoading, error: err },
+  ] = useMutation(validateEnrollee);
+  const { displayMessage } = useAlert();
+  const { data, loading: load } = useQuery(getUserTypes);
+  const [fetchProvider, { data: dat, loading }] =
+    useLazyQuery(getUserTypeProviders);
+  const [userTypeId, setUserTypeIds] = useState("");
+  const [providers, setProviders] = useState([]);
+  const [input, setInput] = useState("");
+  const [details, setDetails] = useState("");
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setInputState(value);
+    setInput(value.toLowerCase());
+  };
+  useEffect(() => {
+    setUserTypeIds(data?.getUserTypes?.userType[0]._id);
+  }, [data]);
+  useEffect(() => {
+    if (userTypeId) {
+      fetchProvider({
+        variables: {
+          id: userTypeId,
+        },
+      });
+    }
+    //eslint-disable-next-line
+  }, [userTypeId]);
+  useEffect(() => {
+    if (dat) {
+      setProviders(dat?.getUserTypeProviders?.provider);
+    }
+  }, [dat]);
+  useEffect(() => {
+    setDetails(validateData?.validateEnrollee?.data);
+  }, [validateData]);
+
+  useEffect(() => {
+    const filteredData = providers.filter((el) => {
+      //if no input the return the original
+      if (input === "") {
+        return el;
+      }
+      //return the item which contains the user input
+      else {
+        return el.name.toLowerCase().includes(input);
+      }
+    });
+    setState(filteredData);
+    //eslint-disable-next-line
+  }, [input]);
+  const handleSelect = (item) => {
+    const { name, userTypeId, userTypeData } = item;
+
+    setFormState({
+      hmo: name,
+      userTypeId,
+    });
+    setState([]);
+    setInputState(name);
+  };
+  const onSubmit = async (values) => {
+    const { id } = values;
+    try {
+      await validate({
+        variables: {
+          hmoId: id,
+          providerId: formState.userTypeId,
+        },
+      });
+      displayMessage("success", "Validation Successful");
+    } catch (error) {
+      displayMessage("error", error);
+    }
+  };
+  if (loading || load) return <Loader />;
   return (
     <Grid container sx={{ pt: 3, px: 6 }} gap={4}>
       <Grid item xs={9} sx={{ margin: "auto", py: 5 }}>
@@ -81,13 +171,10 @@ const Validations = () => {
           alignItems="center"
           justifyContent="space-between"
           flexWrap="nowrap"
-          //   className={classes.head}
-
           sx={{ height: "6rem" }}
         >
           <Grid
             item
-            // className={classes.grid}
             sx={{
               height: "inherit",
               width: "100%",
@@ -100,7 +187,7 @@ const Validations = () => {
               paddingTop: 0,
               fontWeight: 300,
               fontSize: "2.4rem",
-
+              position: "relative",
               letterSpacing: "-0.01em",
             }}
           >
@@ -115,18 +202,47 @@ const Validations = () => {
               sx={{ flex: 1, p: 0, lineHeight: "3rem", font: "inherit" }}
               size="large"
               placeholder="Search by HMO by Name,"
+              onChange={handleChange}
+              value={inputState}
             />
           </Grid>
         </Grid>
+        {state.length > 0 && (
+          <Grid item container sx={{ mt: 2 }}>
+            <List
+              sx={{
+                width: "100%",
+              }}
+            >
+              {state?.map((item) => (
+                <ListItem
+                  key={item.name}
+                  sx={{
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    fontSize: "1.2rem",
+                    borderBottom: "1px solid #E6E6E6",
+                  }}
+                  onClick={() => handleSelect(item)}
+                >
+                  {item.name}
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+        )}
       </Grid>
       <Grid item xs={9} sx={{ margin: "auto" }}>
         <Formik
-          initialValues={{ hmo: "", id: "" }}
+          initialValues={
+            formState?.name ? { hmo: "", id: "", userTypeId: "" } : formState
+          }
           onSubmit={onSubmit}
           validationSchema={validationSchema}
           validateOnChange={false}
           validateOnMount={false}
           validateOnBlur={false}
+          enableReinitialize
         >
           {({ isSubmitting, dirty, isValid }) => {
             return (
@@ -143,15 +259,16 @@ const Validations = () => {
                       id="hmo"
                       name="hmo"
                       placeholder="Enter HMO name"
+                      disabled
                     />
                   </Grid>
                   <Grid item xs={4}>
                     <FormikControl
                       control="input"
-                      label="Customer ID"
+                      label="HMO ID"
                       id="id"
                       name="id"
-                      placeholder="Enter Customer ID"
+                      placeholder="Enter HMO ID"
                     />
                   </Grid>
 
@@ -184,7 +301,7 @@ const Validations = () => {
                   color: "#6C6C6C",
                 }}
               >
-                Customer HMO Details
+                HMO Details
               </Typography>
               <Divider sx={{ mb: 6 }} />
             </Grid>
@@ -200,18 +317,34 @@ const Validations = () => {
                   alignItems="center"
                   sx={{ height: "100%" }}
                 >
-                  <Users />
+                  {details?.icon ? (
+                    <img
+                      src={details?.icon}
+                      alt={details?.name}
+                      style={{
+                        width: "12.8rem",
+                        height: "12.8rem",
+                        objectFit: "contain",
+                      }}
+                    />
+                  ) : (
+                    <Users />
+                  )}
                 </Grid>
               </Grid>
               <Grid item xs={8} sx={{ pt: 4 }}>
                 <Grid container>
                   <Formik
-                    initialValues={{
-                      firstName: "",
-                      lastName: "",
-                      plan: "",
-                      expiryDate: "",
-                    }}
+                    initialValues={
+                      details?.name
+                        ? {
+                            firstName: "",
+                            lastName: "",
+                            plan: "",
+                            expiryDate: "",
+                          }
+                        : details
+                    }
                     onSubmit={onSubmit}
                     validationSchema={validationSchema2}
                     validateOnChange={false}
@@ -255,7 +388,7 @@ const Validations = () => {
                               <Grid item xs={6}>
                                 <FormikControl
                                   control="date"
-                                  label="Expiry Date (mm-dd-yyyy)"
+                                  label="Expiry Date"
                                   id="date"
                                   name="expiryDate"
                                   placeholder="Date"

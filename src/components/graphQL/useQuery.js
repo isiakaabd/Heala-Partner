@@ -25,6 +25,61 @@ export const getDoctorAvailabilityForDate = gql`
     }
   }
 `;
+export const getUserTypes = gql`
+  ${PageInfo}
+  query getUserTypes {
+    getUserTypes(filterBy: { name: "HMO Enrollee" }) {
+      userType {
+        _id
+        name
+        icon
+        description
+        providerCount
+        createdAt
+        updatedAt
+      }
+      pageInfo {
+        ...pageDetails
+      }
+    }
+  }
+`;
+export const getUserTypeProviders = gql`
+  query getUserTypeProviders($id: String) {
+    getUserTypeProviders(filterBy: { userTypeId: $id }) {
+      provider {
+        _id
+        name
+        icon
+        userTypeId
+        userCount
+        doctorCount
+        enrolleeCount
+        partnerCount
+        createdAt
+        updatedAt
+        userTypeData {
+          name
+          icon
+          createdAt
+          updatedAt
+        }
+      }
+      pageInfo {
+        totalDocs
+        limit
+        offset
+        hasPrevPage
+        hasNextPage
+        page
+        totalPages
+        pagingCounter
+        prevPage
+        nextPage
+      }
+    }
+  }
+`;
 export const getDiagnosticDashboard = gql`
   query getDiagnosticDashboard($partner: String!) {
     getDiagnosticDashboard(partner: $partner) {

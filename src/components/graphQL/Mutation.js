@@ -12,6 +12,22 @@ export const updateDrugOrder = gql`
     }
   }
 `;
+export const validateEnrollee = gql`
+  mutation validateEnrollee($hmoId: String!, $providerId: String!) {
+    validateEnrollee(data: { hmoId: $hmoId, providerId: $providerId }) {
+      enrollee {
+        _id
+        firstName
+        lastName
+        hmoId
+        phone
+      }
+      errors {
+        field
+      }
+    }
+  }
+`;
 
 export const Login_USER = gql`
   mutation Login($data: LoginUserInput!) {
