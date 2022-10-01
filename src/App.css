@@ -134,6 +134,12 @@ li {
   position: relative;
   /* display: inline-block; */
 }
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled {
+  -webkit-text-fill-color: #4f4f4f !important;
+  fill: #4f4f4f;
+  font-size: clamp(0.8rem, 2vw, 1.6rem) !important;
+  font-weight: normal !important;
+}
 
 /* .dropdown-content {
   display: none;
