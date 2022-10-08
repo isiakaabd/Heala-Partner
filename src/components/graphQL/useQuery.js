@@ -582,29 +582,33 @@ export const getConsult = gql`
       patientData
       providerId
       declineReason
+      consultationDuration
       diagnosis {
         ailment
         severity
       }
       doctorNote
-      prescription {
-        priceListId
-        drugName
-        drugPrice
-        unitPrice
-        notes
-        dosageQuantity
-        dosage
-        mode
-        amount
-        dosageFrequency {
-          day
-          duration
-        }
-      }
       createdAt
       updatedAt
       referralId
+      prescription {
+        _id
+        drugs {
+          priceListId
+          drugName
+          drugPrice
+          unitPrice
+          dosageQuantity
+          dosageUnit
+          route
+          amount
+          instructions
+          dosageFrequency {
+            timing
+            duration
+          }
+        }
+      }
     }
   }
 `;
@@ -628,29 +632,19 @@ export const getConsultations = gql`
         discomfortLevel
         firstNotice
         doctor
-        type
-        status
-        contactMedium
-        doctorData
-        patientData
+        consultationDuration
         diagnosis {
           ailment
           severity
         }
         doctorNote
-        prescription {
-          drugName
-          dosageQuantity
-          dosage
-          dosageFrequency {
-            day
-            duration
-          }
-          mode
-        }
+        declineReason
         createdAt
-        referralId
         updatedAt
+        patientData
+        doctorData
+        referralId
+        providerId
       }
       pageInfo {
         ...pageDetails
@@ -800,7 +794,6 @@ export const getDocConsult = gql`
         _id
         patient
         consultationOwner
-        contactMedium
         symptoms {
           name
         }
@@ -808,26 +801,19 @@ export const getDocConsult = gql`
         discomfortLevel
         firstNotice
         doctor
+        consultationDuration
         diagnosis {
           ailment
           severity
         }
         doctorNote
-        prescription {
-          drugName
-          dosageQuantity
-          dosage
-          dosageFrequency {
-            day
-            duration
-          }
-          mode
-        }
+        declineReason
         createdAt
-        patientData
         updatedAt
+        patientData
+        doctorData
         referralId
-        status
+        providerId
       }
       pageInfo {
         ...pageDetails

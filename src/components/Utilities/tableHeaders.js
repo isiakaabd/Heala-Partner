@@ -335,10 +335,6 @@ export const referralHeaderss = [
     id: 8,
     label: "Type",
   },
-  {
-    id: 6,
-    label: "",
-  },
 ];
 export const subscriptionHeadersss = [
   {
@@ -485,7 +481,6 @@ export const consultationsHeadCells = [
   { id: 102, label: "Symptoms" },
   { id: 104, label: "Type" },
   { id: 103, label: "Status" },
-  { id: 1040, label: "" },
 ];
 
 // Patients > Prescription Route Table
