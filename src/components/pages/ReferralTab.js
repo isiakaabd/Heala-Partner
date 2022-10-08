@@ -7,7 +7,6 @@ import {
   Checkbox,
   Card,
   TableCell,
-  Button,
 } from "@mui/material";
 import { dateMoment } from "components/Utilities/Time";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
@@ -20,13 +19,11 @@ import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import { useLazyQuery } from "@apollo/client";
 import { getRefferals } from "components/graphQL/useQuery";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-// import Filter from "components/Forms/Filters";
 import {
   referralFilterBy,
   referralPageDefaultFilterValues,
 } from "helpers/mockData";
-import { Link } from "react-router-dom";
+import {  useHistory } from "react-router-dom";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -89,6 +86,7 @@ const ReferralTab = () => {
     totalDocs: 0,
   });
   const providerId = localStorage.getItem("partnerProviderId");
+  const history = useHistory();
   const theme = useTheme();
   const [filterValues, setFilterValues] = useState(
     referralPageDefaultFilterValues
@@ -203,6 +201,8 @@ const ReferralTab = () => {
                       tabIndex={-1}
                       key={_id}
                       selected={isItemSelected}
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => history.push(`referrals/${_id}`)}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
@@ -277,18 +277,6 @@ const ReferralTab = () => {
                         style={{ color: theme.palette.common.black }}
                       >
                         {type}
-                      </TableCell>
-
-                      <TableCell align="left" className={classes.tableCell}>
-                        <Button
-                          variant="contained"
-                          className={classes.button}
-                          component={Link}
-                          to={`referrals/${_id}`}
-                          endIcon={<ArrowForwardIosIcon />}
-                        >
-                          View Referral
-                        </Button>
                       </TableCell>
                     </TableRow>
                   );
