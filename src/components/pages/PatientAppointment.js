@@ -13,7 +13,6 @@ import {
   TableCell,
   Checkbox,
   Button,
-  Avatar,
 } from "@mui/material";
 import { useAlert } from "components/hooks";
 import { deleteAppointment } from "components/graphQL/Mutation";
@@ -32,7 +31,6 @@ import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { isSelected } from "helpers/isSelected";
 import { handleSelectedRows } from "helpers/selectedRows";
-import displayPhoto from "assets/images/avatar.svg";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { useParams } from "react-router-dom";
@@ -349,17 +347,6 @@ const PatientAppointment = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span style={{ marginRight: "1rem" }}>
-                            <Avatar
-                              alt={`Display Photo of ${row.doctorData.firstName}`}
-                              src={
-                                row.doctorData.picture
-                                  ? row.doctorData.picture
-                                  : displayPhoto
-                              }
-                              sx={{ width: 24, height: 24 }}
-                            />
-                          </span>
                           <span style={{ fontSize: "1.25rem" }}>
                             {`${row.doctorData.firstName} 
                              ${row.doctorData.lastName}`}

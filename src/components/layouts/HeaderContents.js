@@ -194,9 +194,14 @@ const HeaderText = ({ pharmacyData }) => {
     case "/dashboard":
       return (
         <div>
-          <Typography variant="h5" className={classes.text} gutterBottom>
-            Welcome,
+          <Typography variant="h3" color="primary" className={classes.name}>
+            {pharmacyData?.name}
           </Typography>
+        </div>
+      );
+    case "/":
+      return (
+        <div>
           <Typography variant="h3" color="primary" className={classes.name}>
             {pharmacyData?.name}
           </Typography>

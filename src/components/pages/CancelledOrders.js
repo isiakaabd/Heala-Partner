@@ -232,7 +232,7 @@ const CancelledOrders = () => {
               {state
                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const { _id, createdAt, orderId, patientData, reason } = row;
+                  const { _id, createdAt, orderId, patientData } = row;
                   const isItemSelected = isSelected(_id, selectedRows);
 
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -276,9 +276,9 @@ const CancelledOrders = () => {
                       <TableCell align="left" className={classes.tableCell}>
                         {orderId}
                       </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
+                      {/* <TableCell align="left" className={classes.tableCell}>
                         {reason}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="left" className={classes.tableCell}>
                         <div
                           style={{

@@ -4,43 +4,68 @@ import {
   Grid,
   Typography,
   TableCell,
-  Avatar,
   Chip,
+  Checkbox,
+  Card,
 } from "@mui/material";
+// import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useSelector } from "react-redux";
+import { handleSelectedRows } from "helpers/selectedRows";
+import {
+  changeHospitalTableLimit,
+  handleHospitalPageChange,
+} from "helpers/filterHelperFunctions";
 import EnhancedTable from "./EnhancedTable";
+import { CustomSelect } from "components/validation/Select";
+import { Modals, Loader } from "components/Utilities";
+import { isSelected } from "helpers/isSelected";
 import { availabilityHeadCells } from "components/Utilities/tableHeaders";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
-import displayPhoto from "assets/images/avatar.svg";
-import { hours } from "components/Utilities/Time";
+import { hours, days, today } from "components/Utilities/Time";
 import { EmptyTable } from "components/layouts";
+import { useActions } from "components/hooks/useActions";
 import PropTypes from "prop-types";
-
+import { useLazyQuery } from "@apollo/client";
+import { defaultPageInfo } from "helpers/mockData";
+import {
+  getAvailabilities,
+  getDoctorAvailabilityForDate,
+} from "components/graphQL/useQuery";
 const useStyles = makeStyles((theme) => ({
   tableCell: {
     "&.MuiTableCell-root": {
       fontSize: "1.25rem",
     },
   },
+
   button: {
     "&.MuiButton-root": {
-      ...theme.typography.rowBtn,
-      paddingTop: ".5rem",
-      paddingBottom: ".5rem",
-      background: theme.palette.common.lightGrey,
-      color: theme.palette.primary.dark,
+      background: "#fff",
+      color: theme.palette.common.grey,
+      textTransform: "none",
+      borderRadius: "2rem",
+      display: "flex",
+      alignItems: "center",
+      padding: "1rem",
+      maxWidth: "10rem",
+      whiteSpace: "nowrap",
 
       "&:hover": {
-        background: "#ccc",
+        background: "#fcfcfc",
       },
 
       "&:active": {
-        background: theme.palette.primary.light,
-        color: "#fff",
+        background: "#fafafa",
       },
 
       "& .MuiButton-endIcon>*:nth-of-type(1)": {
         fontSize: "1.2rem",
+      },
+
+      "& .MuiButton-endIcon": {
+        marginLeft: ".3rem",
+        marginTop: "-.2rem",
       },
     },
   },
@@ -54,109 +79,325 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AvailabilityTable = ({ data }) => {
-  const [avaliablity, setAvaliablity] = useState([]);
+const AvailabilityTable = () => {
+  const [pageInfo, setPageInfo] = useState({
+    page: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+    limit: 10,
+    totalDocs: 0,
+  });
+  const [modal, setModal] = useState(false);
+  const { selectedRows } = useSelector((state) => state.tables);
+  const { setSelectedRows } = useActions();
+  const [availabilities, setAvailabilities] = useState([]);
+  const [select, setSelect] = useState(today());
+  const id = localStorage.getItem("partnerProviderId");
+  const [fetchAvailabilities, { loading: load }] =
+    useLazyQuery(getAvailabilities);
+  const [fetchDay, { loading, data: dt }] = useLazyQuery(
+    getDoctorAvailabilityForDate
+  );
+  const [avail, setAvail] = useState("");
   useEffect(() => {
-    setAvaliablity(data);
-  }, [data]);
+    if (dt) {
+      const { available, day, times } = dt?.getDoctorAvailabilityForDate;
+      setAvail({
+        available,
+        day,
+        times,
+      });
+    } else {
+      setAvail({
+        availale: false,
+        day: "Not Available",
+        times: [],
+      });
+    }
+  }, [dt]);
+  useEffect(() => {
+    fetchAvailabilities({
+      variables: {
+        first: 5,
+        providerId: id,
+        day: select,
+      },
+    }).then(({ data }) => {
+      if (data) {
+        setPageInfo(data?.getAvailabilities?.pageInfo || []);
+        setAvailabilities(
+          data?.getAvailabilities?.availability || defaultPageInfo
+        );
+      }
+    });
+  }, [fetchAvailabilities, select, id]);
 
+  useEffect(() => {
+    fetchAvailabilities({
+      variables: {
+        first: 5,
+        providerId: id,
+        day: select,
+      },
+    }).then(({ data }) => {
+      if (data) {
+        setPageInfo(data?.getAvailabilities?.pageInfo || []);
+        setAvailabilities(
+          data?.getAvailabilities?.availability || defaultPageInfo
+        );
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSelectChange = async (e) => {
+    const { value } = e.target;
+    setSelect(value);
+    await fetchAvailabilities({
+      variables: {
+        first: 5,
+        providerId: id,
+        day: value,
+      },
+    });
+  };
+  const setTableData = async (response, errMsg) => {
+    response
+      .then(({ data }) => {
+        setPageInfo(data?.getAvailabilities?.pageInfo || []);
+        setAvailabilities(
+          data?.getAvailabilities?.availability || defaultPageInfo
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   const classes = useStyles();
   const theme = useTheme();
+  const handleCheckDay = (day, doctor) => {
+    setModal(true);
 
+    fetchDay({
+      variables: {
+        day,
+        doctor,
+      },
+    });
+  };
+  if (load) return <Loader />;
+  const { day, available, times } = avail;
   return (
-    <Grid item container direction="column" height="100%" rowGap={2}>
-      <Grid item>
-        <Typography variant="h4">Availability Table</Typography>
-      </Grid>
-      {avaliablity && avaliablity.length > 0 ? (
-        <Grid
-          item
-          container
-          direction="column"
-          overflow="hidden"
-          maxWidth={{ md: "100%", sm: "100%", xs: "100%" }}
+    <>
+      <Grid item container direction="column" height="100%" rowGap={2}>
+        <Card
+          variant="outlined"
+          sx={{
+            width: "100%",
+            borderRadius: "1.5rem",
+            borderColor: "transparent",
+            p: 2,
+            mt: 2,
+          }}
         >
-          <EnhancedTable
-            headCells={availabilityHeadCells}
-            rows={avaliablity}
-            paginationLabel="List per page"
-            title="Availability Calendar"
-            hasCheckbox={false}
-            hasPagination={false}
-          >
-            {avaliablity.map((row, index) => {
-              const { _id, doctorData, times, day } = row;
-              const labelId = `enhanced-table-checkbox-${index}`;
-              const rowdata = doctorData && (
-                <TableRow hover tabIndex={-1} key={_id}>
-                  <TableCell
-                    id={labelId}
-                    scope="row"
-                    align="left"
-                    className={classes.tableCell}
-                    style={{ color: theme.palette.common.grey }}
-                  >
-                    {doctorData ? doctorData?.dociId : "no doctor"}
-                  </TableCell>
-                  <TableCell align="left" className={classes.tableCell}>
-                    <div
-                      style={{
-                        height: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "left",
-                      }}
+          <Grid item container alignItems="center" sx={{ mb: 2 }}>
+            <Grid item flex={1}>
+              <Typography variant="h4">Doctor Availability </Typography>
+            </Grid>
+            <Grid item>
+              <CustomSelect
+                value={select}
+                onChange={handleSelectChange}
+                options={days}
+                variant="small"
+                name="select"
+              />
+            </Grid>
+          </Grid>
+          {availabilities?.length > 0 ? (
+            <Grid
+              item
+              container
+              direction="column"
+              overflow="hidden"
+              maxWidth={{ md: "100%", sm: "100%", xs: "100%" }}
+            >
+              <EnhancedTable
+                headCells={availabilityHeadCells}
+                rows={availabilities}
+                paginationLabel="Availabilities per page"
+                hasCheckbox={true}
+                changeLimit={async (e) => {
+                  const res = changeHospitalTableLimit(fetchAvailabilities, {
+                    first: e,
+                    providerId: id,
+                    day: select,
+                  });
+
+                  await setTableData(res, "Failed to change table limit.");
+                }}
+                dataPageInfo={pageInfo}
+                handlePagination={async (page) => {
+                  const res = handleHospitalPageChange(
+                    fetchAvailabilities,
+                    page,
+                    pageInfo,
+                    id,
+                    {
+                      day: select,
+                    }
+                  );
+                  await setTableData(res, "Failed to change page.");
+                }}
+              >
+                {availabilities?.map((row, index) => {
+                  const { _id, doctorData, day, times, doctor } = row;
+                  const startTime = hours(times[0].start);
+                  const endTime = hours(times[times.length - 1].stop);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+                  const isItemSelected = isSelected(_id, selectedRows);
+
+                  return (
+                    <TableRow
+                      hover
+                      tabIndex={-1}
+                      key={_id}
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => handleCheckDay(day, doctor)}
                     >
-                      <span style={{ marginRight: "1rem" }}>
-                        <Avatar
-                          alt="Remy Sharp"
-                          src={doctorData ? doctorData.picture : displayPhoto}
-                          sx={{ width: 24, height: 24 }}
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          onClick={() =>
+                            handleSelectedRows(
+                              _id,
+                              selectedRows,
+                              setSelectedRows
+                            )
+                          }
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": labelId,
+                          }}
                         />
-                      </span>
-                      <span style={{ fontSize: "1.25rem" }}>
-                        {doctorData
-                          ? `${doctorData?.firstName} ${doctorData?.lastName}`
-                          : "no name"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell align="left" className={classes.tableCell}>
-                    {day && day}
-                  </TableCell>
-                  <TableCell align="left" className={classes.tableCell}>
-                    <Grid container gap={1}>
-                      {times &&
-                        times.map((time) => {
-                          return (
-                            <Chip
-                              key={index}
-                              label={`${hours(time.start)} - ${hours(
-                                time.stop
-                              )} `}
-                              className={classes.badge}
-                              style={{
-                                background: theme.palette.common.lightGreen,
-                                color: theme.palette.common.green,
-                              }}
-                            />
-                          );
-                        })}
-                    </Grid>
-                  </TableCell>
-                </TableRow>
-              );
-              return rowdata;
-            })}
-          </EnhancedTable>
+                      </TableCell>
+                      <TableCell
+                        id={labelId}
+                        scope="row"
+                        align="left"
+                        className={classes.tableCell}
+                        style={{ color: theme.palette.common.grey }}
+                      >
+                        {doctorData?.dociId
+                          ? doctorData?.dociId?.split("-")[1]
+                          : "No Value"}
+                      </TableCell>
+                      <TableCell align="left" className={classes.tableCell}>
+                        <div
+                          style={{
+                            height: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            textAlign: "left",
+                          }}
+                        >
+                          <span style={{ fontSize: "1.25rem" }}>
+                            {doctorData?.firstName
+                              ? `${doctorData?.firstName} ${doctorData?.lastName}`
+                              : "no name"}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell align="left" className={classes.tableCell}>
+                        {day ? day : "No Value"}
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        className={classes.tableCell}
+                        style={{
+                          color: theme.palette.common.red,
+                        }}
+                      >
+                        <Chip
+                          label={startTime}
+                          className={classes.badge}
+                          style={{
+                            background: theme.palette.common.lightRed,
+                            color: theme.palette.common.red,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        align="left"
+                        className={classes.tableCell}
+                        style={{
+                          color: theme.palette.common.red,
+                        }}
+                      >
+                        <Chip
+                          label={endTime}
+                          className={classes.badge}
+                          style={{
+                            background: theme.palette.common.lightRed,
+                            color: theme.palette.common.red,
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </EnhancedTable>
+            </Grid>
+          ) : (
+            <EmptyTable
+              headCells={availabilityHeadCells}
+              paginationLabel="Availability  per page"
+            />
+          )}
+        </Card>
+      </Grid>
+      <Modals
+        isOpen={modal}
+        title="Available Day"
+        rowSpacing={5}
+        width="10vw"
+        handleClose={() => setModal(false)}
+      >
+        {loading && <Loader />}
+        <Grid item container alignItems="center" gap={2}>
+          <Typography variant="h4">{day}</Typography>
+          <div
+            style={{
+              background: available
+                ? theme.palette.common.green
+                : theme.palette.common.red,
+              width: "20px",
+              height: "20px",
+              borderRadius: "50%",
+            }}
+          ></div>
         </Grid>
-      ) : (
-        <EmptyTable
-          headCells={availabilityHeadCells}
-          paginationLabel="Availability  per page"
-        />
-      )}
-    </Grid>
+        <Grid item container gap={1}>
+          {times
+            ? times?.map((time, ind) => {
+                const { start, stop } = time;
+                return (
+                  <Chip
+                    key={ind}
+                    label={`${hours(start)} - ${hours(stop)} `}
+                    className={classes.badge}
+                    style={{
+                      background: theme.palette.common.lightRed,
+                      color: theme.palette.common.red,
+                    }}
+                  />
+                );
+              })
+            : "No Time"}
+        </Grid>
+      </Modals>
+    </>
   );
 };
 AvailabilityTable.propTypes = {

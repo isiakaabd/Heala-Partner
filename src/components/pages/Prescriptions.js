@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Grid, Avatar, Divider } from "@mui/material";
+import { Typography, Grid, Divider } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import displayPhoto from "assets/images/avatar.svg";
 import { dateMoment } from "components/Utilities/Time";
 import { getConsultations } from "components/graphQL/useQuery";
 import { useQuery } from "@apollo/client";
@@ -102,16 +101,7 @@ const Prescriptions = () => {
                     Doctor:
                   </Typography>
                 </Grid>
-                <Grid item>
-                  <Avatar
-                    src={
-                      consultations && doc && doc.picture
-                        ? doc.picture
-                        : displayPhoto
-                    }
-                    alt="Display photo of the sender"
-                  />
-                </Grid>
+
                 <Grid item>
                   <Typography variant="h5">
                     {doc.firstName

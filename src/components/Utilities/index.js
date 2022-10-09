@@ -24,6 +24,7 @@ export { default as Loader } from "./Loader";
 export { default as Modals } from "./Modal";
 export { default as PreviousButton } from "./PreviousButton";
 export { default as Search } from "./Search";
+export { default as Searchs } from "./Searchs";
 export { default as SearchInput } from "./SearchInput";
 export { default as TextError } from "./TextError";
 export { default as Button } from "./Button";

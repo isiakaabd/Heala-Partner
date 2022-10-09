@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, ErrorMessage } from "formik";
+import { Field, ErrorMessage, useFormikContext } from "formik";
 import { TextError } from "components/Utilities";
 import { TextField, FormLabel, Grid } from "@mui/material";
 import PropTypes from "prop-types";
@@ -8,6 +8,9 @@ import { makeStyles } from "@mui/styles";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDateTimePicker from "@mui/lab/DesktopDateTimePicker";
 const useStyles = makeStyles((theme) => ({
+  input: {
+    ...theme.typography.input,
+  },
   FormLabel: {
     "&.MuiFormLabel-root": {
       ...theme.typography.FormLabel,
@@ -15,8 +18,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dates = ({ name, value, setFieldValue, onBlur }) => {
+const Dates = ({ name, value, onBlur }) => {
   const today = new Date();
+  const classes = useStyles();
+  const { setFieldValue } = useFormikContext();
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DesktopDateTimePicker
@@ -25,8 +30,14 @@ const Dates = ({ name, value, setFieldValue, onBlur }) => {
         onChange={(value) => setFieldValue(name, value)}
         value={value}
         onBlur={onBlur}
+        className={classes.input}
         renderInput={(params) => (
-          <TextField {...params} sx={{ padding: "-12px" }} />
+          <TextField
+            {...params}
+            sx={{
+              padding: "-12px",
+            }}
+          />
         )}
       />
     </LocalizationProvider>
@@ -35,7 +46,7 @@ const Dates = ({ name, value, setFieldValue, onBlur }) => {
 
 Dates.propTypes = {
   value: PropTypes.string,
-  label: PropTypes.string,
+  // label: PropTypes.string,
   onChange: PropTypes.func,
   setFieldValue: PropTypes.func,
   children: PropTypes.node,
@@ -49,7 +60,7 @@ const DateTimePicker = (props) => {
   return (
     <Grid container direction="column" gap={1}>
       <FormLabel className={classes.FormLabel}>{label}</FormLabel>
-      <Field name={name} as={Dates} label={label} {...rest} />
+      <Field name={name} as={Dates} {...rest} className={classes.input} />
       <ErrorMessage name={name} component={TextError} />
     </Grid>
   );

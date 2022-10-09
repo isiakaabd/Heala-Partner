@@ -6,6 +6,7 @@ import {
   ListItemIcon,
   List,
 } from "@mui/material";
+import PropTypes from "prop-types";
 import { hospitalMenu } from "helpers/asideMenus";
 import { makeStyles } from "@mui/styles";
 import logo from "assets/images/logo.svg";
@@ -119,12 +120,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const HospitalMenu = (props) => {
-  const {
-    selectedMenu,
-    setSelectedMenu,
-    /* setSelectedSubMenu,
-    setWaitingListMenu, */
-  } = props;
+  const { selectedMenu, setSelectedMenu } = props;
   const { logout } = useActions();
   const [logout_user] = useMutation(LOGOUT_USER);
 
@@ -221,8 +217,6 @@ const HospitalMenu = (props) => {
 HospitalMenu.propTypes = {
   selectedMenu: PropTypes.number,
   setSelectedMenu: PropTypes.func,
-  /*  setSelectedSubMenu: PropTypes.func,
-  setWaitingListMenu: PropTypes.func, */
 };
 
 export default HospitalMenu;

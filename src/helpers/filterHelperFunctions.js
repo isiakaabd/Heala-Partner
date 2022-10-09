@@ -157,36 +157,38 @@ export const deleteVar = (variable) => {
     delete variable[key];
   }
 };
-export const handleHospitalPageChange = (fetchDataFN, type, pageInfo, id) => {
+export const handleHospitalPageChange = (
+  fetchDataFN,
+  type,
+  pageInfo,
+  id,
+  hcpId
+) => {
   const getData = (pageNumber) => {
     return fetchDataFN({
       variables: {
         page: pageNumber,
         providerId: id,
         first: pageInfo?.limit || 10,
+        doctor: hcpId,
       },
     });
   };
 
   switch (type) {
     case "FIRSTPAGE":
-      getData(1);
-      break;
-
+      return getData(1);
     case "NEXTPAGE":
-      getData(pageInfo?.nextPage || 1);
-      break;
+      return getData(pageInfo?.nextPage || 1);
 
     case "PREVPAGE":
-      getData(pageInfo?.prevPage || 1);
-      break;
+      return getData(pageInfo?.prevPage || 1);
 
     case "LASTPAGE":
-      getData(pageInfo?.totalPages || 1);
-      break;
+      return getData(pageInfo?.totalPages || 1);
 
     default:
-      break;
+      return;
   }
 };
 

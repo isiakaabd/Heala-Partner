@@ -25,7 +25,6 @@ const HcpEarnings = lazy(() => import("components/pages/HcpEarnings"));
 const HcpPatients = lazy(() => import("components/pages/HcpPatients"));
 const HcpCaseNote = lazy(() => import("components/pages/HcpCaseNote"));
 const Appointments = lazy(() => import("components/pages/Appointments"));
-const WaitingList = lazy(() => import("components/pages/WaitingList"));
 const Messages = lazy(() => import("components/pages/Messages"));
 const CreateMessage = lazy(() => import("components/pages/CreateMessage"));
 const ViewMessage = lazy(() => import("components/pages/ViewMessage"));
@@ -40,12 +39,13 @@ const ReferralTab = lazy(() => import("components/pages/ReferralTab"));
 const HospitalSettings = lazy(() =>
   import("components/pages/HospitalSettings")
 );
+const DoctorEarning = lazy(() => import("components/pages/DoctorEarning"));
+const Validations = lazy(() => import("components/pages/Validations"));
+const DoctorPayout = lazy(() => import("components/pages/DoctorPayout"));
 const SubscriptionIncome = lazy(() =>
   import("components/pages/SubscriptionIncome")
 );
-const WaitingListDetails = lazy(() =>
-  import("components/pages/WaitingListDetails")
-);
+
 const HcpConsultations = lazy(() =>
   import("components/pages/HcpConsultations")
 );
@@ -61,60 +61,50 @@ const Hospital = () => {
           exact
           component={HospitalDashboard}
         />
-
         <PrivateRoute exact path="/patients" component={Patients} />
-
+        <PrivateRoute exact path="/validations" component={Validations} />
         <PrivateRoute
           exact
           path="/patients/:patientId"
           component={SinglePatient}
         />
-
         <PrivateRoute
           exact
           path="/patients/:patientId/profile"
           component={PatientProfile}
         />
-
         <PrivateRoute
           exact
           path="/patients/:patientId/profile/chat"
           component={Chat}
         />
-
         <PrivateRoute
           path="/patients/:patientId/consultations"
           exact
           component={Consultations}
         />
-
         <PrivateRoute
           exact
           path="/patients/:patientId/prescriptions"
           component={Prescriptions}
         />
-
         <PrivateRoute
           path="/patients/:patientId/appointments"
           component={PatientAppointment}
         />
-
         <PrivateRoute
           path="/patients/:patientId/records"
           component={MedicalRecords}
         />
-
         <PrivateRoute
           exact
           path="/patients/:patientId/consultations/case-note/:id"
           component={CaseNotes}
         />
-
         <PrivateRoute
           path="/patients/:patientId/medications"
           component={Medications}
         />
-
         <PrivateRoute exact path="/hcps" component={Hcps} />
         <PrivateRoute exact path="/hcps/:hcpId" component={SingleHCP} />
         <PrivateRoute
@@ -122,57 +112,49 @@ const Hospital = () => {
           path="/hcps/:hcpId/profile"
           component={HcpProfile}
         />
-
+        ``
         <PrivateRoute
           exact
           path="/hcps/:hcpId/profile/chat"
           component={HCPChat}
         />
-
         <PrivateRoute
           path="/hcps/:hcpId/appointments"
           component={HcpAppointments}
         />
-
         <PrivateRoute
           path="/hcps/:hcpId/availability"
           component={HcpAvailability}
         />
-
         <PrivateRoute
           exact
           path="/hcps/:hcpId/earnings"
           component={HcpEarnings}
         />
         <PrivateRoute
+          exact
+          path="/hcps/:hcpId/earnings/payout"
+          component={DoctorPayout}
+        />
+        <PrivateRoute
+          exact
+          path="/hcps/:hcpId/earnings/earn"
+          component={DoctorEarning}
+        />
+        <PrivateRoute
           path="/hcps/:hcpId/doctor-patients"
           component={HcpPatients}
         />
-
         <PrivateRoute
           exact
           path="/hcps/:hcpId/consultations"
           component={HcpConsultations}
         />
-
         <PrivateRoute
           path="/hcps/:hcpId/consultations/case-note/:rowId"
           component={HcpCaseNote}
         />
-
         <PrivateRoute exact path="/appointments" component={Appointments} />
-
-        <PrivateRoute
-          exact
-          path="/appointments/waiting-list"
-          component={WaitingList}
-        />
-
-        <PrivateRoute
-          path="/appointments/waiting-list/:listId"
-          component={WaitingListDetails}
-        />
-
         <PrivateRoute exact path="/messages" component={Messages} />
         <PrivateRoute
           path="/messages/create-message"
@@ -183,7 +165,6 @@ const Hospital = () => {
           path="/messages/:messageId"
           component={ViewMessage}
         />
-
         <PrivateRoute exact path="/email" component={Email} />
         <PrivateRoute exact path="/finance" component={Finance} />
         <PrivateRoute exact path="/finance/earnings" component={Financetable} />
@@ -193,7 +174,6 @@ const Hospital = () => {
           path="/finance/sub-income"
           component={SubscriptionIncome}
         />
-
         <PrivateRoute
           exact
           path="/referrals/:referralId"
@@ -201,16 +181,10 @@ const Hospital = () => {
         />
         <PrivateRoute exact path="/referrals" component={ReferralTab} />
         <PrivateRoute exact path="/plans" component={Subscription} />
-
+        <PrivateRoute exact path="/settings" component={HospitalSettings} />
         <PrivateRoute
           exact
-          path="/hospital-settings"
-          component={HospitalSettings}
-        />
-
-        <PrivateRoute
-          exact
-          path="/hospital-settings/profile"
+          path="/settings/profile"
           component={HospitalProfile}
         />
         <PrivateRoute component={PageNotFound} />

@@ -11,6 +11,8 @@ const lightGreen = "#f7f7f7";
 const gold = "rgb(243, 173, 83)";
 const black = "#2D2F39";
 const disable = "#cccccc";
+const blue = "#3E5EA9";
+const lightBlue = "#F3F5FA";
 
 export const muiTheme = createTheme({
   palette: {
@@ -18,8 +20,10 @@ export const muiTheme = createTheme({
       dark,
       grey,
       red,
+      blue,
       disable,
       green,
+      lightBlue,
       lightRed,
       lightGrey,
       lighterGrey,
@@ -136,17 +140,23 @@ export const muiTheme = createTheme({
     },
     FormLabel: {
       fontSize: "clamp(1.4rem,2vw,1.6rem)",
-      color: dark,
+      color: "#979797",
+      fontWeight: 400,
+      // fontSize: "1.6rem",
+      lineHeight: "2rem",
     },
     input: {
       width: "100%",
       height: "5rem",
       padding: "clamp(0.3rem, 2vw, 1rem)",
-      fontSize: "clamp(1.4rem,2vw,1.6rem)",
+      fontSize: "clamp(0.8rem,2vw,1.6rem)",
       color: dark,
-      fontWeight: 600,
+      borderRadius: "1.4rem",
+      border: "1px solid #E6E6E6",
       "&::placeholder": {
-        color: lightGrey,
+        color: "#E6E6E6",
+        lineHeight: "2.5rem",
+        fontSize: "1.6rem",
         // fontSize: "clamp(1.2rem,2vw,1.6rem)",
         fontWeight: "500 !important",
       },
@@ -158,6 +168,13 @@ export const muiTheme = createTheme({
         root: {
           background: "#fff",
           boxShadow: "-1px 0px 10px -2px rgba(0,0,0,0.15)",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          boxShadow: "none",
         },
       },
     },

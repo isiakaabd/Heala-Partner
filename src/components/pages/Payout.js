@@ -191,107 +191,99 @@ const Payout = () => {
                 await setTableData(res, "Failed to change page.");
               }}
             >
-              {profiles
-                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const { amount, createdAt, /* doctorData, */ status, _id } =
-                    row;
+              {profiles.map((row, index) => {
+                const { amount, createdAt, status, _id, doctorData } = row;
+                const data = doctorData || [];
+                const { firstName, lastName, picture } = data[0] || {};
+                const isItemSelected = isSelected(_id, selectedRows);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                  const isItemSelected = isSelected(_id, selectedRows);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={_id}
-                      selected={isItemSelected}
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={_id}
+                    selected={isItemSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        onClick={() =>
+                          handleSelectedRows(_id, selectedRows, setSelectedRows)
+                        }
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          "aria-labelledby": labelId,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      id={labelId}
+                      scope="row"
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.black }}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={() =>
-                            handleSelectedRows(
-                              _id,
-                              selectedRows,
-                              setSelectedRows
-                            )
-                          }
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        id={labelId}
-                        scope="row"
-                        align="left"
-                        className={classes.tableCell}
-                        style={{ color: theme.palette.common.black }}
-                      >
-                        {dateMoment(createdAt)}
-                      </TableCell>
-                      <TableCell
-                        id={labelId}
-                        scope="row"
-                        align="left"
-                        className={classes.tableCell}
-                        style={{ color: theme.palette.common.black }}
-                      >
-                        {timeMoment(createdAt)}
-                      </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
+                      {dateMoment(createdAt)}
+                    </TableCell>
+                    <TableCell
+                      id={labelId}
+                      scope="row"
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.black }}
+                    >
+                      {timeMoment(createdAt)}
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      {row?.doctorData && row?.doctorData[0] !== {} ? (
                         <div
                           style={{
                             height: "100%",
                             display: "flex",
-                            alignItems: "center",
+                            alignItems: "left",
                           }}
                         >
-                          <span style={{ marginRight: "1rem" }}>
-                            {/* <Avatar
-                              alt="Remy Sharp"
-                              src={picture ? picture : displayPhoto}
-                              sx={{ width: 24, height: 24 }}
-                            /> */}
-                          </span>
-                          <span style={{ fontSize: "1.25rem" }}>
-                            {/* {firstName} {lastName} */}
-                          </span>
+                          <span style={{ fontSize: "1.25rem" }}>{`${
+                            firstName && firstName
+                          } ${lastName && lastName}`}</span>
                         </div>
-                      </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
-                        {/* {specialization} */}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        className={classes.tableCell}
-                        style={{ color: theme.palette.common.red }}
-                      >
-                        {amount}
-                      </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
-                        <Chip
-                          label={status}
-                          className={classes.badge}
-                          style={{
-                            background:
-                              status === "active"
-                                ? theme.palette.common.lightGreen
-                                : theme.palette.common.lightRed,
-                            color:
-                              status === "active"
-                                ? theme.palette.common.green
-                                : theme.palette.common.red,
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                      ) : (
+                        "No Name"
+                      )}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.red }}
+                    >
+                      {amount}
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      <Chip
+                        label={status}
+                        className={classes.badge}
+                        style={{
+                          background:
+                            status === "Success"
+                              ? theme.palette.common.lightGreen
+                              : status === "Failed"
+                              ? theme.palette.common.lightGreen
+                              : theme.palette.common.lightRed,
+                          color:
+                            status === "Success"
+                              ? theme.palette.common.green
+                              : status === "Failed"
+                              ? theme.palette.common.danger
+                              : theme.palette.common.red,
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </EnhancedTable>
           </Grid>
         ) : (

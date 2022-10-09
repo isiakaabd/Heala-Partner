@@ -24,11 +24,13 @@ export const patientsHeadCells = [
     id: 55,
     label: "Total Tests",
   },
-  {
-    id: 4,
-    label: "",
-  },
 ];
+export const availabilityHeadCells10 = [
+  { id: 2, label: "Day" },
+  { id: 3, label: "Start Time" },
+  { id: 300, label: "End Time" },
+];
+
 export const patientsHeadCells1 = [
   {
     id: 0,
@@ -54,10 +56,6 @@ export const patientsHeadCells1 = [
     id: 4,
     label: "Status",
   },
-  {
-    id: 5,
-    label: "",
-  },
 ];
 export const hcpsHeadCells5 = [
   { id: 0, label: "Medical ID" },
@@ -65,7 +63,6 @@ export const hcpsHeadCells5 = [
   { id: 2, label: "Category" },
   { id: 3, label: "Consultations" },
   { id: 5, label: "Status" },
-  { id: 6, label: "" },
 ];
 export const messagesHeadCell = [
   { id: 0, label: "Date" },
@@ -194,6 +191,29 @@ export const financeHeader = [
     label: "Subscription Plan",
   },
 ];
+export const financeHeader2 = [
+  {
+    id: 0,
+    label: " Amount",
+  },
+  {
+    id: 1,
+    label: "Customer",
+  },
+  {
+    id: 2,
+    label: "Plan Type",
+  },
+
+  {
+    id: 30,
+    label: "Provider",
+  },
+  {
+    id: 34,
+    label: "Paid On",
+  },
+];
 export const earningHead = [
   {
     id: 0,
@@ -215,6 +235,46 @@ export const earningHead = [
   {
     id: 31,
     label: "Amount",
+  },
+];
+export const payoutHeaderss1 = [
+  {
+    id: 234,
+    label: "Amount",
+  },
+  {
+    id: 235,
+    label: "Customer",
+  },
+  {
+    id: 2350,
+    label: "Provider",
+  },
+  {
+    id: 2,
+    label: "Received On",
+  },
+];
+export const payoutHeaders = [
+  {
+    id: 0,
+    label: "Date",
+  },
+  {
+    id: 1,
+    label: "Time",
+  },
+  {
+    id: 2,
+    label: "Name",
+  },
+  {
+    id: 4,
+    label: "Amount",
+  },
+  {
+    id: 40,
+    label: "Status",
   },
 ];
 export const referralHeader = [
@@ -270,10 +330,6 @@ export const referralHeaderss = [
   {
     id: 8,
     label: "Type",
-  },
-  {
-    id: 6,
-    label: "",
   },
 ];
 export const subscriptionHeadersss = [
@@ -333,8 +389,26 @@ export const payoutHeader = [
   },
 
   {
-    id: 3,
-    label: "Medical ID",
+    id: 4,
+    label: "Amount Paid Out ",
+  },
+  {
+    id: 5,
+    label: "Payout status",
+  },
+];
+export const payoutHeaderss = [
+  {
+    id: 0,
+    label: "Date",
+  },
+  {
+    id: 1,
+    label: "Time",
+  },
+  {
+    id: 2,
+    label: " Name",
   },
   {
     id: 4,
@@ -403,7 +477,6 @@ export const consultationsHeadCells = [
   { id: 102, label: "Symptoms" },
   { id: 104, label: "Type" },
   { id: 103, label: "Status" },
-  { id: 1040, label: "" },
 ];
 
 // Patients > Prescription Route Table
@@ -462,10 +535,11 @@ export const waitingHeadCells = [
 ];
 
 export const availabilityHeadCells = [
-  { id: 0, label: "HCP ID" },
+  { id: 0, label: "Doctor ID" },
   { id: 1, label: "Name" },
-  { id: 2, label: "Category" },
-  { id: 3, label: "Available Time" },
+  { id: 2, label: "Day" },
+  { id: 3, label: "Start Time" },
+  { id: 300, label: "End Time" },
 ];
 
 // HCPs HEADCELLS
@@ -487,7 +561,6 @@ export const partnersHeadCells = [
   { id: 3, label: "Patient's Name" },
   { id: 120, label: "Test Amount" },
   { id: 12, label: "Total Test" },
-  { id: 6, label: "" },
 ];
 
 // Messages's HEADCELLS
@@ -495,7 +568,7 @@ export const messagesHeadCells = [
   { id: 24, label: "Date" },
   { id: 9, label: "Time" },
   { id: 2, label: "Order Num" },
-  { id: 22, label: "Cancellation's Reason" },
+  // { id: 22, label: "Cancellation's Reason" },
   { id: 3, label: "Patient's Name" },
 ];
 // HCP Patients HEADCELLS

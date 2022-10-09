@@ -10,6 +10,8 @@ const hospitalPatterns = {
   "Doctor view": "hcps/{id}",
   "Doctor profile": "hcps/{id}/profile",
   Earnings: "hcps/{id}/earnings",
+  Data: "hcps/{id}/earnings/earn",
+  Payout: "hcps/{id}/earnings/payout",
   Availibility: "hcps/{id}/availability",
   "Doctor patients": "hcps/{id}/doctor-patients",
   "Send message": "hcps/{id}/profile/chat",
@@ -28,7 +30,8 @@ const hospitalPatterns = {
   // REFERRALS PATTERNS
   Referrals: "referrals",
   Referral: "referrals/{id}",
-
+  // Validations
+  Validations: "validations",
   //SETTINGS PATTERNS
   Settings: "hospital-settings",
   "Hospital profile": "hospital-settings/profile",

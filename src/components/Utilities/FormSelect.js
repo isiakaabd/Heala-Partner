@@ -21,7 +21,7 @@ const FormSelect = ({
         onChange={onChange}
         displayEmpty
         startAdornment={startAdornment}
-        style={{ minHeight: 60 }}
+        style={{ minHeight: 50, minWidth: 90 }}
         inputProps={{ "aria-label": "Select Referral Type" }}
         IconComponent={KeyboardArrowDownIcon}
         {...rest}

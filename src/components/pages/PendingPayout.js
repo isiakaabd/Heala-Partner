@@ -1,19 +1,11 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import {
-  Grid,
-  Typography,
-  TableRow,
-  TableCell,
-  Checkbox,
-  Avatar,
-} from "@mui/material";
+import { Grid, Typography, TableRow, TableCell, Checkbox } from "@mui/material";
 import { EnhancedTable, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { rows } from "components/Utilities/DataHeader";
 import { pendingHeader } from "components/Utilities/tableHeaders";
-import displayPhoto from "assets/images/avatar.png";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
@@ -203,13 +195,6 @@ const PendingPayout = ({
                           alignItems: "center",
                         }}
                       >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt="Remy Sharp"
-                            src={displayPhoto}
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
                         <span style={{ fontSize: "1.25rem" }}>
                           {row.firstName} {row.lastName}
                         </span>

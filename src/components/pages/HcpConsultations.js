@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useLazyQuery } from "@apollo/client";
 import { getDocConsult } from "components/graphQL/useQuery";
-import {
-  Avatar,
-  Typography,
-  TableRow,
-  Button,
-  TableCell,
-  Checkbox,
-  Grid,
-} from "@mui/material";
+import { Typography, TableRow, TableCell, Checkbox, Grid } from "@mui/material";
 import { consultationsHeadCells } from "components/Utilities/tableHeaders";
 import { useSelector } from "react-redux";
 import { NoData, EnhancedTable, EmptyTable } from "components/layouts";
@@ -19,10 +10,8 @@ import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { isSelected } from "helpers/isSelected";
 import { handleSelectedRows } from "helpers/selectedRows";
-import displayPhoto from "assets/images/avatar.svg";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Loader } from "components/Utilities";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { dateMoment } from "components/Utilities/Time";
 import {
   changeHospitalTableLimit,
@@ -75,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 const HcpConsultations = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const history = useHistory();
   const [pageInfo, setPageInfo] = useState({
     page: 0,
     totalPages: 1,
@@ -166,6 +156,12 @@ const HcpConsultations = () => {
                   tabIndex={-1}
                   key={_id}
                   selected={isItemSelected}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() =>
+                    history.push(
+                      `/hcps/${hcpId}/consultations/case-note/${_id}`
+                    )
+                  }
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
@@ -195,17 +191,6 @@ const HcpConsultations = () => {
                         alignItems: "left",
                       }}
                     >
-                      <span style={{ marginRight: "1rem" }}>
-                        <Avatar
-                          alt={`Display Photo of ${patientData.firstName}`}
-                          src={
-                            patientData.picture
-                              ? patientData.picture
-                              : displayPhoto
-                          }
-                          sx={{ width: 24, height: 24 }}
-                        />
-                      </span>
                       <span
                         style={{ fontSize: "1.25rem" }}
                       >{`${patientData.firstName} ${patientData.lastName}`}</span>
@@ -235,7 +220,7 @@ const HcpConsultations = () => {
                       maxWidth: "20rem",
                     }}
                   >
-                    {contactMedium}
+                    {contactMedium ? contactMedium : "No Value"}
                   </TableCell>
                   <TableCell
                     align="left"
@@ -246,17 +231,6 @@ const HcpConsultations = () => {
                     }}
                   >
                     {status ? status : "No Value"}
-                  </TableCell>
-                  <TableCell align="left">
-                    <Button
-                      variant="contained"
-                      className={classes.button}
-                      component={Link}
-                      to={`/hcps/${hcpId}/consultations/case-note/${_id}`}
-                      endIcon={<ArrowForwardIosIcon />}
-                    >
-                      View Details
-                    </Button>
                   </TableCell>
                 </TableRow>
               );

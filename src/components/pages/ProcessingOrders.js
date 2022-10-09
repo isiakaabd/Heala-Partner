@@ -13,7 +13,6 @@ import {
   Chip,
   Button,
   Checkbox,
-  Avatar,
   TableCell,
   TableRow,
 } from "@mui/material";
@@ -29,7 +28,6 @@ import { EnhancedTable } from "components/layouts";
 import { hcpsHeadCells } from "components/Utilities/tableHeaders";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useHistory } from "react-router-dom";
-import displayPhoto from "assets/images/avatar.png";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -392,13 +390,6 @@ const ProcessingOrders = () => {
                           alignItems: "center",
                         }}
                       >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={`Display Photo of ${patientData?.firstName}`}
-                            src={patientData?.image || displayPhoto}
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
                         <span style={{ fontSize: "1.25rem" }}>
                           {patientData
                             ? `${patientData?.firstName} ${patientData?.lastName}`

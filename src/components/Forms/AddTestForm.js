@@ -1,14 +1,15 @@
 import React from "react";
 import t from "prop-types";
-import { Formik, Form } from "formik";
+
 import { useAlert } from "components/hooks";
 import { useTheme } from "@mui/material/styles";
 import { Grid } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { CustomButton } from "components/Utilities";
 import { FormikControl } from "components/validation";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 import { addTest } from "components/graphQL/Mutation";
-import { addTestValidation } from "helpers/validationSchemas";
 
 export const AddTestForm = ({ onSuccess }) => {
   const theme = useTheme();
@@ -20,7 +21,15 @@ export const AddTestForm = ({ onSuccess }) => {
     price: null,
     tat: "",
   };
-
+  const validationSchema = Yup.object({
+    name: Yup.string("Enter your Test name")
+      .trim()
+      .required("Test Name is required"),
+    price: Yup.number("Enter your Test price")
+      .trim()
+      .required("Test Price is required"),
+    tat: Yup.string("Enter your Test price").trim().required("TAT is required"),
+  });
   const onSubmit = async (values) => {
     try {
       const { name, price, tat } = values;
@@ -52,7 +61,7 @@ export const AddTestForm = ({ onSuccess }) => {
     <Formik
       initialValues={addTestIntialValues}
       onSubmit={onSubmit}
-      validationSchema={addTestValidation}
+      validationSchema={validationSchema}
       validateOnChange={false}
       validateOnMount={false}
       validateOnBlur={false}

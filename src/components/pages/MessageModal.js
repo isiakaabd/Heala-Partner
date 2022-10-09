@@ -2,17 +2,8 @@ import React from "react";
 
 import { makeStyles } from "@mui/styles";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Grid,
-  Paper,
-  Typography,
-  Stack,
-  Avatar,
-  Modal,
-  Box,
-} from "@mui/material";
+import { Grid, Paper, Typography, Stack, Modal, Box } from "@mui/material";
 import TextChat from "components/Utilities/TextChat";
-import displayPhoto from "assets/images/avatar.png";
 import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -111,9 +102,6 @@ const MessageModal = ({
               alignItems="flex-start"
             >
               <Grid item container alignItems="center" gap={2}>
-                <Grid item>
-                  <Avatar src={displayPhoto} />
-                </Grid>
                 <Grid item>
                   <Typography variant="h3">{title ? title : ""}</Typography>
                 </Grid>

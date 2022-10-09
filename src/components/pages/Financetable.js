@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Link, useHistory } from "react-router-dom";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -6,8 +8,8 @@ import {
 import {
   Grid,
   Typography,
-  Avatar,
   TableCell,
+  Button,
   TableRow,
   Checkbox,
 } from "@mui/material";
@@ -20,8 +22,7 @@ import {
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
-import { earningHead } from "components/Utilities/tableHeaders";
-import displayPhoto from "assets/images/avatar.svg";
+import { payoutHeaderss1 } from "components/Utilities/tableHeaders";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -62,6 +63,35 @@ const useStyles = makeStyles((theme) => ({
       },
 
       "& .css-9tj150-MuiButton-endIcon": {
+        marginLeft: ".3rem",
+        marginTop: "-.2rem",
+      },
+    },
+  },
+  buttons: {
+    "&.MuiButton-root": {
+      background: "#fff",
+      color: theme.palette.common.grey,
+      textTransform: "none",
+      borderRadius: "2rem",
+      display: "flex",
+      alignItems: "center",
+      padding: "1rem",
+      maxWidth: "10rem",
+
+      "&:hover": {
+        background: "#fcfcfc",
+      },
+
+      "&:active": {
+        background: "#fafafa",
+      },
+
+      "& .MuiButton-endIcon>*:nth-of-type(1)": {
+        fontSize: "1.2rem",
+      },
+
+      "& .MuiButton-endIcon": {
         marginLeft: ".3rem",
         marginTop: "-.2rem",
       },
@@ -142,7 +172,7 @@ const Financetable = () => {
       displayMessage("error", error);
     }
   };
-
+  const history = useHistory();
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
 
@@ -162,7 +192,7 @@ const Financetable = () => {
         {profiles.length > 0 ? (
           <Grid item container>
             <EnhancedTable
-              headCells={earningHead}
+              headCells={payoutHeaderss1}
               rows={profiles}
               paginationLabel="finance per page"
               hasCheckbox={true}
@@ -186,10 +216,9 @@ const Financetable = () => {
               }}
             >
               {profiles.map((row, index) => {
-                const { doctorData, createdAt, balance, _id } = row;
-                const { firstName, picture, lastName, specialization } =
-                  doctorData[0];
-                const isItemSelected = isSelected(_id, selectedRows);
+                const { createdAt, providerId, balance, doctorData } = row;
+                const { firstName, lastName } = doctorData[0] || {};
+                const isItemSelected = isSelected(row._id, selectedRows);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -198,13 +227,21 @@ const Financetable = () => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={_id}
+                    key={row._id}
+                    style={{ cursor: "pointer" }}
                     selected={isItemSelected}
+                    onClick={() =>
+                      history.push(`hcps/${doctorData[0]._id}/consultations`)
+                    }
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
                         onClick={() =>
-                          handleSelectedRows(_id, selectedRows, setSelectedRows)
+                          handleSelectedRows(
+                            row.id,
+                            selectedRows,
+                            setSelectedRows
+                          )
                         }
                         color="primary"
                         checked={isItemSelected}
@@ -214,52 +251,50 @@ const Financetable = () => {
                       />
                     </TableCell>
                     <TableCell
-                      id={labelId}
-                      scope="row"
-                      align="left"
-                      className={classes.tableCell}
-                      style={{ color: theme.palette.common.black }}
-                    >
-                      {dateMoment(createdAt)}
-                    </TableCell>
-                    <TableCell
-                      id={labelId}
-                      scope="row"
-                      align="left"
-                      className={classes.tableCell}
-                      style={{ color: theme.palette.common.black }}
-                    >
-                      {timeMoment(createdAt)}
-                    </TableCell>
-                    <TableCell align="left" className={classes.tableCell}>
-                      <div
-                        style={{
-                          height: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={firstName ? firstName : "image"}
-                            src={doctorData ? picture : displayPhoto}
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
-                        <span style={{ fontSize: "1.25rem" }}>
-                          {doctorData ? `${firstName} ${lastName}` : "No Data"}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell align="left" className={classes.tableCell}>
-                      {specialization ? specialization : "No Value"}
-                    </TableCell>
-                    <TableCell
                       align="left"
                       className={classes.tableCell}
                       style={{ color: theme.palette.common.red }}
                     >
                       {formatNumber(balance.toFixed(2))}
+                    </TableCell>
+                    <TableCell align="left" className={classes.tableCell}>
+                      {doctorData && doctorData[0] !== {} ? (
+                        <div
+                          style={{
+                            height: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span style={{ fontSize: "1.25rem" }}>
+                            {doctorData &&
+                              `${firstName && firstName} ${
+                                lastName && lastName
+                              }`}
+                          </span>
+                        </div>
+                      ) : (
+                        "No name"
+                      )}
+                    </TableCell>
+                    <TableCell
+                      id={labelId}
+                      scope="row"
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.black }}
+                    >
+                      {providerId}
+                    </TableCell>
+
+                    <TableCell
+                      id={labelId}
+                      scope="row"
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.black }}
+                    >
+                      {`${dateMoment(createdAt)} - ${timeMoment(createdAt)}`}
                     </TableCell>
                   </TableRow>
                 );
@@ -268,7 +303,7 @@ const Financetable = () => {
           </Grid>
         ) : (
           <EmptyTable
-            headCells={earningHead}
+            headCells={payoutHeaderss1}
             paginationLabel="Finance  per page"
           />
         )}

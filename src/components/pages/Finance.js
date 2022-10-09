@@ -220,7 +220,7 @@ const Finance = () => {
                           textDecorationStyle: "double",
                         }}
                       >
-                        N{""}
+                        N
                       </span>
                       {formatNumber(totalEarning)}
                     </Typography>
@@ -261,7 +261,7 @@ const Finance = () => {
                           textDecorationStyle: "double",
                         }}
                       >
-                        N{""}
+                        N
                       </span>
                       {formatNumber(+totalPayouts)}
                     </Typography>
@@ -271,7 +271,7 @@ const Finance = () => {
                         color: theme.palette.common.lightGrey,
                       }}
                     >
-                      Total Expenditure
+                      Total Payouts
                     </Typography>
                   </Grid>
                 </Grid>

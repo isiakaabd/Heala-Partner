@@ -2,8 +2,6 @@ import React, { useState, useCallback, useEffect } from "react";
 import {
   Grid,
   TableRow,
-  Avatar,
-  Chip,
   FormControl,
   FormLabel,
   Button,
@@ -21,15 +19,13 @@ import {
   CustomButton,
   Loader,
 } from "components/Utilities";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { partnersHeadCells } from "components/Utilities/tableHeaders";
-import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useLazyQuery } from "@apollo/client";
 import { getDiagnosticTests } from "components/graphQL/useQuery";
 import {
@@ -151,6 +147,7 @@ const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
 
 const ScheduledRequest = () => {
   const classes = useStyles();
+  const history = useHistory();
   const [search, setSearch] = useState("");
   const theme = useTheme();
   const buttonType = {
@@ -281,10 +278,10 @@ const ScheduledRequest = () => {
               }
             >
               {scheduleState.map((row, index) => {
-                const { _id, patientData, tests, createdAt, testId } = row;
+                const { _id, patientData, tests, scheduledAt, testId } = row;
                 const isItemSelected = isSelected(_id, selectedRows);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                const x = tests.map((i) => i.price);
+                const x = tests?.map((i) => i.price);
                 return (
                   <TableRow
                     hover
@@ -292,6 +289,8 @@ const ScheduledRequest = () => {
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={_id}
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => history.push(`/schedule/${_id}/schedule`)}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
@@ -312,10 +311,10 @@ const ScheduledRequest = () => {
                       align="left"
                       className={classes.tableCell}
                     >
-                      {dateMoment(createdAt)}
+                      {dateMoment(scheduledAt)}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
-                      {timeMoment(createdAt)}
+                      {timeMoment(scheduledAt)}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       {testId ? testId : "No Test ID"}
@@ -328,18 +327,9 @@ const ScheduledRequest = () => {
                           alignItems: "center",
                         }}
                       >
-                        <span style={{ marginRight: "1rem" }}>
-                          <Avatar
-                            alt={`Display Photo of ${
-                              patientData ? patientData.firstName : "user"
-                            }`}
-                            src={patientData ? patientData.image : displayPhoto}
-                            sx={{ width: 24, height: 24 }}
-                          />
-                        </span>
                         <span style={{ fontSize: "1.25rem" }}>
                           {patientData
-                            ? `${patientData.firstName} ${patientData.lastName}`
+                            ? `${patientData?.firstName} ${patientData?.lastName}`
                             : "No Patient"}
                         </span>
                       </div>
@@ -354,16 +344,6 @@ const ScheduledRequest = () => {
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       {x.length}
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label="View schedule"
-                        variant="outlined"
-                        component={Link}
-                        to={`/schedule/${_id}/schedule`}
-                        className={classes.chip}
-                        deleteIcon={<ArrowForwardIosIcon />}
-                      />
                     </TableCell>
                   </TableRow>
                 );

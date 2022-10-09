@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 
 import CustomButton from "components/Utilities/CustomButton";
-import PreviousButton from "components/Utilities/PreviousButton";
 import { Divider, Grid, Typography } from "@mui/material";
 import FormikControl from "components/validation/FormikControl";
 import { useTheme } from "@mui/material/styles";
@@ -170,9 +169,7 @@ const CreateMessage = () => {
           <Form onChange={setRecipientvalue(values.recipient)}>
             {/* /*setRecipientvalue(values.recipient)*/}
             <Grid container direction="column">
-              <Grid item style={{ marginBottom: "3rem" }}>
-                <PreviousButton path={`/messages`} />
-              </Grid>
+              <Grid item style={{ marginBottom: "3rem" }}></Grid>
               <Grid item container direction="column" alignItems="center">
                 <Grid item>
                   <Typography variant="h4" style={{ marginBottom: "3rem" }}>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Typography, Grid, Avatar, Divider } from "@mui/material";
+import { Typography, Grid, Divider } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import displayPhoto from "assets/images/avatar.svg";
 import { useQuery } from "@apollo/client";
@@ -89,18 +89,7 @@ const ViewReferral = () => {
                   Patient:
                 </Typography>
               </Grid>
-              <Grid item>
-                <Avatar
-                  src={
-                    patientData && patientData.image
-                      ? patientData.image
-                      : displayPhoto
-                  }
-                  alt={`Display photo of the  ${
-                    patientData ? patientData.firstName : "placeholder"
-                  }`}
-                />
-              </Grid>
+
               <Grid item>
                 <Typography variant="h5">
                   {patientData
@@ -116,18 +105,6 @@ const ViewReferral = () => {
                 <Typography variant="body1" className={classes.title}>
                   Referred By:
                 </Typography>
-              </Grid>
-              <Grid item>
-                <Avatar
-                  src={
-                    doctorData && doctorData.picture
-                      ? doctorData.picture
-                      : displayPhoto
-                  }
-                  alt={`Display photo of the doctor ${
-                    doctorData ? doctorData.firstName : ""
-                  }`}
-                />
               </Grid>
               <Grid item>
                 <Typography variant="h5">

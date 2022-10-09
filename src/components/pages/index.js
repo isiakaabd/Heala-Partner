@@ -8,6 +8,8 @@ export { default as Login } from "./Login";
 export { default as PageNotFound } from "./PageNotFound";
 export { default as Error } from "./Error";
 export { default as Chat } from "./Chat";
+export { default as DoctorPayout } from "./DoctorPayout";
+export { default as DoctorEarning } from "./DoctorEarning";
 export { default as PendingOrder } from "./PendingOrder";
 export { default as ProcessingOrders } from "./ProcessingOrders";
 export { default as ViewCompleted } from "./ViewCompleted";
@@ -56,7 +58,6 @@ export { default as Settings } from "./Settings";
 export { default as SingleHCP } from "./SingleHCP";
 export { default as SinglePatient } from "./SinglePatient";
 export { default as Subscription } from "./Subscription";
+export { default as Validations } from "./Validations";
 
 export { default as ViewReferral } from "./ViewReferral";
-export { default as WaitingList } from "./WaitingList";
-export { default as WaitingListDetails } from "./WaitingListDetails";

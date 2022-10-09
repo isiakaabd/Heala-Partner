@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import {
   Grid,
   Typography,
+  Card,
   TableCell,
   TableRow,
   Checkbox,
-  Avatar,
 } from "@mui/material";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import {
@@ -16,8 +16,7 @@ import {
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
-import { financeHeader } from "components/Utilities/tableHeaders";
-import displayPhoto from "assets/images/avatar.svg";
+import { financeHeader2 } from "components/Utilities/tableHeaders";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -145,7 +144,16 @@ const SubscriptionIncome = () => {
   if (error) return <NoData error={error} />;
   return (
     <Grid container direction="column" gap={2} height="100%">
-      <>
+      <Card
+        variant="outlined"
+        sx={{
+          width: "100%",
+          borderRadius: "1.5rem",
+          borderColor: "transparent",
+          p: 2,
+          mt: 2,
+        }}
+      >
         <Grid item container gap={1} alignItems="center">
           <Grid item flex={1}>
             <Typography noWrap variant="h1" component="div" color="#2D2F39">
@@ -159,7 +167,7 @@ const SubscriptionIncome = () => {
         {profiles.length > 0 ? (
           <Grid item container>
             <EnhancedTable
-              headCells={financeHeader}
+              headCells={financeHeader2}
               rows={profiles}
               paginationLabel="finance per page"
               hasCheckbox={true}
@@ -183,9 +191,10 @@ const SubscriptionIncome = () => {
               }}
             >
               {profiles.map((row, index) => {
-                const { createdAt, amount, _id, patientData } = row;
+                const { createdAt, amount, patientData, providerId, planId } =
+                  row;
                 const { firstName, image, lastName } = patientData || {};
-                const isItemSelected = isSelected(_id, selectedRows);
+                const isItemSelected = isSelected(row._id, selectedRows);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
@@ -194,13 +203,17 @@ const SubscriptionIncome = () => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={_id}
+                    key={row._id}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
                         onClick={() =>
-                          handleSelectedRows(_id, selectedRows, setSelectedRows)
+                          handleSelectedRows(
+                            row.id,
+                            selectedRows,
+                            setSelectedRows
+                          )
                         }
                         color="primary"
                         checked={isItemSelected}
@@ -210,22 +223,11 @@ const SubscriptionIncome = () => {
                       />
                     </TableCell>
                     <TableCell
-                      id={labelId}
-                      scope="row"
                       align="left"
                       className={classes.tableCell}
-                      style={{ color: theme.palette.common.black }}
+                      style={{ color: theme.palette.common.red }}
                     >
-                      {dateMoment(createdAt)}
-                    </TableCell>
-                    <TableCell
-                      id={labelId}
-                      scope="row"
-                      align="left"
-                      className={classes.tableCell}
-                      style={{ color: theme.palette.common.black }}
-                    >
-                      {timeMoment(createdAt)}
+                      {formatNumber(amount.toFixed(2))}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       {patientData && patientData !== {} ? (
@@ -236,13 +238,6 @@ const SubscriptionIncome = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span style={{ marginRight: "1rem" }}>
-                            <Avatar
-                              alt={firstName ? firstName : "image"}
-                              src={patientData ? image : displayPhoto}
-                              sx={{ width: 24, height: 24 }}
-                            />
-                          </span>
                           <span style={{ fontSize: "1.25rem" }}>
                             {patientData &&
                               `${firstName && firstName} ${
@@ -259,7 +254,24 @@ const SubscriptionIncome = () => {
                       className={classes.tableCell}
                       style={{ color: theme.palette.common.red }}
                     >
-                      {formatNumber(amount.toFixed(2))}
+                      {planId}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.red }}
+                    >
+                      {providerId}
+                    </TableCell>
+
+                    <TableCell
+                      id={labelId}
+                      scope="row"
+                      align="left"
+                      className={classes.tableCell}
+                      style={{ color: theme.palette.common.black }}
+                    >
+                      {`${dateMoment(createdAt)} - ${timeMoment(createdAt)}`}
                     </TableCell>
                   </TableRow>
                 );
@@ -268,11 +280,11 @@ const SubscriptionIncome = () => {
           </Grid>
         ) : (
           <EmptyTable
-            headCells={financeHeader}
+            headCells={financeHeader2}
             paginationLabel="Finance  per page"
           />
         )}
-      </>
+      </Card>
     </Grid>
   );
 };

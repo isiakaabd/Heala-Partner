@@ -6,7 +6,6 @@ import {
   FormControl,
   FormLabel,
   Avatar,
-  Chip,
   TableRow,
   Grid,
   TableCell,
@@ -22,7 +21,7 @@ import {
 } from "components/Utilities";
 import useFormInput from "components/hooks/useFormInput";
 import { makeStyles } from "@mui/styles";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { EnhancedTable, EmptyTable } from "components/layouts";
 import { partnersHeadCells } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
@@ -31,7 +30,6 @@ import { useActions } from "components/hooks/useActions";
 import { useTheme } from "@mui/material/styles";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useLazyQuery } from "@apollo/client";
 import { getDiagnosticTests } from "components/graphQL/useQuery";
 import {
@@ -148,6 +146,7 @@ const CompletedOrder = () => {
   const classes = useStyles();
   const [openFilterPartner, setOpenFilterPartner] = useState(false);
   const [search, setSearch] = useState("");
+  const history = useHistory();
   // FILTER PARTNERS SELECT STATES
   const [filterSelectInput, handleSelectedInput] = useFormInput({
     hospitalName: "",
@@ -280,6 +279,8 @@ const CompletedOrder = () => {
                     tabIndex={-1}
                     key={_id}
                     selected={isItemSelected}
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => history.push(`/completed/${_id}/view`)}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
@@ -305,7 +306,7 @@ const CompletedOrder = () => {
                       {timeMoment(createdAt)}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
-                      {testId}
+                      {testId ? testId : "No Value"}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       <div
@@ -341,16 +342,6 @@ const CompletedOrder = () => {
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       {x.length}
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label="View result"
-                        variant="outlined"
-                        component={Link}
-                        to={`/completed/${_id}/view`}
-                        className={classes.chip}
-                        deleteIcon={<ArrowForwardIosIcon />}
-                      />
                     </TableCell>
                   </TableRow>
                 );

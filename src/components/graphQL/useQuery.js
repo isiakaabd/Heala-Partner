@@ -12,6 +12,74 @@ export const getPartner = gql`
     }
   }
 `;
+export const getDoctorAvailabilityForDate = gql`
+  query getDoctorAvailabilityForDate($doctor: String!, $day: String) {
+    getDoctorAvailabilityForDate(doctorId: $doctor, day: $day) {
+      day
+      available
+      times {
+        start
+        stop
+        available
+      }
+    }
+  }
+`;
+export const getUserTypes = gql`
+  ${PageInfo}
+  query getUserTypes {
+    getUserTypes(filterBy: { name: "HMO Enrollee" }) {
+      userType {
+        _id
+        name
+        icon
+        description
+        providerCount
+        createdAt
+        updatedAt
+      }
+      pageInfo {
+        ...pageDetails
+      }
+    }
+  }
+`;
+export const getUserTypeProviders = gql`
+  query getUserTypeProviders($id: String) {
+    getUserTypeProviders(filterBy: { userTypeId: $id }) {
+      provider {
+        _id
+        name
+        icon
+        userTypeId
+        userCount
+        doctorCount
+        enrolleeCount
+        partnerCount
+        createdAt
+        updatedAt
+        userTypeData {
+          name
+          icon
+          createdAt
+          updatedAt
+        }
+      }
+      pageInfo {
+        totalDocs
+        limit
+        offset
+        hasPrevPage
+        hasNextPage
+        page
+        totalPages
+        pagingCounter
+        prevPage
+        nextPage
+      }
+    }
+  }
+`;
 export const getDiagnosticDashboard = gql`
   query getDiagnosticDashboard($partner: String!) {
     getDiagnosticDashboard(partner: $partner) {
@@ -183,16 +251,18 @@ export const getDrugOrders = gql`
       data {
         _id
         partner
+        patient
         doctor
-        createdAt
         orderId
-        reason
+
+        deliveryOption
         consultationId
         note
         cancellationReason
         partnerData
         doctorData
         patientData
+        total
         prescriptions {
           priceListId
           drugName
@@ -204,7 +274,9 @@ export const getDrugOrders = gql`
         userLocation {
           address
           phoneNumber
-          city
+          state
+          lga
+          landmark
           lat
           lng
         }
@@ -406,7 +478,6 @@ export const getDrugOrder = gql`
       doctor
       orderId
       status
-      reason
       consultationId
       note
       cancellationReason
@@ -467,7 +538,6 @@ export const cancelDrugOrder = gql`
         doctor
         orderId
         status
-        reason
         consultationId
         note
         cancellationReason
@@ -514,29 +584,33 @@ export const getConsult = gql`
       patientData
       providerId
       declineReason
+      consultationDuration
       diagnosis {
         ailment
         severity
       }
       doctorNote
-      prescription {
-        priceListId
-        drugName
-        drugPrice
-        unitPrice
-        notes
-        dosageQuantity
-        dosage
-        mode
-        amount
-        dosageFrequency {
-          day
-          duration
-        }
-      }
       createdAt
       updatedAt
       referralId
+      prescription {
+        _id
+        drugs {
+          priceListId
+          drugName
+          drugPrice
+          unitPrice
+          dosageQuantity
+          dosageUnit
+          route
+          amount
+          instructions
+          dosageFrequency {
+            timing
+            duration
+          }
+        }
+      }
     }
   }
 `;
@@ -560,29 +634,19 @@ export const getConsultations = gql`
         discomfortLevel
         firstNotice
         doctor
-        type
-        status
-        contactMedium
-        doctorData
-        patientData
+        consultationDuration
         diagnosis {
           ailment
           severity
         }
         doctorNote
-        prescription {
-          drugName
-          dosageQuantity
-          dosage
-          dosageFrequency {
-            day
-            duration
-          }
-          mode
-        }
+        declineReason
         createdAt
-        referralId
         updatedAt
+        patientData
+        doctorData
+        referralId
+        providerId
       }
       pageInfo {
         ...pageDetails
@@ -614,23 +678,25 @@ export const getDiagnosticTests = gql`
         partner
         patient
         doctor
-        reason
-        testId
-        patientData
-        doctorData
         referralId
-        time
-        scheduledAt
-        tests {
-          price
-        }
         note
-        scheduledAt
         sampleCollection
         testResults
         cancellationReason
+        patientData
+        doctorData
+        testId
         partnerData
-        createdAt
+        tests {
+          paid
+          price
+          _id
+          tat
+          partner
+          name
+        }
+        time
+        scheduledAt
         userLocation {
           address
           phoneNumber
@@ -645,6 +711,52 @@ export const getDiagnosticTests = gql`
     }
   }
 `;
+// export const getDiagnosticTests = gql`
+//   ${PageInfo}
+//   query getDiagnosticTests(
+//     $status: String
+//     $page: Int
+//     $first: Int
+//     $testId: String
+//     $partnerProviderId: String!
+//   ) {
+//     getDiagnosticTests(
+//       filterBy: {
+//         testId: $testId
+//         status: "pending"
+//         partner: $partnerProviderId
+//       }
+//       orderBy: "-createdAt"
+//       page: $page
+//       first: $first
+//     ) {
+//       data {
+//         _id
+//         partner
+//         patient
+//         doctor
+//         reason
+//         referralId
+//         note
+//         sampleCollection
+//         testResults
+//         cancellationReason
+//         partnerData
+//         scheduledAt
+//         userLocation {
+//           address
+//           phoneNumber
+//           city
+//           lat
+//           lng
+//         }
+//       }
+//       pageInfo {
+//         ...pageDetails
+//       }
+//     }
+//   }
+// `;
 export const cancelDiagnosticReferral = gql`
   query cancelDiagnosticReferral($id: String) {
     cancelDiagnosticReferral(id: $id) {
@@ -732,7 +844,6 @@ export const getDocConsult = gql`
         _id
         patient
         consultationOwner
-        contactMedium
         symptoms {
           name
         }
@@ -740,26 +851,19 @@ export const getDocConsult = gql`
         discomfortLevel
         firstNotice
         doctor
+        consultationDuration
         diagnosis {
           ailment
           severity
         }
         doctorNote
-        prescription {
-          drugName
-          dosageQuantity
-          dosage
-          dosageFrequency {
-            day
-            duration
-          }
-          mode
-        }
+        declineReason
         createdAt
-        patientData
         updatedAt
+        patientData
+        doctorData
         referralId
-        status
+        providerId
       }
       pageInfo {
         ...pageDetails
@@ -993,25 +1097,119 @@ export const getSubscriptionsIncome = gql`
     }
   }
 `;
-// patientStats
-// doctorStats
-// totalEarnings
-// totalPayout
-// appointmentStats
-// subscribers
-// availabilityCalendar {
-//   _id
-//   doctor
-//   doctorData
-//   day
-//   available
-//   times {
-//     start
-//     stop
-//   }
-//   createdAt
-//   updatedAt
-// }
+
+export const getAvailabilities = gql`
+  ${PageInfo}
+  query getAvailabilities(
+    $id: String
+    $providerId: String
+    $page: Int
+    $day: String
+    $first: Int
+  ) {
+    getAvailabilities(
+      filterBy: { doctor: $id, providerId: $providerId, day: $day }
+      page: $page
+      first: $first
+    ) {
+      availability {
+        _id
+        doctor
+        doctorData
+        createdAt
+        updatedAt
+        providerId
+        day
+        available
+        times {
+          start
+          stop
+          available
+        }
+      }
+      pageInfo {
+        ...pageDetails
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const getMyEarnings = gql`
+  ${PageInfo}
+  query getMyEarnings($doctor: String, $page: Int, $first: Int) {
+    getMyEarnings(
+      filterBy: { doctor: $doctor }
+      first: $first
+      page: $page
+      orderBy: "-createdAt"
+    ) {
+      data {
+        _id
+        doctor
+        balance
+        doctorData
+        createdAt
+        updatedAt
+      }
+      totalEarnings
+      totalPayouts
+      pageInfo {
+        ...pageDetails
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+export const getPayouts = gql`
+  ${PageInfo}
+  query getPayouts($page: Int, $doctor: String, $first: Int) {
+    getPayouts(filterBy: { doctor: $doctor }, page: $page, first: $first) {
+      data {
+        _id
+        doctor
+        amount
+        status
+        createdAt
+        updatedAt
+        providerId
+        providerData
+      }
+      pageInfo {
+        ...pageDetails
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+export const getPayoutData = gql`
+  query getEarningStats(
+    $first: Int
+    $page: Int
+    $status: String
+    $doctor: String
+  ) {
+    getEarningStats(
+      filterBy: { status: $status, doctor: $doctor }
+      q: "365"
+      page: $page
+      first: $first
+      orderBy: "-createdAt"
+    ) {
+      payoutData
+    }
+  }
+`;
+
 export const dashboard = gql`
   query getStats($providerId: String, $q: String) {
     getStats(filterBy: { providerId: $providerId }, q: $q) {
@@ -1027,11 +1225,138 @@ export const dashboard = gql`
         activeChartData
         inactiveChartData
       }
-      totalActiveSubscribers
-      totalInactiveSubscribers
+      partnerStats {
+        total
+        chartData
+        hospitalChartData
+        diagnosticsChartData
+        pharmacyChartData
+        totalHospitals
+        totalPharmacies
+        totalDiagnostics
+      }
+      subscriptionStats {
+        totalActive
+        totalInactive
+        chartData
+        activeChartData
+        inactiveChartData
+      }
+      earningStats {
+        total
+        chartData
+      }
+      payoutStats {
+        total
+        chartData
+      }
+      consultationStats {
+        totalOngoing
+        totalAccepted
+        totalCompleted
+        totalDeclined
+        totalCancelled
+        ongoingChartData
+        acceptedChartData
+        completedChartData
+        declinedChartData
+        cancelledChartData
+      }
+      availabilityCalender {
+        today
+        availableDoctors {
+          dociId
+          firstName
+          lastName
+          providerId
+          availability {
+            times {
+              start
+              stop
+              available
+            }
+            createdAt
+            updatedAt
+          }
+        }
+      }
     }
   }
 `;
+export const dashboard1 = gql`
+  query getStats {
+    getStats(filterBy: {}, q: $q) {
+      patientStats {
+        totalActive
+        totalInactive
+        activeChartData
+        inactiveChartData
+      }
+      doctorStats {
+        totalActive
+        totalInactive
+        activeChartData
+        inactiveChartData
+      }
+      partnerStats {
+        total
+        chartData
+        hospitalChartData
+        diagnosticsChartData
+        pharmacyChartData
+        totalHospitals
+        totalPharmacies
+        totalDiagnostics
+      }
+      subscriptionStats {
+        totalActive
+        totalInactive
+        chartData
+        activeChartData
+        inactiveChartData
+      }
+      earningStats {
+        total
+        chartData
+      }
+      payoutStats {
+        total
+        chartData
+      }
+      consultationStats {
+        totalOngoing
+        totalAccepted
+        totalCompleted
+        totalDeclined
+        totalCancelled
+        ongoingChartData
+        acceptedChartData
+        completedChartData
+        declinedChartData
+        cancelledChartData
+      }
+      availabilityCalender {
+        today
+        availableDoctors {
+          dociId
+          firstName
+          lastName
+          providerId
+          availability {
+            times {
+              start
+              stop
+              available
+            }
+            createdAt
+            updatedAt
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const getPlans = gql`
   ${PageInfo}
   query getPlans($amount: Float, $provider: String, $page: Int, $first: Int) {

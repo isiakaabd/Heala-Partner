@@ -9,7 +9,11 @@ const useAlert = () => {
     const networkError = message?.networkError?.result?.errors[0].message;
     const graphQlError = message?.graphQLErrors?.map((err) => err.message);
     return enqueueSnackbar(
-      <Typography test-role="data-testing" style={{ fontSize: "1.2rem" }}>
+      <Typography
+        test-role="data-testing"
+        data-testid="alert-test-value"
+        style={{ fontSize: "1.2rem" }}
+      >
         {networkError ? networkError : graphQlError ? graphQlError : message}
       </Typography>,
       {
