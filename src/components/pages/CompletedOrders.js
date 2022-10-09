@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Grid,
-  Chip,
   Avatar,
   FormControl,
   FormLabel,
@@ -25,14 +24,13 @@ import {
   changeTableLimit,
   handlePageChange,
 } from "helpers/filterHelperFunctions";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { partnersHeadCells } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useLazyQuery } from "@apollo/client";
 import { getDrugOrders } from "components/graphQL/useQuery";
 import { NoData, EmptyTable, EnhancedTable } from "components/layouts";
@@ -145,6 +143,7 @@ const hospitals = ["General Hospital, Lekki", "H-Medix", "X Lab"];
 const CompletedOrders = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const history = useHistory();
   const [state, setState] = useState([]);
   const [search, setSearch] = useState("");
   const prettyDollarConfig = {
@@ -273,6 +272,8 @@ const CompletedOrders = () => {
                     tabIndex={-1}
                     key={_id}
                     selected={isItemSelected}
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => history.push(`completed-order/${_id}/order`)}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
@@ -337,16 +338,6 @@ const CompletedOrders = () => {
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       {x?.length}
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label="view order"
-                        variant="outlined"
-                        component={Link}
-                        to={`completed-order/${_id}/order`}
-                        className={classes.chip}
-                        deleteIcon={<ArrowForwardIosIcon />}
-                      />
                     </TableCell>
                   </TableRow>
                 );

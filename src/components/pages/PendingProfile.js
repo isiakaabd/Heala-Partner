@@ -534,7 +534,7 @@ const PendingProfile = () => {
               validateOnChange={false}
               validateOnMount={false}
             >
-              {({ isSubmitting, dirty, isValid, setFieldValue }) => {
+              {({ isSubmitting, dirty, isValid }) => {
                 return (
                   <Form style={{ marginTop: "3rem" }}>
                     <Grid container rowGap={3}>
@@ -544,7 +544,6 @@ const PendingProfile = () => {
                           name="date"
                           label="Date"
                           placeholder="Choose Date and Time"
-                          setFieldValue={setFieldValue}
                         />
                       </Grid>
                       <Grid item container>

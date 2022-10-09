@@ -376,7 +376,6 @@ export const fulfillDrugOrder = gql`
         doctor
         orderId
         status
-        reason
         consultationId
         note
         cancellationReason

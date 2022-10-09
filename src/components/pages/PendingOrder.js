@@ -4,7 +4,6 @@ import {
   Grid,
   Button,
   FormControl,
-  Chip,
   TableRow,
   FormLabel,
   Checkbox,
@@ -26,8 +25,7 @@ import { debounce } from "helpers/debounce";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { patientsHeadCells } from "components/Utilities/tableHeaders";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -114,6 +112,7 @@ const useStyles = makeStyles((theme) => ({
 const PendingOrder = () => {
   const [search, setSearch] = useState("");
   const classes = useStyles();
+  const history = useHistory();
   const theme = useTheme();
   const [state, setState] = useState([]);
   const [fetchDiagnostics, { data, loading, error }] =
@@ -212,7 +211,7 @@ const PendingOrder = () => {
               type={buttonType}
               disabled={!search}
               onClick={handleSubmitSearch}
-            />{" "}
+            />
           </Grid>
         </Grid>
         {/* The Search and Filter ends here */}
@@ -255,7 +254,11 @@ const PendingOrder = () => {
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={_id}
+                        sx={{ cursor: "pointer" }}
                         selected={isItemSelected}
+                        onClick={() =>
+                          history.push(`pending-order/${_id}/order`)
+                        }
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
@@ -326,21 +329,6 @@ const PendingOrder = () => {
                         </TableCell>
                         <TableCell align="left" className={classes.tableCell}>
                           {x.length}
-                        </TableCell>
-
-                        <TableCell>
-                          <Chip
-                            label="view request"
-                            variant="outlined"
-                            component={Link}
-                            to={`pending-order/${_id}/order`}
-                            className={classes.chip}
-                            sx={{
-                              cursor: "pointer",
-                            }}
-                            type="pending"
-                            deleteIcon={<ArrowForwardIosIcon />}
-                          />
                         </TableCell>
                       </TableRow>
                     );
