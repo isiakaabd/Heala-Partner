@@ -190,7 +190,7 @@ const ProcessingOrders = () => {
       await cancelTest({
         variables: {
           id: cancelId,
-          reason,
+          reason: reason.trim(),
         },
         refetchQueries: [
           {
