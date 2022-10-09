@@ -141,7 +141,7 @@ const ScheduledRequestProfile = () => {
       setScheduleState(data.getDiagnosticTest);
     }
   }, [data]);
-  console.log(data);
+
   const [openDisablePatient, setOpenDisablePatient] = useState(false);
   const [modal, setModal] = useState(false);
   const [cancel, setCancel] = useState(false);
@@ -162,7 +162,7 @@ const ScheduledRequestProfile = () => {
       await cancelTest({
         variables: {
           id: scheduleId,
-          reason,
+          reason: reason.trim(),
         },
         refetchQueries: [
           {
