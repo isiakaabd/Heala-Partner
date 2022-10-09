@@ -1,41 +1,20 @@
 import React, { useState, useEffect } from "react";
-import FormikControl from "components/validation/FormikControl";
-import { Formik, Form } from "formik";
 
 import TableLayout from "components/layouts/TableLayout";
 import * as Yup from "yup";
 import { NoData, EmptyTable } from "components/layouts";
-import {
-  defaultPageInfo,
-  searchOptions,
-  patientSearchOptions,
-} from "helpers/mockData";
-import {
-  Button,
-  Chip,
-  Checkbox,
-  TableCell,
-  TableRow,
-  Grid,
-} from "@mui/material";
-import {
-  Modals,
-  Loader,
-  CustomButton,
-  PatientFilters,
-  CompoundSearch,
-} from "components/Utilities";
+import { defaultPageInfo, searchOptions } from "helpers/mockData";
+import { Chip, Checkbox, TableCell, TableRow, Grid } from "@mui/material";
+import { Loader, PatientFilters, CompoundSearch } from "components/Utilities";
 import { EnhancedTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { patientsHeadCells1 } from "components/Utilities/tableHeaders";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import displayPhoto from "assets/images/avatar.svg";
-import { Link, useHistory } from "react-router-dom";
+
+import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
-import { isSelected } from "helpers/isSelected";
 import { useLazyQuery } from "@apollo/client";
 // import { getPatients } from "components/graphaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjkkkkvkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo6666666666666666666666666666666666666666666666666666666666666666666666uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuukkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkQL/useQuery";
 import {
@@ -48,11 +27,6 @@ import {
   getPatientsByPlan,
   getPatientsByStatus,
 } from "components/graphQL/useQuery";
-
-const genderType = [
-  { key: "Male", value: "0" },
-  { key: "Female", value: "1" },
-];
 
 const useStyles = makeStyles((theme) => ({
   searchFilterContainer: {
@@ -142,21 +116,6 @@ const Patients = () => {
   ] = useLazyQuery(getPatientsByPlan);
   const id = localStorage.getItem("partnerProviderId");
 
-  const initialValues = {
-    name: "",
-    bloodGroup: "",
-    phone: "",
-    gender: "",
-  };
-
-  const validationSchema = Yup.object({
-    name: Yup.string("Enter your hospital").trim(),
-    bloodGroup: Yup.string("Enter your bloodGroup").trim(),
-    gender: Yup.string("Select your gender"),
-    phone: Yup.number("Enter your specialization").typeError(
-      "Enter a current Number"
-    ),
-  });
   const setTableData = async (response, errMsg) => {
     response
       .then(({ data }) => {
@@ -192,15 +151,7 @@ const Patients = () => {
   }, [fetchPatient, id]);
 
   const [profiles, setProfiles] = useState([]);
-  const onSubmit = async (values) => {
-    const { gender } = values;
-    await fetchPatient({
-      variables: {
-        gender,
-      },
-    });
-    handleDialogClose();
-  };
+
   const [pageInfo, setPageInfo] = useState({
     page: 0,
     totalPages: 1,

@@ -4,7 +4,6 @@ import { useTheme } from "@mui/material/styles";
 import {
   Grid,
   Button,
-  Chip,
   TableRow,
   TableCell,
   Checkbox,
@@ -22,8 +21,7 @@ import {
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { patientsHeadCells } from "components/Utilities/tableHeaders";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { handleSelectedRows } from "helpers/selectedRows";
@@ -155,6 +153,7 @@ const Pending = () => {
     gender: "",
     status: "",
   });
+  const history = useHistory();
 
   const { date, plan } = inputValue;
   const buttonType = {
@@ -244,7 +243,7 @@ const Pending = () => {
                 );
               }}
             >
-              {pendingState.map((row, index) => {
+              {pendingState?.map((row, index) => {
                 const {
                   createdAt,
                   _id,
@@ -255,7 +254,8 @@ const Pending = () => {
                 } = row;
                 const isItemSelected = isSelected(_id, selectedRows);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                const x = tests.map((i) => i.price);
+                const x = tests?.map((i) => i.price);
+
                 return (
                   <TableRow
                     hover
@@ -263,6 +263,8 @@ const Pending = () => {
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={_id}
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => history.push(`pending/${_id}/request`)}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
@@ -323,25 +325,13 @@ const Pending = () => {
                     <TableCell align="left" className={classes.tableCell}>
                       {prettyMoney(
                         prettyDollarConfig,
-                        x.reduce(function (accumulator, currentValue) {
+                        x?.reduce(function (accumulator, currentValue) {
                           return accumulator + currentValue;
                         }, 0)
                       )}
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
-                      {x.length}
-                    </TableCell>
-
-                    <TableCell>
-                      <Chip
-                        label="View request"
-                        variant="outlined"
-                        component={Link}
-                        to={`pending/${_id}/request`}
-                        className={classes.chip}
-                        sx={{ "&:hover": { cursor: "pointer" } }}
-                        deleteIcon={<ArrowForwardIosIcon />}
-                      />
+                      {x?.length}
                     </TableCell>
                   </TableRow>
                 );

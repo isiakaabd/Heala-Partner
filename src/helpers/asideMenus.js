@@ -13,7 +13,7 @@ import SubscriptionIcon from "components/Icons/SubscriptionIcon";
 import PeopleIcon from "components/Icons/PeopleIcon";
 
 export const pharmacyMenu = [
-  { id: 0, title: "Dashboard", icon: DashboardIcon, path: "/dashboard" },
+  { id: 0, title: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
   {
     id: 1,
     title: "Pending Orders",
@@ -42,7 +42,7 @@ export const pharmacyMenu = [
   { id: 11, title: "Settings", icon: <SettingsIcon />, path: "/settings" },
 ];
 export const diagnosticsMenu = [
-  { id: 0, title: "Dashboard", icon: DashboardIcon, path: "/dashboard" },
+  { id: 0, title: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
   {
     id: 1,
     title: "Test Referrals",

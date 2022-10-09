@@ -251,16 +251,18 @@ export const getDrugOrders = gql`
       data {
         _id
         partner
+        patient
         doctor
-        createdAt
         orderId
-        reason
+
+        deliveryOption
         consultationId
         note
         cancellationReason
         partnerData
         doctorData
         patientData
+        total
         prescriptions {
           priceListId
           drugName
@@ -272,7 +274,9 @@ export const getDrugOrders = gql`
         userLocation {
           address
           phoneNumber
-          city
+          state
+          lga
+          landmark
           lat
           lng
         }
@@ -474,7 +478,6 @@ export const getDrugOrder = gql`
       doctor
       orderId
       status
-      reason
       consultationId
       note
       cancellationReason
@@ -535,7 +538,6 @@ export const cancelDrugOrder = gql`
         doctor
         orderId
         status
-        reason
         consultationId
         note
         cancellationReason
@@ -582,29 +584,33 @@ export const getConsult = gql`
       patientData
       providerId
       declineReason
+      consultationDuration
       diagnosis {
         ailment
         severity
       }
       doctorNote
-      prescription {
-        priceListId
-        drugName
-        drugPrice
-        unitPrice
-        notes
-        dosageQuantity
-        dosage
-        mode
-        amount
-        dosageFrequency {
-          day
-          duration
-        }
-      }
       createdAt
       updatedAt
       referralId
+      prescription {
+        _id
+        drugs {
+          priceListId
+          drugName
+          drugPrice
+          unitPrice
+          dosageQuantity
+          dosageUnit
+          route
+          amount
+          instructions
+          dosageFrequency {
+            timing
+            duration
+          }
+        }
+      }
     }
   }
 `;
@@ -628,29 +634,19 @@ export const getConsultations = gql`
         discomfortLevel
         firstNotice
         doctor
-        type
-        status
-        contactMedium
-        doctorData
-        patientData
+        consultationDuration
         diagnosis {
           ailment
           severity
         }
         doctorNote
-        prescription {
-          drugName
-          dosageQuantity
-          dosage
-          dosageFrequency {
-            day
-            duration
-          }
-          mode
-        }
+        declineReason
         createdAt
-        referralId
         updatedAt
+        patientData
+        doctorData
+        referralId
+        providerId
       }
       pageInfo {
         ...pageDetails
@@ -682,23 +678,25 @@ export const getDiagnosticTests = gql`
         partner
         patient
         doctor
-        reason
-        testId
-        patientData
-        doctorData
         referralId
-        time
-        scheduledAt
-        tests {
-          price
-        }
         note
-        scheduledAt
         sampleCollection
         testResults
         cancellationReason
+        patientData
+        doctorData
+        testId
         partnerData
-        createdAt
+        tests {
+          paid
+          price
+          _id
+          tat
+          partner
+          name
+        }
+        time
+        scheduledAt
         userLocation {
           address
           phoneNumber
@@ -713,6 +711,52 @@ export const getDiagnosticTests = gql`
     }
   }
 `;
+// export const getDiagnosticTests = gql`
+//   ${PageInfo}
+//   query getDiagnosticTests(
+//     $status: String
+//     $page: Int
+//     $first: Int
+//     $testId: String
+//     $partnerProviderId: String!
+//   ) {
+//     getDiagnosticTests(
+//       filterBy: {
+//         testId: $testId
+//         status: "pending"
+//         partner: $partnerProviderId
+//       }
+//       orderBy: "-createdAt"
+//       page: $page
+//       first: $first
+//     ) {
+//       data {
+//         _id
+//         partner
+//         patient
+//         doctor
+//         reason
+//         referralId
+//         note
+//         sampleCollection
+//         testResults
+//         cancellationReason
+//         partnerData
+//         scheduledAt
+//         userLocation {
+//           address
+//           phoneNumber
+//           city
+//           lat
+//           lng
+//         }
+//       }
+//       pageInfo {
+//         ...pageDetails
+//       }
+//     }
+//   }
+// `;
 export const cancelDiagnosticReferral = gql`
   query cancelDiagnosticReferral($id: String) {
     cancelDiagnosticReferral(id: $id) {
@@ -800,7 +844,6 @@ export const getDocConsult = gql`
         _id
         patient
         consultationOwner
-        contactMedium
         symptoms {
           name
         }
@@ -808,26 +851,19 @@ export const getDocConsult = gql`
         discomfortLevel
         firstNotice
         doctor
+        consultationDuration
         diagnosis {
           ailment
           severity
         }
         doctorNote
-        prescription {
-          drugName
-          dosageQuantity
-          dosage
-          dosageFrequency {
-            day
-            duration
-          }
-          mode
-        }
+        declineReason
         createdAt
-        patientData
         updatedAt
+        patientData
+        doctorData
         referralId
-        status
+        providerId
       }
       pageInfo {
         ...pageDetails

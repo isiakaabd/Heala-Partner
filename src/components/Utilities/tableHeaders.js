@@ -24,10 +24,6 @@ export const patientsHeadCells = [
     id: 55,
     label: "Total Tests",
   },
-  {
-    id: 4,
-    label: "",
-  },
 ];
 export const availabilityHeadCells10 = [
   { id: 2, label: "Day" },
@@ -335,10 +331,6 @@ export const referralHeaderss = [
     id: 8,
     label: "Type",
   },
-  {
-    id: 6,
-    label: "",
-  },
 ];
 export const subscriptionHeadersss = [
   {
@@ -485,7 +477,6 @@ export const consultationsHeadCells = [
   { id: 102, label: "Symptoms" },
   { id: 104, label: "Type" },
   { id: 103, label: "Status" },
-  { id: 1040, label: "" },
 ];
 
 // Patients > Prescription Route Table
@@ -570,7 +561,6 @@ export const partnersHeadCells = [
   { id: 3, label: "Patient's Name" },
   { id: 120, label: "Test Amount" },
   { id: 12, label: "Total Test" },
-  { id: 6, label: "" },
 ];
 
 // Messages's HEADCELLS
@@ -578,7 +568,7 @@ export const messagesHeadCells = [
   { id: 24, label: "Date" },
   { id: 9, label: "Time" },
   { id: 2, label: "Order Num" },
-  { id: 22, label: "Cancellation's Reason" },
+  // { id: 22, label: "Cancellation's Reason" },
   { id: 3, label: "Patient's Name" },
 ];
 // HCP Patients HEADCELLS

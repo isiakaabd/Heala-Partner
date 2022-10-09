@@ -29,7 +29,6 @@ const Dates = ({ name, value, onBlur, disabled, type, ...rest }) => {
         disabled={disabled}
         onBlur={onBlur}
         style={{ height: "5rem !important" }}
-        onError={(err) => console.log(err)}
         renderInput={(params) => (
           <TextField
             {...params}
