@@ -232,7 +232,7 @@ const CancelledOrders = () => {
               {state
                 // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const { _id, createdAt, orderId, patientData, reason } = row;
+                  const { _id, createdAt, orderId, patientData } = row;
                   const isItemSelected = isSelected(_id, selectedRows);
 
                   const labelId = `enhanced-table-checkbox-${index}`;

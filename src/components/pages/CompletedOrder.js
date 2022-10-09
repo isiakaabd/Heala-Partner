@@ -6,7 +6,6 @@ import {
   FormControl,
   FormLabel,
   Avatar,
-  Chip,
   TableRow,
   Grid,
   TableCell,
