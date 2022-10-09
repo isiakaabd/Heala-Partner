@@ -327,7 +327,7 @@ const ScheduledRequestProfile = () => {
               gap={2}
               className={classes.cardsWrapper}
             >
-              {tests && tests.length > 0 ? (
+              {tests?.length > 0 ? (
                 tests.map((i, index) => {
                   return (
                     <Grid item key={index}>
@@ -475,16 +475,18 @@ const ScheduledRequestProfile = () => {
                     }}
                   />
                 </Grid>
-                <Grid item>
-                  <Chip
-                    variant="outlined"
-                    label={userLocation.city}
-                    classes={{
-                      root: classes.chipRoot,
-                      label: classes.chipLabel,
-                    }}
-                  />
-                </Grid>
+                {userLocation?.city && (
+                  <Grid item>
+                    <Chip
+                      variant="outlined"
+                      label={userLocation.city}
+                      classes={{
+                        root: classes.chipRoot,
+                        label: classes.chipLabel,
+                      }}
+                    />
+                  </Grid>
+                )}
               </Grid>
             ) : (
               <Grid item>

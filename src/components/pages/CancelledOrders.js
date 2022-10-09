@@ -276,9 +276,9 @@ const CancelledOrders = () => {
                       <TableCell align="left" className={classes.tableCell}>
                         {orderId}
                       </TableCell>
-                      <TableCell align="left" className={classes.tableCell}>
+                      {/* <TableCell align="left" className={classes.tableCell}>
                         {reason}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="left" className={classes.tableCell}>
                         <div
                           style={{
