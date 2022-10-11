@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Grid, Paper } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
@@ -13,10 +13,24 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const TableLayout = ({ children, filters, search }) => {
+const TableLayout = ({ children, filters, search, header, showHeader }) => {
   const classes = useStyles();
   return (
     <Paper id="table_layout" className={`${classes.cont}`} elevation={0}>
+      <Grid container sx={{ marginBottom: "2rem" }}>
+        {header && showHeader && (
+          <Typography
+            sx={{
+              fontWeight: 500,
+              fontSize: "20px",
+              lineHeight: "25.36px",
+              color: "#010101",
+            }}
+          >
+            {header}
+          </Typography>
+        )}
+      </Grid>
       <Grid
         container
         justifyContent="space-between"
@@ -36,6 +50,8 @@ TableLayout.propTypes = {
   children: PropTypes.node.isRequired,
   filters: PropTypes.node,
   search: PropTypes.node,
+  header: PropTypes.string,
+  showHeader: PropTypes.bool,
 };
 
 export default TableLayout;

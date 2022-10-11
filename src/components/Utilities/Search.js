@@ -42,7 +42,6 @@ const SearchContainer = ({
               : hasStartIcon && <SearchIcon style={{ fontSize: "3rem" }} />}
           </InputAdornment>
         }
-        autoFocus
       />
     </Grid>
   );

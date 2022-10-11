@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Formiks = ({ name, setFieldValue, onBlur }) => {
+export const Formiks = ({ name, setFieldValue, onBlur, value }) => {
   const fileRef = useRef(null);
   const classes = useStyles();
   const { displayMessage } = useAlert();
@@ -81,6 +81,12 @@ export const Formiks = ({ name, setFieldValue, onBlur }) => {
     reader.readAsDataURL(file);
     reader.onloadend = (e) => setPreview(reader.result);
   };
+
+  useEffect(() => {
+    if (value) {
+      setPreview(value);
+    }
+  }, []);
 
   return (
     <Grid container spacing={2} alignItems="center">
@@ -123,7 +129,13 @@ export const Formiks = ({ name, setFieldValue, onBlur }) => {
             </FormControl>
           </Grid>
           <Grid item>
-            {preview && isCompleted !== "failed" ? (
+            {!preview ? (
+              <Typography sx={{ color: "#757886", fontSize: "16px" }}>
+                No file chosen
+              </Typography>
+            ) : preview && isCompleted !== "failed" ? (
+              <Avatar sx={{ backgroundColor: "#eaeaea" }} src={preview} />
+            ) : preview ? (
               <Avatar sx={{ backgroundColor: "#eaeaea" }} src={preview} />
             ) : (
               ""

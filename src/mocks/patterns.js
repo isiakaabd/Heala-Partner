@@ -69,8 +69,26 @@ const pharmacyPatterns = {
   Profile: "settings/profile",
 };
 
+const hmoPatterns = {
+  // PATIENTS PATTERNS
+  Patients: "patients",
+  "Patient view": "patients/{id}",
+  "Patient Profile": "patients/{id}/profile",
+  chat: "patients/{id}/profile/chat",
+
+  // ENROLLEES
+  Enrollees: "enrollees",
+
+  // ENROLLEES
+  Plans: "plans",
+
+  //SETTINGS PATTERNS
+  Settings: "settings",
+};
+
 export default Object.freeze({
   hospitalPatterns,
   diagnosticsPatterns,
   pharmacyPatterns,
+  hmoPatterns,
 });

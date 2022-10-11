@@ -10,6 +10,9 @@ import PatientsIcon from "components/Icons/PatientsIcon";
 import SettingsIcon from "components/Icons/SettingsIcon";
 import RefferalsIcon from "components/Icons/RefferalsIcon";
 import SubscriptionIcon from "components/Icons/SubscriptionIcon";
+import PartnersIcon from "components/Icons/PartnersIcon";
+import LabelIcon from "components/Icons/LabelIcon";
+import PlansIcon from "components/Icons/PlansIcon";
 import PeopleIcon from "components/Icons/PeopleIcon";
 
 export const pharmacyMenu = [
@@ -124,6 +127,61 @@ export const hospitalMenu = [
     id: 10,
     title: "Subscription Plans",
     icon: <SubscriptionIcon />,
+    path: "/plans",
+  },
+  {
+    id: 11,
+    title: "Settings",
+    icon: <SettingsIcon />,
+    path: "/settings",
+  },
+];
+
+export const hmoMenu = [
+  {
+    id: 0,
+    title: "Dashboard",
+    icon: <DashboardIcon />,
+    path: "/dashboard",
+  },
+  {
+    id: 1,
+    title: "Patients",
+    icon: <PatientsIcon />,
+    path: "/patients",
+  },
+  {
+    id: 2,
+    title: "Enrollees",
+    icon: <PartnersIcon />,
+    path: "/enrollees",
+  },
+
+  {
+    id: 8,
+    title: "Benefits List",
+    icon: <LabelIcon />,
+    path: "/benefits-list",
+    disabled: true,
+  },
+  {
+    id: 9,
+    title: "Claims Automation",
+    icon: <RefferalsIcon />,
+    path: "/claims-automation",
+    disabled: true,
+  },
+  {
+    id: 10,
+    title: "Payouts",
+    icon: <FinanceIcon />,
+    path: "/payouts",
+    disabled: true,
+  },
+  {
+    id: 12,
+    title: "Plans",
+    icon: <PlansIcon />,
     path: "/plans",
   },
   {

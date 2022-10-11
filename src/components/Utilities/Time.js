@@ -46,7 +46,13 @@ export const duration = (value) => {
 
 export const returnpercent = (a, b) => {
   //% Increase/Decrease = (present m(onth total - past month total) / past month total × 100
-  return ((b - a) / a) * 100;
+  try {
+    const percent = ((b - a) / a) * 100;
+    return percent || 0;
+  } catch (error) {
+    console.error("Error from returnPercent function", error);
+    return 0;
+  }
 };
 export const financialPercent = (a, b) => {
   return Math.round((a / (b + a)) * 100);

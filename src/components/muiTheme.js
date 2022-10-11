@@ -13,6 +13,7 @@ const black = "#2D2F39";
 const disable = "#cccccc";
 const blue = "#3E5EA9";
 const lightBlue = "#F3F5FA";
+const danger = "#f21818";
 
 export const muiTheme = createTheme({
   palette: {
@@ -30,6 +31,7 @@ export const muiTheme = createTheme({
       lightGreen,
       gold,
       black,
+      danger,
     },
     primary: {
       main: dark,
@@ -147,18 +149,23 @@ export const muiTheme = createTheme({
     },
     input: {
       width: "100%",
-      height: "5rem",
+      height: "50px",
       padding: "clamp(0.3rem, 2vw, 1rem)",
-      fontSize: "clamp(0.8rem,2vw,1.6rem)",
+      fontSize: "clamp(1.4rem,2vw,1.5rem)",
       color: dark,
-      borderRadius: "1.4rem",
-      border: "1px solid #E6E6E6",
+      fontWeight: 400,
+      border: "1px solid #E0E0E0 !important",
+      borderRadius: "8px",
       "&::placeholder": {
-        color: "#E6E6E6",
-        lineHeight: "2.5rem",
-        fontSize: "1.6rem",
-        // fontSize: "clamp(1.2rem,2vw,1.6rem)",
-        fontWeight: "500 !important",
+        fontWeight: "400 !important",
+        fontSize: "clamp(1.4rem,2vw,1rem)",
+        color: "#afafaf",
+        fontFamily: [
+          '"Euclid Circular"',
+          '"Circular Std Medium"',
+          "Roboto",
+          "sans-serif",
+        ].join(", "),
       },
     },
   },

@@ -584,6 +584,267 @@ export const CREATE_PLAN = gql`
   }
 `;
 
+export const createEnrollee = gql`
+  mutation createEnrollee(
+    $firstName: String!
+    $lastName: String!
+    $email: String!
+    $phone: String!
+    $photo: String
+    $hmoId: String!
+    $noc: Int
+    $plan: String!
+    $expiryDate: String!
+    $providerId: String!
+    $planId: String
+  ) {
+    createEnrollee(
+      data: {
+        firstName: $firstName
+        lastName: $lastName
+        email: $email
+        hmoId: $hmoId
+        noc: $noc
+        phone: $phone
+        photo: $photo
+        plan: $plan
+        expiryDate: $expiryDate
+        providerId: $providerId
+        planId: $planId
+      }
+    ) {
+      enrollee {
+        _id
+        firstName
+        lastName
+        hmoId
+        phone
+        providerId
+      }
+      errors {
+        field
+      }
+    }
+  }
+`;
+
+export const updateEnrollee = gql`
+  mutation updateEnrollee(
+    $id: ID!
+    $firstName: String!
+    $lastName: String!
+    $email: String!
+    $phone: String
+    $photo: String
+    $hmoId: String!
+    $plan: String
+    $expiryDate: String!
+    $providerId: String!
+  ) {
+    updateEnrollee(
+      data: {
+        id: $id
+        firstName: $firstName
+        lastName: $lastName
+        email: $email
+        hmoId: $hmoId
+        phone: $phone
+        photo: $photo
+        plan: $plan
+        expiryDate: $expiryDate
+        providerId: $providerId
+      }
+    ) {
+      enrollee {
+        _id
+        firstName
+        lastName
+        hmoId
+        phone
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const deleteEnrollee = gql`
+  mutation deleteEnrollee($id: String) {
+    deleteEnrollee(data: { id: $id }) {
+      count
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const uploadHMOEnrollees = gql`
+  mutation uploadEnrollees(
+    $fileUrl: String!
+    $providerId: String!
+    $planId: String!
+  ) {
+    uploadEnrollees(
+      data: {
+        fileUrl: $fileUrl
+        providerId: $providerId
+        bucket: "heala-media"
+        planId: $planId
+      }
+    ) {
+      result {
+        fileUrl
+        totalInserted
+        bucket
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const addEditDelHMOPlans = gql`
+  mutation updateProvider($id: String!, $plans: [HmoPlansInput]) {
+    updateProvider(data: { id: $id, hmoPlans: $plans }) {
+      provider {
+        _id
+        name
+        hmoPlans {
+          name
+          planId
+        }
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const updatePartnerProfile = gql`
+  mutation updatePartnerProfile(
+    $profileId: String
+    $partnerName: String
+    $phone: String
+    $address: String
+    $logoImageUrl: String
+    $bankName: String
+    $accName: String
+    $accNumber: String
+    $nuban: String
+  ) {
+    updatePartnerProfile(
+      data: {
+        id: $profileId
+        name: $partnerName
+        phone: $phone
+        address: $address
+        logoImageUrl: $logoImageUrl
+        bankDetails: {
+          name: $bankName
+          accName: $accName
+          accNumber: $accNumber
+          nuban: $nuban
+        }
+      }
+    ) {
+      partner {
+        _id
+        name
+        email
+        phone
+        address
+        bankDetails {
+          name
+          accNumber
+          nuban
+        }
+        category
+        logoImageUrl
+        profileUrl
+        dociId
+        providerId
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const updateEmail = gql`
+  mutation updateEmail($data: UpdateEmailInput) {
+    updateEmail(data: $data) {
+      account {
+        _id
+        email
+        dociId
+        createdAt
+        updatedAt
+        isEmailVerified
+        isPasswordTemporary
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const updatePassword = gql`
+  mutation updatePassword(
+    $currentPassword: String!
+    $newPassword: String!
+    $confirmPassword: String!
+  ) {
+    updatePassword(
+      data: {
+        currentPassword: $currentPassword
+        newPassword: $newPassword
+        confirmPassword: $confirmPassword
+      }
+    ) {
+      account {
+        _id
+        email
+        dociId
+        createdAt
+        updatedAt
+        isEmailVerified
+        isPasswordTemporary
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const updateProfileEmail = gql`
+  mutation updatePartnerProfile($id: String, $email: String) {
+    updatePartnerProfile(data: { id: $id, email: $email }) {
+      partner {
+        _id
+        accountId
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+`;
+
 // export const DELETE_PLAN = gql`
 //   mutation deletePlan($id: String!) {
 //     deletePlan(data: { id: $id }) {

@@ -225,6 +225,8 @@ export const getAppPattern = (appType) => {
       return patterns?.pharmacyPatterns;
     case "hospital":
       return patterns?.hospitalPatterns;
+    case "hmo":
+      return patterns?.hmoPatterns;
     default:
       return {};
   }
@@ -304,7 +306,6 @@ export const filterData = async (filterVaribles, queryParams) => {
     const { fetchData, refetch, variables } = queryParams;
     const newFilterVaribles = removeEmptyStringValues(filterVaribles);
     const x = { ...newFilterVaribles, providerId: partnerProviderId };
-    console.log(x);
     const getData = () => {
       if (newFilterVaribles === {}) {
         deleteVar(variables);
@@ -324,5 +325,59 @@ export const filterData = async (filterVaribles, queryParams) => {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+export const filterHmoData = async (filterVaribles, queryParams) => {
+  try {
+    const { fetchData, refetch, variables } = queryParams;
+    const newFilterVaribles = removeEmptyStringValues(filterVaribles);
+    const getData = () => {
+      if (newFilterVaribles === {}) {
+        deleteVar(variables);
+        return refetch();
+      } else {
+        return fetchData({ variables: newFilterVaribles });
+      }
+    };
+
+    const { data } = await getData();
+
+    if (!data) {
+      throw Error("something went wrong while filtering by status");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const handleHmoPageChange = (fetchDataFN, type, pageInfo, variables) => {
+  const getData = (pageNumber) => {
+    return fetchDataFN({
+      variables: {
+        page: pageNumber,
+        first: pageInfo?.limit || 10,
+        ...variables,
+      },
+    });
+  };
+  switch (type) {
+    case "FIRSTPAGE":
+      return getData(1);
+
+    case "NEXTPAGE":
+      return getData(pageInfo?.nextPage || 1);
+
+    case "PREVPAGE":
+      return getData(pageInfo?.prevPage || 1);
+
+    case "LASTPAGE":
+      return getData(pageInfo?.totalPages || 1);
+
+    default:
+      return;
   }
 };

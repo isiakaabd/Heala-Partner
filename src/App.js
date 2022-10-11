@@ -19,6 +19,7 @@ import { LOGOUT_USER } from "components/graphQL/Mutation";
 import { useActions } from "components/hooks/useActions";
 import { AppTypeProvider } from "store/contexts/AppTypeContext";
 import { Box, Drawer, Toolbar, CssBaseline } from "@mui/material";
+import Hmo from "components/routes/HmoRoutes";
 
 const PreApp = ({ window }) => {
   const { changeAppType } = useApptype();
@@ -64,9 +65,11 @@ const PreApp = ({ window }) => {
           }
 
           if (data) {
+            const partnerData = data?.getPartner;
             userDetail({
-              data: data?.getPartner.category,
+              data: partnerData?.category,
             });
+            localStorage.setItem("partnerData", JSON.stringify(partnerData));
           }
           setstate(false);
         }
@@ -95,7 +98,11 @@ const PreApp = ({ window }) => {
           {isAuthenticated && role === "hospital" && state && (
             <Loader color="success" />
           )}
+          {isAuthenticated && role === "hmo" && state && (
+            <Loader color="success" />
+          )}
 
+          {/*  =========== DIAGNOSTICS VIEW ============  */}
           {isAuthenticated && role === "diagnostics" && !state && (
             <>
               <Box sx={{ display: "flex" }}>
@@ -171,6 +178,8 @@ const PreApp = ({ window }) => {
               </Box>
             </>
           )}
+
+          {/* =========== PHARMACY VIEW ============= */}
           {isAuthenticated && role === "pharmacy" && !state && (
             <>
               <Box sx={{ display: "flex" }}>
@@ -247,6 +256,8 @@ const PreApp = ({ window }) => {
               </Box>
             </>
           )}
+
+          {/* ========= HOSPITAL VIEW =========== */}
           {isAuthenticated && role === "hospital" && !state && (
             <>
               <Box sx={{ display: "flex" }}>
@@ -325,6 +336,90 @@ const PreApp = ({ window }) => {
                 >
                   <Toolbar />
                   <Hospital />
+                </Box>
+              </Box>
+            </>
+          )}
+
+          {/*======== HMO VIEW ======= */}
+          {isAuthenticated && role === "hmo" && !state && (
+            <>
+              <Box sx={{ display: "flex" }}>
+                <CssBaseline />
+                <Header
+                  handleDrawerToggle={handleDrawerToggle}
+                  drawerWidth={drawerWidth}
+                />
+
+                {!isAuthenticated && (
+                  <Route
+                    path={["/", "/login"]}
+                    render={(props) => <Login {...props} />}
+                  />
+                )}
+                <Box
+                  component="nav"
+                  sx={{
+                    width: { md: "30rem" },
+                    backgroundColor: "#f8f8f8",
+                    flexShrink: { md: 0 },
+                  }}
+                  aria-label="sidebar_menu"
+                >
+                  <Drawer
+                    container={container}
+                    variant="temporary"
+                    open={mobileOpen}
+                    onClose={handleDrawerToggle}
+                    ModalProps={{
+                      keepMounted: true, // Better open performance on mobile.
+                    }}
+                    sx={{
+                      display: { xs: "block", md: "none" },
+                      "& .MuiDrawer-paper": {
+                        boxSizing: "border-box",
+                        width: "30rem",
+                      },
+                      "& .MuiBackdrop-root": {
+                        backgroundColor: "rgba(0, 0, 0, 0.2)",
+                      },
+                    }}
+                  >
+                    <SideNav
+                      types="temporary"
+                      handleDrawerToggle={handleDrawerToggle}
+                    />
+                  </Drawer>
+                  <Drawer
+                    variant="permanent"
+                    sx={{
+                      display: { xs: "none", md: "block" },
+                      "& .MuiDrawer-paper": {
+                        boxSizing: "border-box",
+                        width: drawerWidth,
+                        backgroundColor: "#f8f8f8",
+                      },
+                      "& .MuiBackdrop-root": {
+                        backgroundColor: "rgba(0, 0, 0, 0.2)",
+                      },
+                    }}
+                    open
+                  >
+                    <SideNav />
+                  </Drawer>
+                </Box>
+                <Box
+                  component="main"
+                  sx={{
+                    flex: 1,
+                    p: 3,
+                    width: { xs: `calc(100% - ${drawerWidth}px)` },
+
+                    backgroundColor: "#f8f8f8",
+                  }}
+                >
+                  <Toolbar />
+                  <Hmo />
                 </Box>
               </Box>
             </>

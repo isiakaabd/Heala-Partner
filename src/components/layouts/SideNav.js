@@ -21,6 +21,7 @@ import {
   hospitalMenu,
   pharmacyMenu,
   diagnosticsMenu,
+  hmoMenu,
 } from "helpers/asideMenus";
 
 import { useAlert } from "components/hooks";
@@ -162,6 +163,8 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
       ? pharmacyMenu
       : type === "diagnostics"
       ? diagnosticsMenu
+      : type === "hmo"
+      ? hmoMenu
       : [];
   }, [type]);
 
@@ -194,7 +197,7 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
     <>
       <Grid
         className={classes.aside}
-        boxShadow={{ sm: "5px -5px 7px #eee", xs: "none" }}
+        sx={{ borderRight: "1px solid rgba(229, 229, 229, 0.5)" }}
       >
         <div className={classes.logoWrapper}>
           <img src={logo} alt="logo" />
@@ -208,6 +211,7 @@ const SideNav = ({ types, drawerWidth, handleDrawerToggle }) => {
               selected={selectedMenu === menu.id}
               component={Link}
               to={menu.path}
+              disabled={menu?.disabled || false}
             >
               <ListItemIcon sx={{ marginRight: "15px" }}>
                 {menu.icon}

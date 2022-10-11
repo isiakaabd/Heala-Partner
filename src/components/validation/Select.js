@@ -53,7 +53,7 @@ export const Formiks = ({
   children,
   variant = "small",
 }) => {
-  const height = variant === "small" ? "40px" : "60px";
+  const height = variant === "small" ? "40px" : "50px";
   const props = {
     height: height,
   };
@@ -98,7 +98,7 @@ export const FromikSelect = ({
   children,
   variant = "medium",
 }) => {
-  const height = variant === "small" ? "40px" : "60px";
+  const height = variant === "small" ? "40px" : "50px";
   const props = {
     height: height,
   };
@@ -136,17 +136,18 @@ FromikSelect.propTypes = {
 };
 
 const Selects = (props) => {
-  const { name, label, options, placeholder } = props;
+  const { name, label, options } = props;
   const classes = useStyles();
   return (
     <Grid container direction="column" gap={1}>
       <FormLabel className={classes.FormLabel}>{label}</FormLabel>
       <Field name={name} as={FromikSelect} label={label}>
-        <MenuItem value="">
-          <Typography>{placeholder}</Typography>
-        </MenuItem>
         {options.map((option) => (
-          <MenuItem key={option.key} value={option.value}>
+          <MenuItem
+            key={option.key}
+            value={option.value}
+            style={{ fontSize: "1.4rem", fontWeight: "400" }}
+          >
             {option.key}
           </MenuItem>
         ))}

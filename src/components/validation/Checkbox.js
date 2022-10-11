@@ -1,7 +1,7 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
 import { TextError } from "components/Utilities";
-import { FormLabel, FormControl, Box, Grid } from "@mui/material";
+import { FormLabel, FormControl, Box, Grid, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { makeStyles } from "@mui/styles";
 
@@ -40,7 +40,7 @@ const Checkbox = (props) => {
           <Grid container spacing={2}>
             <Field name={name} {...rest} as={Checkbox}>
               {({ field }) => {
-                return options.map((option, index) => {
+                return (options || []).map((option, index) => {
                   return (
                     <Grid item key={index} display="flex" columnGap={2}>
                       <input
@@ -72,3 +72,35 @@ Checkbox.propTypes = {
   options: PropTypes.array,
 };
 export default Checkbox;
+
+export const CustomCheckbox = ({
+  children,
+  label,
+  checkboxTitle,
+  onChange,
+  ...props
+}) => {
+  const classes = useStyles();
+  return (
+    <Grid container direction="column">
+      <FormLabel component="legend" className={classes.FormLabel}>
+        {label}
+      </FormLabel>
+      <Grid container alignItems="center">
+        <Checkbox
+          onChange={onChange}
+          className={classes.customCheckbox}
+          {...props}
+        />
+        <Typography>{checkboxTitle}</Typography>
+      </Grid>
+      <Grid>{children}</Grid>
+    </Grid>
+  );
+};
+CustomCheckbox.propTypes = {
+  children: PropTypes.node,
+  label: PropTypes.string,
+  checkboxTitle: PropTypes.string,
+  onChange: PropTypes.func,
+};

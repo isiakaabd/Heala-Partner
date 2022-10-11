@@ -224,3 +224,167 @@ export const specializationOptions = [
   { key: "occupational medicine ", value: "occupational medicine " },
   { key: "Neonatology", value: "Neonatology" },
 ];
+
+export const addHMOEnrolleInitialValues = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  hmoId: "",
+  noc: "",
+  plan: "",
+  planId: "",
+  expiryDate: "",
+};
+
+export const hmoSearchFilterOptions = {
+  hmoId: "SDT07657",
+  firstName: "John",
+  lastName: "Doe",
+  plan: "Plan name",
+};
+
+export const hmoSearchOptions = [
+  { key: "By HMO ID", value: "hmoId" },
+  { key: "By first name", value: "firstName" },
+  { key: "By last name", value: "lastName" },
+  { key: "By HMO plan", value: "plan" },
+];
+
+export const planMockData = {
+  data: {
+    getPlans: {
+      plan: [
+        {
+          _id: "6315c425a9c245001362bd99",
+          name: "Silver",
+          providerData: null,
+          amount: 0,
+          description:
+            "This plan allows you to have up to 40 consultations in a year",
+          provider: null,
+          duration: null,
+          createdAt:
+            "Mon Sep 05 2022 09:40:53 GMT+0000 (Coordinated Universal Time)",
+          updatedAt:
+            "Mon Sep 05 2022 09:40:53 GMT+0000 (Coordinated Universal Time)",
+          __typename: "Plan",
+        },
+        {
+          _id: "6313aa86a9c245001362b206",
+          name: "One-off Consultation",
+          providerData: null,
+          amount: 0,
+          description: "For emergency consultations",
+          provider: null,
+          duration: null,
+          createdAt:
+            "Sat Sep 03 2022 19:27:03 GMT+0000 (Coordinated Universal Time)",
+          updatedAt:
+            "Mon Sep 12 2022 18:48:57 GMT+0000 (Coordinated Universal Time)",
+          __typename: "Plan",
+        },
+        {
+          _id: "6311ecb1a9c245001362a6f8",
+          name: "Consultation Only Plan",
+          providerData: {
+            _id: "630c74c6460b4f00138998ee",
+            name: "Google HMO",
+            icon: "https://dq1z5gvyi71s7.cloudfront.net/Capturea.JPG",
+            userTypeId: "61ed2b68e6091400135e3dba",
+            createdAt:
+              "Mon Aug 29 2022 08:11:50 GMT+0000 (Coordinated Universal Time)",
+            updatedAt:
+              "Mon Aug 29 2022 08:11:50 GMT+0000 (Coordinated Universal Time)",
+            email: "fakegoogleHMO@gmail.com",
+            phone: "08123456787",
+            address: "google does not have a location",
+          },
+          amount: 0,
+          description: "Unlimited access to consultations",
+          provider: "630c74c6460b4f00138998ee",
+          duration: null,
+          createdAt:
+            "Fri Sep 02 2022 11:44:49 GMT+0000 (Coordinated Universal Time)",
+          updatedAt:
+            "Thu Sep 15 2022 10:24:59 GMT+0000 (Coordinated Universal Time)",
+          __typename: "Plan",
+        },
+        {
+          _id: "630270c311414f0013f2bb65",
+          name: "Sapphire",
+          providerData: {
+            _id: "62e2399c2e8afb00139b325c",
+            name: "Heala HMO",
+            icon: "https://dq1z5gvyi71s7.cloudfront.net/hmo-logo-1.png",
+            iconAlt: "https://dq1z5gvyi71s7.cloudfront.net/hmo-logo-2.png",
+            userTypeId: "61ed2b68e6091400135e3dba",
+            createdAt:
+              "Thu Jul 28 2022 07:24:12 GMT+0000 (Coordinated Universal Time)",
+            updatedAt:
+              "Sat Aug 13 2022 20:13:03 GMT+0000 (Coordinated Universal Time)",
+          },
+          amount: 0,
+          description: "One time consultation with a doctor",
+          provider: "62e2399c2e8afb00139b325c",
+          duration: "Consultations",
+          createdAt:
+            "Sun Aug 21 2022 17:52:03 GMT+0000 (Coordinated Universal Time)",
+          updatedAt:
+            "Tue Sep 06 2022 16:23:04 GMT+0000 (Coordinated Universal Time)",
+          __typename: "Plan",
+        },
+      ],
+      pageInfo: {
+        totalDocs: 4,
+        limit: 10,
+        offset: null,
+        hasPrevPage: false,
+        hasNextPage: false,
+        page: 1,
+        totalPages: 1,
+        pagingCounter: 1,
+        prevPage: null,
+        nextPage: null,
+        __typename: "PageInfo",
+      },
+      __typename: "PlanConnection",
+    },
+  },
+};
+
+export const hmoGraphStateOptions = [
+  { key: "Patients", value: "patients" },
+  { key: "Enrollees", value: "enrollees" },
+  { key: "Consultations", value: "consultations" },
+];
+
+export const hmoConsultationsOptions = [
+  { key: "All Stats", value: "all" },
+  { key: "Accepted", value: "accepted" },
+  { key: "Completed", value: "completed" },
+  { key: "Declined", value: "declined" },
+  { key: "Ongoing", value: "ongoing" },
+  { key: "Cancelled", value: "cancelled" },
+];
+
+export const mockOpt = {
+  patients: {
+    all: "total",
+    active: "totalActive",
+    inactive: "totalInactive",
+  },
+  enrollees: {
+    all: "total",
+    active: "totalActive",
+    inactive: "totalInactive",
+  },
+  consultations: {
+    all: "total",
+    accepted: "totalAccepted",
+    completed: "totalCompleted",
+    declined: "totalDeclined",
+    ongoing: "totalOngoing",
+    cancelled: "totalCancelled",
+  },
+};

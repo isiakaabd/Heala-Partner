@@ -576,3 +576,40 @@ export const hcpPatientsHeadCells = [
   { id: 1, label: "Patient Name" },
   { id: 2, label: "" },
 ];
+
+export const hmoEnrollesTableHeadCells = [
+  { id: 1, label: "HMO ID" },
+  { id: 0, label: "NAME" },
+  { id: 2, label: "NOC" },
+  { id: 5, label: "HMO PLAN" },
+  { id: 6, label: "EXPIRY" },
+  { id: 7, label: "STATUS" },
+  { id: 9, label: "" },
+];
+
+export const hmoPlansTableHeader = [
+  {
+    id: 8,
+    label: "Name of plan",
+  },
+  /*   {
+    id: 1,
+    label: "Amount",
+  }, */
+  /* {
+    id: 2,
+    label: " Description",
+  }, */
+  /* {
+    id: 4,
+    label: " Provider",
+  }, */
+  {
+    id: 6,
+    label: "Heala access plan",
+  },
+  {
+    id: 8,
+    label: "",
+  },
+];

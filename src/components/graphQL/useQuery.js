@@ -5,10 +5,20 @@ export const getPartner = gql`
     getPartner(accountId: $id) {
       _id
       name
-      profileUrl
       email
+      phone
+      address
+      bankDetails {
+        name
+        accName
+        accNumber
+        nuban
+      }
       category
       logoImageUrl
+      profileUrl
+      dociId
+      providerId
     }
   }
 `;
@@ -1359,9 +1369,15 @@ export const dashboard1 = gql`
 
 export const getPlans = gql`
   ${PageInfo}
-  query getPlans($amount: Float, $provider: String, $page: Int, $first: Int) {
+  query getPlans(
+    $type: String
+    $amount: Float
+    $provider: String
+    $page: Int
+    $first: Int
+  ) {
     getPlans(
-      filterBy: { amount: $amount, provider: $provider }
+      filterBy: { amount: $amount, provider: $provider, type: $type }
       page: $page
       orderBy: "-createdAt"
       first: $first
@@ -1592,6 +1608,111 @@ export const getUsertypess = gql`
         pagingCounter
         prevPage
         nextPage
+      }
+    }
+  }
+`;
+
+export const getEnrolles = gql`
+  query getEnrolles(
+    $providerId: String
+    $page: Int
+    $first: Int
+    $firstName: String
+    $lastName: String
+    $hmoId: String
+    $planId: String
+    $plan: String
+  ) {
+    getEnrollees(
+      filterBy: {
+        providerId: $providerId
+        firstName: $firstName
+        lastName: $lastName
+        hmoId: $hmoId
+        plan: $plan
+        planId: $planId
+      }
+      first: $first
+      page: $page
+      orderBy: "-createdAt"
+    ) {
+      data {
+        _id
+        firstName
+        lastName
+        email
+        hmoId
+        photo
+        noc
+        phone
+        plan
+        planId
+        expiryDate
+      }
+      pageInfo {
+        totalDocs
+        limit
+        offset
+        hasPrevPage
+        hasNextPage
+        page
+        totalPages
+        pagingCounter
+        prevPage
+        nextPage
+      }
+    }
+  }
+`;
+
+export const hmoDashboard = gql`
+  query getStats($providerId: String, $q: String) {
+    getStats(filterBy: { providerId: $providerId }, q: $q) {
+      patientStats {
+        total
+        totalActive
+        totalInactive
+        chartData
+        activeChartData
+        inactiveChartData
+      }
+
+      consultationStats {
+        total
+        totalOngoing
+        totalAccepted
+        totalCompleted
+        totalDeclined
+        totalCancelled
+        chartData
+        ongoingChartData
+        acceptedChartData
+        completedChartData
+        declinedChartData
+        cancelledChartData
+      }
+
+      enrolleeStats {
+        total
+        totalActive
+        totalInactive
+        chartData
+        activeChartData
+        inactiveChartData
+      }
+    }
+  }
+`;
+
+export const getHmoPlans = gql`
+  query getProvider($id: ID!) {
+    getProvider(id: $id) {
+      _id
+      name
+      hmoPlans {
+        name
+        planId
       }
     }
   }

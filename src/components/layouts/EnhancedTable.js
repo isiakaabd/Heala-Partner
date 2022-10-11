@@ -52,6 +52,7 @@ const EnhancedTable = ({
   changeLimit,
   dataPageInfo,
   handlePagination,
+  hasPagination = true,
 }) => {
   const classes = useStyles();
   const { setSelectedRows } = useActions();
@@ -84,27 +85,29 @@ const EnhancedTable = ({
           </Table>
         </TableContainer>
 
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 15, 25]}
-          component="div"
-          count={dataPageInfo?.totalDocs || 0}
-          rowsPerPage={dataPageInfo?.limit || 5}
-          page={+dataPageInfo?.page - 1}
-          labelRowsPerPage={paginationLabel}
-          onPageChange={(e) => e}
-          onRowsPerPageChange={(e) => {
-            changeLimit(parseInt(e.target.value, 10));
-          }}
-          className={classes.pagination}
-          ActionsComponent={() => (
-            <EnhancedTableAction
-              {...{
-                dataPageInfo,
-                handlePagination,
-              }}
-            />
-          )}
-        />
+        {hasPagination && (
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 15, 25]}
+            component="div"
+            count={dataPageInfo?.totalDocs || 0}
+            rowsPerPage={dataPageInfo?.limit || 5}
+            page={+dataPageInfo?.page - 1}
+            labelRowsPerPage={paginationLabel}
+            onPageChange={(e) => e}
+            onRowsPerPageChange={(e) => {
+              changeLimit(parseInt(e.target.value, 10));
+            }}
+            className={classes.pagination}
+            ActionsComponent={() => (
+              <EnhancedTableAction
+                {...{
+                  dataPageInfo,
+                  handlePagination,
+                }}
+              />
+            )}
+          />
+        )}
       </Paper>
     </Box>
   );

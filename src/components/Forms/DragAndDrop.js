@@ -6,9 +6,8 @@ import { useTheme } from "@mui/material/styles";
 import { Grid, Typography } from "@mui/material";
 
 import styled from "styled-components";
-import { TextError } from "components/Utilities/TextError";
-import { CustomButton, Loader } from "components/Utilities";
-import { IsImg } from "helpers/filterHelperFunctions";
+import { CustomButton, Loader, TextError } from "components/Utilities";
+import { IsImg } from "helpers/func";
 
 const getColor = (props) => {
   if (props.isDragAccept) {
