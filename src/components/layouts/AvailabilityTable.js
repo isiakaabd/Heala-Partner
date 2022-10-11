@@ -253,8 +253,9 @@ const AvailabilityTable = () => {
               >
                 {availabilities?.map((row, index) => {
                   const { _id, doctorData, day, times, doctor } = row;
-                  const startTime = hours(times[0].start);
-                  const endTime = hours(times[times.length - 1].stop);
+
+                  const startTime = times && hours(times[0]?.start);
+                  const endTime = times && hours(times[times?.length - 1].stop);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   const isItemSelected = isSelected(_id, selectedRows);
 
@@ -320,7 +321,7 @@ const AvailabilityTable = () => {
                         }}
                       >
                         <Chip
-                          label={startTime}
+                          label={startTime ? startTime : "No Value"}
                           className={classes.badge}
                           style={{
                             background: theme.palette.common.lightRed,
@@ -336,7 +337,7 @@ const AvailabilityTable = () => {
                         }}
                       >
                         <Chip
-                          label={endTime}
+                          label={endTime ? endTime : "No Value"}
                           className={classes.badge}
                           style={{
                             background: theme.palette.common.lightRed,

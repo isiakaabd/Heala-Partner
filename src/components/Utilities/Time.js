@@ -21,7 +21,7 @@ export const roundUp = (num) => {
 };
 
 export const hours = (z) => {
-  let time = z.split(":")[0];
+  let time = z?.split(":")[0];
   if (time < 12) return `${z} AM`;
   if (time > 12) {
     let newTime = +time - 12;

@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { dateMoment } from "components/Utilities/Time";
-import { Link } from "react-router-dom";
-import {
-  Grid,
-  Typography,
-  TableRow,
-  TableCell,
-  Checkbox,
-  Button,
-} from "@mui/material";
+import { useHistory } from "react-router-dom";
+import { Grid, Typography, TableRow, TableCell, Checkbox } from "@mui/material";
 import { FilterList, Loader } from "components/Utilities";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { consultationsHeadCells4 } from "components/Utilities/tableHeaders";
@@ -18,8 +11,6 @@ import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { isSelected } from "helpers/isSelected";
 import { handleSelectedRows } from "helpers/selectedRows";
-import displayPhoto from "assets/images/avatar.svg";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -81,6 +72,7 @@ const Consultations = () => {
     totalDocs: 0,
   });
   const classes = useStyles();
+  const history = useHistory();
   const theme = useTheme();
   const { patientConsultation } = useActions();
   const { patientId } = useParams();
@@ -102,9 +94,8 @@ const Consultations = () => {
   const [consultations, setConsultations] = useState([]);
   useEffect(() => {
     if (data) {
-      setConsultations(data.getConsultations.data);
-      // patientConsultation(data)
-      setPageInfo(data.getConsultations.pageInfo);
+      setConsultations(data?.getConsultations?.data);
+      setPageInfo(data?.getConsultations?.pageInfo);
     }
   }, [data, consultations, patientConsultation]);
 
@@ -169,6 +160,12 @@ const Consultations = () => {
                   tabIndex={-1}
                   key={_id}
                   selected={isItemSelected}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() =>
+                    history.push(
+                      `/patients/${patientId}/consultations/case-note/${_id}`
+                    )
+                  }
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
@@ -240,17 +237,6 @@ const Consultations = () => {
                     }}
                   >
                     {status ? status : "No Value"}
-                  </TableCell>
-                  <TableCell align="left">
-                    <Button
-                      variant="contained"
-                      className={classes.button}
-                      component={Link}
-                      to={`/patients/${patientId}/consultations/case-note/${_id}`}
-                      endIcon={<ArrowForwardIosIcon />}
-                    >
-                      View Details
-                    </Button>
                   </TableCell>
                 </TableRow>
               );
