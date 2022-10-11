@@ -231,7 +231,9 @@ const Financetable = () => {
                     style={{ cursor: "pointer" }}
                     selected={isItemSelected}
                     onClick={() =>
-                      history.push(`hcps/${doctorData[0]._id}/consultations`)
+                      history.replace(
+                        `/hcps/${doctorData[0]._id}/consultations`
+                      )
                     }
                   >
                     <TableCell padding="checkbox">

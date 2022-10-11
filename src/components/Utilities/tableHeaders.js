@@ -499,7 +499,6 @@ export const consultationsHeadCells4 = [
   { id: 105, label: "Contact" },
   { id: 133, label: "Type" },
   { id: 1232, label: "Status" },
-  { id: 103, label: "" },
 ];
 export const editManagement = [
   {
