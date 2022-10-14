@@ -161,7 +161,7 @@ const Validations = () => {
           </Typography>
         </Grid>
       </Grid>
-      <Grid item xs={9} sx={{ margin: "auto" }}>
+      <Grid item xs={9} sx={{ margin: "auto", position: "relative" }}>
         <Grid
           container
           alignItems="center"
@@ -183,7 +183,6 @@ const Validations = () => {
               paddingTop: 0,
               fontWeight: 300,
               fontSize: "1.6rem",
-              position: "relative",
               letterSpacing: "-0.01em",
             }}
           >
@@ -213,8 +212,9 @@ const Validations = () => {
               zIndex: 300,
               maxHeight: "20rem",
               background: "white",
-              padding: " 0",
-              width: "80rem",
+              padding: "0",
+              // maxWidth: "100%",
+              width: "100%",
               overflowY: "scroll",
               boxShadow: "-1px 0px 10px -2px rgba(0,0,0,0.15)",
               // boxShadow: "1px 0px 8px -2px rgba(0,0,0,0.75)",

@@ -61,7 +61,7 @@ const HospitalProfile = () => {
           },
         ],
       });
-      history.push("/hospital-settings");
+      history.push("/settings");
       displayMessage("success", "profile updated");
     } catch (error) {
       displayMessage("error", error);

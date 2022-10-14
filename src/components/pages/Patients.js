@@ -336,7 +336,7 @@ const Patients = () => {
                     </TableCell>
                     <TableCell align="left" className={classes.tableCell}>
                       <Chip
-                        label={status ? status : "No Status"}
+                        label={status === "Blocked" ? "Inactive" : status}
                         className={classes.badge}
                         style={{
                           background:

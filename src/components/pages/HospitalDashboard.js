@@ -17,6 +17,8 @@ const HospitalDashboard = () => {
     },
   });
 
+  console.log(data);
+
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
 

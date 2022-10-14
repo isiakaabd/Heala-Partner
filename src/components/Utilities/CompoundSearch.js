@@ -27,8 +27,8 @@ const CompoundSearch = ({
     try {
       deleteVar(variables);
       let value = searchVal;
-      // if (searchBy === "id") value = `HEALA-${searchVal}`;
-      if (searchBy === "ids") value = searchVal;
+      if (searchBy === "id") value = `HEALA-${searchVal}`;
+      // if (searchBy === "ids") value = searchVal;
 
       const searchVariables =
         value === ""
