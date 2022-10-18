@@ -5,7 +5,6 @@ import {
   FormLabel,
   FormControl,
   TableCell,
-  Checkbox,
   Button,
 } from "@mui/material";
 import { dateMoment } from "components/Utilities/Time";
@@ -21,8 +20,6 @@ import {
 import useFormInput from "components/hooks/useFormInput";
 import { messagesHeadCell } from "components/Utilities/tableHeaders";
 import { useSelector } from "react-redux";
-import { useActions } from "components/hooks/useActions";
-import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import { useLazyQuery } from "@apollo/client";
 import { getDiagnosticTests } from "components/graphQL/useQuery";
@@ -172,7 +169,6 @@ const CancelledOrder = () => {
   });
   const { hospitalName, date, categoryName } = filterSelectInput;
   const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
   const buttonType = {
     background: theme.palette.common.black,
     hover: theme.palette.primary.main,
@@ -259,18 +255,6 @@ const CancelledOrder = () => {
                     key={_id}
                     selected={isItemSelected}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onClick={() =>
-                          handleSelectedRows(_id, selectedRows, setSelectedRows)
-                        }
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
                     <TableCell
                       id={labelId}
                       scope="row"

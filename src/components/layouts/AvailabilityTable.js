@@ -5,12 +5,8 @@ import {
   Typography,
   TableCell,
   Chip,
-  Checkbox,
   Card,
 } from "@mui/material";
-// import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useSelector } from "react-redux";
-import { handleSelectedRows } from "helpers/selectedRows";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -18,13 +14,11 @@ import {
 import EnhancedTable from "./EnhancedTable";
 import { CustomSelect } from "components/validation/Select";
 import { Modals, Loader } from "components/Utilities";
-import { isSelected } from "helpers/isSelected";
 import { availabilityHeadCells } from "components/Utilities/tableHeaders";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { hours, days, today } from "components/Utilities/Time";
 import { EmptyTable } from "components/layouts";
-import { useActions } from "components/hooks/useActions";
 import PropTypes from "prop-types";
 import { useLazyQuery } from "@apollo/client";
 import { defaultPageInfo } from "helpers/mockData";
@@ -89,8 +83,6 @@ const AvailabilityTable = () => {
     totalDocs: 0,
   });
   const [modal, setModal] = useState(false);
-  const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
   const [availabilities, setAvailabilities] = useState([]);
   const [select, setSelect] = useState(today());
   const id = localStorage.getItem("partnerProviderId");
@@ -257,7 +249,6 @@ const AvailabilityTable = () => {
                   const startTime = times && hours(times[0]?.start);
                   const endTime = times && hours(times[times?.length - 1].stop);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  const isItemSelected = isSelected(_id, selectedRows);
 
                   return (
                     <TableRow
@@ -267,22 +258,6 @@ const AvailabilityTable = () => {
                       sx={{ cursor: "pointer" }}
                       onClick={() => handleCheckDay(day, doctor)}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={() =>
-                            handleSelectedRows(
-                              _id,
-                              selectedRows,
-                              setSelectedRows
-                            )
-                          }
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
                       <TableCell
                         id={labelId}
                         scope="row"

@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  Grid,
-  Card,
-  Checkbox,
-  Button,
-  TableRow,
-  TableCell,
-} from "@mui/material";
+import { Grid, Card, Button, TableRow, TableCell } from "@mui/material";
 import { Loader, CustomButton, Modals } from "components/Utilities";
 import { formatNumber } from "components/Utilities/Time";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { subscriptionHeadersss } from "components/Utilities/tableHeaders";
-import { useSelector } from "react-redux";
-import { useActions } from "components/hooks/useActions";
-import { handleSelectedRows } from "helpers/selectedRows";
-import { isSelected } from "helpers/isSelected";
+
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -215,10 +205,6 @@ const Subscription = () => {
     }
   };
 
-  const { selectedRows } = useSelector((state) => state.tables);
-
-  const { setSelectedRows } = useActions();
-
   const buttonType = {
     background: theme.palette.common.black,
     hover: theme.palette.primary.main,
@@ -314,34 +300,9 @@ const Subscription = () => {
               >
                 {plan.map((row, index) => {
                   const { _id, amount, description, duration, name } = row;
-
-                  const isItemSelected = isSelected(_id, selectedRows);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={_id}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={() =>
-                            handleSelectedRows(
-                              _id,
-                              selectedRows,
-                              setSelectedRows
-                            )
-                          }
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={_id}>
                       <TableCell
                         id={labelId}
                         scope="row"

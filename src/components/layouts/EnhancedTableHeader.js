@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { TableHead, Checkbox, TableRow, TableCell } from "@mui/material";
+import { TableHead, TableRow, TableCell } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,13 +25,12 @@ const useStyles = makeStyles((theme) => ({
 function EnhancedTableHead(props) {
   const classes = useStyles();
 
-  const { onSelectAllClick, numSelected, rowCount, headCells, hasCheckbox } =
-    props;
+  const { headCells, hasCheckbox } = props;
 
   return (
     <TableHead className={classes.tableHeader}>
       <TableRow>
-        {hasCheckbox && (
+        {/* {hasCheckbox && (
           <TableCell
             padding="checkbox"
             sx={{
@@ -50,7 +49,7 @@ function EnhancedTableHead(props) {
               }}
             />
           </TableCell>
-        )}
+        )} */}
         {headCells.map((headCell, idx) => {
           const isFirst = hasCheckbox ? false : idx === 0;
           const isLast = idx === headCells.length - 1;

@@ -18,7 +18,7 @@ import {
 import EnhancedTableHeader from "./EnhancedTableHeader";
 import { paginationActionTypes } from "helpers/mockData";
 import { useActions } from "components/hooks/useActions";
-import EnhancedTableToolbar from "./EnhancedTableToolbar";
+// import EnhancedTableToolbar from "./EnhancedTableToolbar";
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -70,7 +70,7 @@ const EnhancedTable = ({
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selectedRows.length} title={title} />
+        {/* <EnhancedTableToolbar numSelected={selectedRows.length} title={title} /> */}
 
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
@@ -79,7 +79,7 @@ const EnhancedTable = ({
               onSelectAllClick={handleSelectAllClick}
               rowCount={rows.length}
               headCells={headCells}
-              hasCheckbox={hasCheckbox}
+              hasCheckbox={false}
             />
             <TableBody>{children}</TableBody>
           </Table>

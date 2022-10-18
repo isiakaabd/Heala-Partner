@@ -9,7 +9,6 @@ import {
   TableRow,
   Grid,
   TableCell,
-  Checkbox,
 } from "@mui/material";
 import { NoData } from "components/layouts";
 import {
@@ -26,9 +25,7 @@ import { EnhancedTable, EmptyTable } from "components/layouts";
 import { partnersHeadCells } from "components/Utilities/tableHeaders";
 import displayPhoto from "assets/images/avatar.svg";
 import { useSelector } from "react-redux";
-import { useActions } from "components/hooks/useActions";
 import { useTheme } from "@mui/material/styles";
-import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import { useLazyQuery } from "@apollo/client";
 import { getDiagnosticTests } from "components/graphQL/useQuery";
@@ -214,7 +211,6 @@ const CompletedOrder = () => {
   //eslint-disable-next-line
 
   const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
   return (
@@ -282,18 +278,6 @@ const CompletedOrder = () => {
                     sx={{ cursor: "pointer" }}
                     onClick={() => history.push(`/completed/${_id}/view`)}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onClick={() =>
-                          handleSelectedRows(_id, selectedRows, setSelectedRows)
-                        }
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
                     <TableCell
                       id={labelId}
                       scope="row"

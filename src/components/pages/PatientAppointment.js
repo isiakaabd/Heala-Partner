@@ -6,14 +6,7 @@ import {
 } from "components/Utilities";
 import { Formik, Form } from "formik";
 import FormikControl from "components/validation/FormikControl";
-import {
-  Grid,
-  Typography,
-  TableRow,
-  TableCell,
-  Checkbox,
-  Button,
-} from "@mui/material";
+import { Grid, Typography, TableRow, TableCell, Button } from "@mui/material";
 import { useAlert } from "components/hooks";
 import { deleteAppointment } from "components/graphQL/Mutation";
 import {
@@ -25,12 +18,8 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { getAppoint, getDOCAppoint } from "components/graphQL/useQuery";
 import DeleteOrDisable from "components/modals/DeleteOrDisable";
 import { consultationsHeadCells2 } from "components/Utilities/tableHeaders";
-import { useSelector } from "react-redux";
-import { useActions } from "components/hooks/useActions";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
-import { isSelected } from "helpers/isSelected";
-import { handleSelectedRows } from "helpers/selectedRows";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { useParams } from "react-router-dom";
@@ -225,9 +214,6 @@ const PatientAppointment = () => {
     }
   }, [data, patientId]);
 
-  const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
-
   const buttonType = {
     background: theme.palette.common.black,
     hover: theme.palette.primary.main,
@@ -308,33 +294,8 @@ const PatientAppointment = () => {
                 }
               >
                 {patientAppointment.map((row, index) => {
-                  const isItemSelected = isSelected(row._id, selectedRows);
-                  const labelId = `enhanced-table-checkbox-${index}`;
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row._id}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={() =>
-                            handleSelectedRows(
-                              row.id,
-                              selectedRows,
-                              setSelectedRows
-                            )
-                          }
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                       <TableCell
                         align="left"
                         className={classes.tableCell}

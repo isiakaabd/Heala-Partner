@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
 } from "helpers/filterHelperFunctions";
-import {
-  Grid,
-  Typography,
-  TableCell,
-  Button,
-  TableRow,
-  Checkbox,
-} from "@mui/material";
+import { Grid, Typography, TableCell, TableRow } from "@mui/material";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import {
   timeMoment,
@@ -24,8 +16,6 @@ import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { payoutHeaderss1 } from "components/Utilities/tableHeaders";
 import { useSelector } from "react-redux";
-import { useActions } from "components/hooks/useActions";
-import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 import { Loader } from "components/Utilities";
 import { useLazyQuery } from "@apollo/client";
@@ -128,7 +118,6 @@ const Financetable = () => {
   const partnerProviderId = localStorage.getItem("partnerProviderId");
   const [profiles, setProfiles] = useState("");
   const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
   const [fetchDoctors, { error, loading }] = useLazyQuery(getEarningStats);
 
   const [pageInfo, setPageInfo] = useState({
@@ -216,7 +205,7 @@ const Financetable = () => {
               }}
             >
               {profiles.map((row, index) => {
-                const { createdAt, providerId, balance, doctorData } = row;
+                const { createdAt, _id, providerId, balance, doctorData } = row;
                 const { firstName, lastName } = doctorData[0] || {};
                 const isItemSelected = isSelected(row._id, selectedRows);
                 const labelId = `enhanced-table-checkbox-${index}`;
@@ -227,7 +216,7 @@ const Financetable = () => {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row._id}
+                    key={_id}
                     style={{ cursor: "pointer" }}
                     selected={isItemSelected}
                     onClick={() =>
@@ -236,22 +225,6 @@ const Financetable = () => {
                       )
                     }
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onClick={() =>
-                          handleSelectedRows(
-                            row.id,
-                            selectedRows,
-                            setSelectedRows
-                          )
-                        }
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
                     <TableCell
                       align="left"
                       className={classes.tableCell}

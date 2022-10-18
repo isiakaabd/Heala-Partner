@@ -163,19 +163,6 @@ const HcpConsultations = () => {
                     )
                   }
                 >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      onClick={() =>
-                        handleSelectedRows(_id, selectedRows, setSelectedRows)
-                      }
-                      color="primary"
-                      checked={isItemSelected}
-                      inputProps={{
-                        "aria-labelledby": labelId,
-                      }}
-                    />
-                  </TableCell>
-
                   <TableCell align="left" className={classes.tableCell}>
                     {dateMoment(createdAt)}
                   </TableCell>

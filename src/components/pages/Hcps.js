@@ -18,20 +18,9 @@ import { useAlert } from "components/hooks";
 import { useTheme } from "@mui/material/styles";
 import EnhancedTable from "components/layouts/EnhancedTable";
 import { hcpsHeadCells5 } from "components/Utilities/tableHeaders";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Link, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useActions } from "components/hooks/useActions";
-import { handleSelectedRows } from "helpers/selectedRows";
-import { isSelected } from "helpers/isSelected";
-import {
-  Grid,
-  TableRow,
-  TableCell,
-  Button,
-  Checkbox,
-  Chip,
-} from "@mui/material";
+import { useHistory } from "react-router-dom";
+
+import { Grid, TableRow, TableCell, Chip } from "@mui/material";
 import { createDOctorProfile } from "components/graphQL/Mutation";
 import { timeConverter } from "components/Utilities/Time";
 import {
@@ -304,9 +293,6 @@ const Hcps = () => {
   });
   const [createDoc] = useMutation(createDOctorProfile);
   const history = useHistory();
-  const { selectedRows } = useSelector((state) => state.tables);
-
-  const { setSelectedRows } = useActions();
 
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
@@ -402,31 +388,17 @@ const Hcps = () => {
                   consultations,
                   lastName,
                 } = row;
-                const isItemSelected = isSelected(_id, selectedRows);
+
                 const labelId = `enhanced-table-checkbox-${index}`;
                 return (
                   <TableRow
                     hover
                     role="checkbox"
-                    aria-checked={isItemSelected}
                     tabIndex={-1}
                     onClick={() => history.push(`hcps/${_id}`)}
                     key={_id}
                     style={{ cursor: "pointer" }}
-                    selected={isItemSelected}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onClick={() =>
-                          handleSelectedRows(_id, selectedRows, setSelectedRows)
-                        }
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
                     <TableCell
                       id={labelId}
                       scope="row"

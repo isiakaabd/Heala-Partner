@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { dateMoment } from "components/Utilities/Time";
 import { useHistory } from "react-router-dom";
-import { Grid, Typography, TableRow, TableCell, Checkbox } from "@mui/material";
+import { Grid, Typography, TableRow, TableCell } from "@mui/material";
 import { FilterList, Loader } from "components/Utilities";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { consultationsHeadCells4 } from "components/Utilities/tableHeaders";
-import { useSelector } from "react-redux";
 import { useActions } from "components/hooks/useActions";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
-import { isSelected } from "helpers/isSelected";
-import { handleSelectedRows } from "helpers/selectedRows";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -76,9 +73,6 @@ const Consultations = () => {
   const theme = useTheme();
   const { patientConsultation } = useActions();
   const { patientId } = useParams();
-
-  const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
   const [fetchConsultations, { loading, data, error }] =
     useLazyQuery(getConsultations);
 
@@ -150,16 +144,13 @@ const Consultations = () => {
                 type,
                 status,
               } = row;
-              const isItemSelected = isSelected(_id, selectedRows);
-              const labelId = `enhanced-table-checkbox-${index}`;
+
               return (
                 <TableRow
                   hover
                   role="checkbox"
-                  aria-checked={isItemSelected}
                   tabIndex={-1}
                   key={_id}
-                  selected={isItemSelected}
                   sx={{ cursor: "pointer" }}
                   onClick={() =>
                     history.push(
@@ -167,18 +158,6 @@ const Consultations = () => {
                     )
                   }
                 >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      onClick={() =>
-                        handleSelectedRows(_id, selectedRows, setSelectedRows)
-                      }
-                      color="primary"
-                      checked={isItemSelected}
-                      inputProps={{
-                        "aria-labelledby": labelId,
-                      }}
-                    />
-                  </TableCell>
                   <TableCell align="left" className={classes.tableCell}>
                     {dateMoment(createdAt)}
                   </TableCell>
@@ -215,7 +194,7 @@ const Consultations = () => {
                     className={classes.tableCell}
                     style={{
                       color: theme.palette.common.grey,
-                      width: "4rem",
+                      minWidth: "6rem",
                     }}
                   >
                     {contactMedium ? contactMedium : "No Value"}

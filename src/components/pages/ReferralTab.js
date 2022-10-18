@@ -1,29 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Loader, Filter } from "components/Utilities";
 
-import {
-  TableRow,
-  Grid,
-  Checkbox,
-  Card,
-  TableCell,
-} from "@mui/material";
+import { TableRow, Grid, Card, TableCell } from "@mui/material";
 import { dateMoment } from "components/Utilities/Time";
 import { EnhancedTable, NoData, EmptyTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import { referralHeaderss } from "components/Utilities/tableHeaders";
-import { useSelector } from "react-redux";
-import { useActions } from "components/hooks/useActions";
-import { handleSelectedRows } from "helpers/selectedRows";
-import { isSelected } from "helpers/isSelected";
 import { useLazyQuery } from "@apollo/client";
 import { getRefferals } from "components/graphQL/useQuery";
 import {
   referralFilterBy,
   referralPageDefaultFilterValues,
 } from "helpers/mockData";
-import {  useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -105,10 +95,6 @@ const ReferralTab = () => {
       },
     });
   }, [fetchRefferals, pageInfo, providerId]);
-
-  const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
-
   const [referral, setReferral] = useState([]);
 
   useEffect(() => {
@@ -190,36 +176,16 @@ const ReferralTab = () => {
               >
                 {referral.map((row, index) => {
                   const { _id, createdAt, type, doctorData, patientData } = row;
-
-                  const isItemSelected = isSelected(_id, selectedRows);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   return (
                     <TableRow
                       hover
                       role="checkbox"
-                      aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={_id}
-                      selected={isItemSelected}
                       sx={{ cursor: "pointer" }}
                       onClick={() => history.push(`referrals/${_id}`)}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={() =>
-                            handleSelectedRows(
-                              _id,
-                              selectedRows,
-                              setSelectedRows
-                            )
-                          }
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
                       <TableCell
                         id={labelId}
                         scope="row"

@@ -1,22 +1,16 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Grid, Typography, Card } from "@mui/material";
-import { AvailabilityCard, Loader } from "components/Utilities";
-import { isSelected } from "helpers/isSelected";
-import { handleSelectedRows } from "helpers/selectedRows";
+import { Loader } from "components/Utilities";
+
 import { EmptyTable } from "components/layouts";
-import { useActions } from "components/hooks/useActions";
 import { Modals } from "components/Utilities";
 import {
   changeHospitalTableLimit,
-  getSearchPlaceholder,
   handleHospitalPageChange,
 } from "helpers/filterHelperFunctions";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useLazyQuery } from "@apollo/client";
-import { useQuery } from "@apollo/client";
-import { getAvailability } from "components/graphQL/useQuery";
-import { TableRow, TableCell, Chip, Checkbox } from "@mui/material";
+import { TableRow, TableCell, Chip } from "@mui/material";
 import { NoData } from "components/layouts";
 import { CustomSelect } from "components/validation/Select";
 import EnhancedTable from "components/layouts/EnhancedTable";
@@ -76,7 +70,6 @@ const HcpAvailability = () => {
       },
     },
   }));
-  const [availabiltyArray, setAvailabiltyArray] = useState([]);
   const { hcpId } = useParams();
   const id = localStorage.getItem("partnerProviderId");
   const theme = useTheme();
@@ -87,8 +80,7 @@ const HcpAvailability = () => {
   // });
   const classes = useStyles();
   const [availabilities, setAvailabilities] = useState([]);
-  //  const { hcpId } = useParams();
-  const { setSelectedRows } = useActions();
+
   const [pageInfo, setPageInfo] = useState({
     page: 0,
     totalPages: 1,
@@ -142,7 +134,7 @@ const HcpAvailability = () => {
       console.error(errMsg);
     }
   };
-  const [loadings, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   const handleCheckDay = useCallback((day, doctor) => {
     setModal(true);
@@ -170,7 +162,6 @@ const HcpAvailability = () => {
       });
     }
   }, [dt]);
-  const { selectedRows } = useSelector((state) => state.tables);
 
   const handleSelectChange = async (e) => {
     const { value } = e.target;
@@ -283,11 +274,8 @@ const HcpAvailability = () => {
               >
                 {availabilities?.map((row, index) => {
                   const { _id, day, times, doctor } = row;
-                  const startTime = hours(times[0].start);
-                  const endTime = hours(times[times.length - 1].stop);
-
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  const isItemSelected = isSelected(_id, selectedRows);
+                  const startTime = times && hours(times[0]?.start);
+                  const endTime = times && hours(times[times.length - 1]?.stop);
 
                   return (
                     <TableRow
@@ -297,22 +285,6 @@ const HcpAvailability = () => {
                       sx={{ cursor: "pointer" }}
                       onClick={() => handleCheckDay(day, doctor)}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={() =>
-                            handleSelectedRows(
-                              _id,
-                              selectedRows,
-                              setSelectedRows
-                            )
-                          }
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
                       {/* <TableCell
                         id={labelId}
                         scope="row"
@@ -356,7 +328,7 @@ const HcpAvailability = () => {
                         }}
                       >
                         <Chip
-                          label={startTime}
+                          label={startTime ? startTime : "No Value"}
                           className={classes.badge}
                           style={{
                             background: theme.palette.common.lightRed,
@@ -372,7 +344,7 @@ const HcpAvailability = () => {
                         }}
                       >
                         <Chip
-                          label={endTime}
+                          label={endTime ? endTime : "No Value"}
                           className={classes.badge}
                           style={{
                             background: theme.palette.common.lightRed,

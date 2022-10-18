@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { EmptyTable, NoData } from "components/layouts";
 import { defaultPageInfo } from "helpers/mockData";
-import {
-  Grid,
-  Typography,
-  Chip,
-  Checkbox,
-  TableRow,
-  TableCell,
-} from "@mui/material";
+import { Grid, Typography, Chip, TableRow, TableCell } from "@mui/material";
 import { timeMoment, dateMoment } from "components/Utilities/Time";
 import { useAlert } from "components/hooks";
 import { Loader } from "components/Utilities";
@@ -24,8 +17,6 @@ import { useTheme } from "@mui/material/styles";
 import { payoutHeader } from "components/Utilities/tableHeaders";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { useSelector } from "react-redux";
-import { useActions } from "components/hooks/useActions";
-import { handleSelectedRows } from "helpers/selectedRows";
 import { isSelected } from "helpers/isSelected";
 
 const useStyles = makeStyles((theme) => ({
@@ -96,7 +87,6 @@ const Payout = () => {
   const [profiles, setProfiles] = useState("");
   const { displayMessage } = useAlert();
   const { selectedRows } = useSelector((state) => state.tables);
-  const { setSelectedRows } = useActions();
   const [fetchDoctors, { error, loading }] = useLazyQuery(getEarningStats);
 
   const [pageInfo, setPageInfo] = useState({
@@ -194,7 +184,7 @@ const Payout = () => {
               {profiles.map((row, index) => {
                 const { amount, createdAt, status, _id, doctorData } = row;
                 const data = doctorData || [];
-                const { firstName, lastName, picture } = data[0] || {};
+                const { firstName, lastName } = data[0] || {};
                 const isItemSelected = isSelected(_id, selectedRows);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -207,18 +197,6 @@ const Payout = () => {
                     key={_id}
                     selected={isItemSelected}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onClick={() =>
-                          handleSelectedRows(_id, selectedRows, setSelectedRows)
-                        }
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
                     <TableCell
                       id={labelId}
                       scope="row"

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 import TableLayout from "components/layouts/TableLayout";
-import * as Yup from "yup";
+
 import { NoData, EmptyTable } from "components/layouts";
 import { defaultPageInfo, searchOptions } from "helpers/mockData";
-import { Chip, Checkbox, TableCell, TableRow, Grid } from "@mui/material";
+import { Chip, TableCell, TableRow, Grid } from "@mui/material";
 import { Loader, PatientFilters, CompoundSearch } from "components/Utilities";
 import { EnhancedTable } from "components/layouts";
 import { makeStyles } from "@mui/styles";
@@ -12,11 +12,8 @@ import { useTheme } from "@mui/material/styles";
 import { patientsHeadCells1 } from "components/Utilities/tableHeaders";
 
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useActions } from "components/hooks/useActions";
-import { handleSelectedRows } from "helpers/selectedRows";
+
 import { useLazyQuery } from "@apollo/client";
-// import { getPatients } from "components/graphaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjkkkkvkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo6666666666666666666666666666666666666666666666666666666666666666666666uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuukkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkQL/useQuery";
 import {
   changeHospitalTableLimit,
   handleHospitalPageChange,
@@ -161,19 +158,7 @@ const Patients = () => {
     totalDocs: 0,
   });
   const history = useHistory();
-  const { selectedRows } = useSelector((state) => state.tables);
 
-  const { setSelectedRows } = useActions();
-
-  const [isOpen, setIsOpen] = useState(false);
-  const handleDialogClose = () => setIsOpen(false);
-
-  const buttonType = {
-    background: theme.palette.common.black,
-    hover: theme.palette.primary.main,
-    active: theme.palette.primary.dark,
-    disabled: theme.palette.common.black,
-  };
   if (loading) return <Loader />;
   if (error) return <NoData error={error} />;
   return (
@@ -283,18 +268,6 @@ const Patients = () => {
                     style={{ cursor: "pointer" }}
                     onClick={() => history.push(`patients/${_id}`)}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        onClick={() =>
-                          handleSelectedRows(_id, selectedRows, setSelectedRows)
-                        }
-                        color="primary"
-                        // checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
                     <TableCell
                       id={labelId}
                       scope="row"
